@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="socialBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F1030" />
+      <stop offset="50%" stop-color="#180B28" />
+      <stop offset="100%" stop-color="#0A0B1A" />
+    </linearGradient>
+    <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F43F5E" />
+      <stop offset="50%" stop-color="#FB923C" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#socialBg)" />
+  <circle cx="150" cy="120" r="100" fill="#F43F5E" opacity="0.15" filter="blur(40px)" />
+  <circle cx="450" cy="280" r="120" fill="#38BDF8" opacity="0.15" filter="blur(40px)" />
+  
+  <!-- Instagram Post Mockup Framing -->
+  <rect x="180" y="40" width="240" height="320" rx="14" fill="#111827" stroke="rgba(255,255,255,0.14)" stroke-width="1.5" />
+  <!-- Header -->
+  <circle cx="205" cy="65" r="10" fill="#FB923C" />
+  <rect x="225" y="60" width="90" height="8" rx="4" fill="#E2E8F0" />
+  <!-- Post Image Area -->
+  <rect x="195" y="85" width="210" height="190" rx="8" fill="url(#neonGrad)" />
+  <text x="300" y="175" text-anchor="middle" fill="#FFFFFF" font-family="'Outfit', sans-serif" font-weight="900" font-size="20" letter-spacing="1">SPECIAL PROMO</text>
+  <text x="300" y="200" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" opacity="0.9">GROW YOUR BRAND TODAY</text>
+  <!-- Post Footer Action Icons -->
+  <circle cx="210" cy="295" r="6" fill="#F43F5E" />
+  <circle cx="230" cy="295" r="6" fill="#94A3B8" />
+  <circle cx="250" cy="295" r="6" fill="#94A3B8" />
+  <rect x="195" y="315" width="150" height="6" rx="3" fill="#64748B" />
+  <rect x="195" y="328" width="100" height="6" rx="3" fill="#475569" />
+</svg>

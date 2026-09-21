@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "PortfolioItem": {
+      "title": "PortfolioItem",
+      "description": "A creative studio work or portfolio piece added by the studio admin.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string" },
+        "description": { "type": "string", "maxLength": 1500 },
+        "image": { "type": "string" },
+        "aspectRatio": { "type": "string" },
+        "buttonText": { "type": "string", "maxLength": 50 },
+        "externalUrl": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "order": { "type": "number" },
+        "authorId": { "type": "string" }
+      },
+      "required": ["title", "category", "description", "image", "createdAt", "authorId"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Studio administrators allowed to manage portfolio works.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/portfolio/{portfolioId}": {
+      "schema": "PortfolioItem",
+      "description": "Publicly readable portfolio works managed by studio administrator."
+    },
+    "/admins/{adminId}": {
+      "schema": "AdminUser",
+      "description": "Admin users permitted to modify portfolio works."
+    }
+  }
+}

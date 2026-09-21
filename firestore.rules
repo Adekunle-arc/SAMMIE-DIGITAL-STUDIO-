@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidPortfolioItem(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 150
+        && data.category is string && data.category.size() > 0 && data.category.size() <= 60
+        && data.description is string && data.description.size() <= 2000
+        && data.image is string && data.image.size() > 0;
+    }
+
+    function isStudioAdmin() {
+      return request.auth != null && request.auth.token.email == 'samadeniran15@gmail.com';
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Portfolio items: Public read, strictly authorized Studio Admin writes
+    match /portfolio/{portfolioId} {
+      allow read: if true;
+      allow create: if isStudioAdmin() && isValidId(portfolioId) && isValidPortfolioItem(incoming());
+      allow update: if isStudioAdmin() && isValidId(portfolioId) && isValidPortfolioItem(incoming());
+      allow delete: if isStudioAdmin() && isValidId(portfolioId);
+    }
+
+    // Test connection endpoint
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

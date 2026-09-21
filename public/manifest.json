@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "Sammie Digital Studio",
+  "short_name": "Sammie Studio",
+  "description": "Professional digital studio in Nigeria specializing in website development, graphic design, logo branding, and social media management.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#FF6B00",
+  "background_color": "#08090D",
+  "icons": [
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

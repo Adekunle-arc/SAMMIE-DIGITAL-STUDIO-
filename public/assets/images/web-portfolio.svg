@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="webBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="codeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF6B00" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#webBg)" />
+  
+  <!-- Browser Window Mockup -->
+  <rect x="50" y="45" width="500" height="310" rx="10" fill="#1E293B" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+  <!-- Browser top bar -->
+  <rect x="50" y="45" width="500" height="36" rx="10" fill="#0F172A" />
+  <circle cx="75" cy="63" r="5" fill="#EF4444" />
+  <circle cx="93" cy="63" r="5" fill="#F59E0B" />
+  <circle cx="111" cy="63" r="5" fill="#10B981" />
+  <rect x="140" y="54" width="280" height="18" rx="9" fill="#1E293B" />
+  <text x="160" y="67" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-size="10">https://sammiedigitalstudio.com</text>
+  
+  <!-- Hero Area of Mockup -->
+  <rect x="80" y="105" width="220" height="16" rx="4" fill="url(#codeGrad)" />
+  <rect x="80" y="132" width="160" height="10" rx="3" fill="#64748B" />
+  <rect x="80" y="152" width="90" height="24" rx="6" fill="#FF6B00" />
+  <text x="125" y="168" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="10">Get Started</text>
+  
+  <!-- Right Dashboard visual -->
+  <rect x="330" y="105" width="190" height="110" rx="8" fill="#0F172A" stroke="rgba(255,255,255,0.06)" />
+  <path d="M 350 180 L 385 150 L 420 165 L 460 130 L 500 145" fill="none" stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round" />
+  <circle cx="460" cy="130" r="4" fill="#3B82F6" />
+  
+  <!-- Bottom Cards in Mockup -->
+  <rect x="80" y="240" width="130" height="85" rx="6" fill="#0F172A" stroke="rgba(255,255,255,0.06)" />
+  <rect x="235" y="240" width="130" height="85" rx="6" fill="#0F172A" stroke="rgba(255,255,255,0.06)" />
+  <rect x="390" y="240" width="130" height="85" rx="6" fill="#0F172A" stroke="rgba(255,255,255,0.06)" />
+</svg>

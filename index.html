@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sammie Digital Studio — Design. Develop. Grow.</title>
+
+    <!-- SEO & Search Engine Metadata -->
+    <meta
+      name="description"
+      content="Get expert website development, flyer design, branding, and social media services in Nigeria. Contact Sammie Digital Studio today to grow your brand!"
+    />
+    <meta
+      name="keywords"
+      content="Sammie Digital Studio, website development Nigeria, web developer Lagos Nigeria, graphic design Nigeria, church flyer design Nigeria, event flyer designer Lagos, logo design Nigeria, brand identity design Nigeria, social media management Nigeria, digital studio Abuja Lagos, web design agency Nigeria"
+    />
+    <meta name="author" content="Sammie Digital Studio" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Regional Targeting -->
+    <meta name="geo.region" content="NG" />
+    <meta name="geo.placename" content="Nigeria" />
+
+    <!-- OpenGraph Social Sharing Metadata -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sammie Digital Studio" />
+    <meta
+      property="og:title"
+      content="Sammie Digital Studio — Design. Develop. Grow."
+    />
+    <meta
+      property="og:description"
+      content="Get expert website development, flyer design, branding, and social media services in Nigeria. Contact Sammie Digital Studio today to grow your brand!"
+    />
+    <meta property="og:image" content="/assets/images/logo.png" />
+
+    <!-- Twitter / X Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Sammie Digital Studio — Design. Develop. Grow."
+    />
+    <meta
+      name="twitter:description"
+      content="Get expert website development, flyer design, branding, and social media services in Nigeria. Contact Sammie Digital Studio today to grow your brand!"
+    />
+    <meta name="twitter:image" content="/assets/images/logo.png" />
+
+    <!-- PWA & Mobile Web App Configuration -->
+    <meta name="theme-color" content="#FF6B00" />
+    <link rel="icon" type="image/png" href="/assets/images/logo.png" />
+    <link rel="shortcut icon" type="image/png" href="/assets/images/logo.png" />
+    <link rel="apple-touch-icon" href="/assets/images/logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <!-- Google Fonts: Premium Agency Typography (Outfit + Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- Site Navigation Header -->
+    <header class="site-header" id="header">
+      <div class="container header-container">
+        <a href="#home" class="logo-link" id="siteLogoLink" aria-label="Sammie Digital Studio Home">
+          <img src="/assets/images/logo.png" alt="Sammie Digital Studio Logo" class="brand-logo-img" width="44" height="44" loading="eager" />
+          <div class="logo-text">
+            <span class="brand-name">SAMMIE</span>
+            <span class="brand-sub">DIGITAL STUDIO</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="nav-links" id="desktopNav" aria-label="Main Navigation">
+          <a href="#home" class="nav-link active" data-i18n="navHome">Home</a>
+          <a href="#about" class="nav-link" data-i18n="navAbout">About</a>
+          <a href="#services" class="nav-link" data-i18n="navServices">Services</a>
+          <a href="#portfolio" class="nav-link" data-i18n="navPortfolio">Portfolio</a>
+          <a href="#process" class="nav-link" data-i18n="navProcess">Process</a>
+          <a href="#faq" class="nav-link" data-i18n="navFaq">FAQ</a>
+        </nav>
+
+        <!-- Header CTA Actions -->
+        <div class="header-actions">
+          <a
+            href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20get%20started."
+            target="_blank"
+            class="btn btn-whatsapp nav-whatsapp-btn"
+            aria-label="Chat on WhatsApp"
+          >
+            <span>💬</span> WhatsApp
+          </a>
+
+          <!-- Get Quote Header Button (Desktop) -->
+          <button
+            id="headerQuoteBtn"
+            class="btn btn-primary nav-quote-btn"
+            data-i18n="navQuote"
+          >
+            Get Quote
+          </button>
+
+          <!-- Mobile Hamburger Toggle Button -->
+          <button
+            id="mobileMenuBtn"
+            class="mobile-menu-btn"
+            aria-label="Toggle Navigation Menu"
+            aria-expanded="false"
+            aria-controls="mobileNav"
+          >
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer & Backdrop -->
+    <div id="mobileNav" class="mobile-nav-drawer" aria-hidden="true">
+      <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+      <div class="mobile-nav-panel">
+        <div class="mobile-nav-header">
+          <a href="#home" class="logo-link mobile-logo-link" id="mobileLogoLink" aria-label="Sammie Digital Studio Home">
+            <img src="/assets/images/logo.png" alt="Sammie Digital Studio Logo" class="brand-logo-img" width="44" height="44" loading="eager" />
+            <div class="logo-text">
+              <span class="brand-name">SAMMIE</span>
+              <span class="brand-sub">DIGITAL STUDIO</span>
+            </div>
+          </a>
+          <button id="closeMobileNavBtn" class="close-mobile-nav" aria-label="Close navigation menu">&times;</button>
+        </div>
+
+        <nav class="mobile-nav-links" id="mobileNavLinks">
+          <a href="#home" class="mobile-nav-link" data-i18n="navHome">Home</a>
+          <a href="#about" class="mobile-nav-link" data-i18n="navAbout">About</a>
+          <a href="#services" class="mobile-nav-link" data-i18n="navServices">Services</a>
+          <a href="#portfolio" class="mobile-nav-link" data-i18n="navPortfolio">Portfolio</a>
+          <a href="#process" class="mobile-nav-link" data-i18n="navProcess">Process</a>
+          <a href="#faq" class="mobile-nav-link" data-i18n="navFaq">FAQ</a>
+        </nav>
+
+        <div class="mobile-nav-actions">
+          <button id="mobileQuoteBtn" class="btn btn-primary btn-block" data-i18n="navQuote">
+            Get Quote
+          </button>
+          <a
+            href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20get%20started."
+            target="_blank"
+            class="btn btn-whatsapp btn-block"
+          >
+            💬 Chat on WhatsApp
+          </a>
+        </div>
+
+        <div class="mobile-nav-footer">
+          <p class="mobile-nav-direct">Direct Line: <strong>08168874826</strong></p>
+          <p class="mobile-nav-meta">Nigeria & Worldwide • Design. Develop. Grow.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+      <div class="container hero-container">
+        <div class="hero-content">
+          <div class="badge hero-badge">
+            <span class="badge-dot"></span>
+            <span data-i18n="heroBadge"
+              >Sammie Digital Studio • Nigeria and worldwide</span
+            >
+          </div>
+
+          <h1 class="hero-title">
+            <span data-i18n="heroTitlePrefix">We Build </span>
+            <span class="text-orange" data-i18n="heroTitleHighlight"
+              >Digital Experiences</span
+            >
+            <span data-i18n="heroTitleSuffix"> That Help Businesses Grow</span>
+          </h1>
+
+          <p class="hero-desc" data-i18n="heroSubtitle">
+            Modern websites, branding, and digital solutions designed to give
+            businesses, organizations, and individuals a strong and credible
+            online presence.
+          </p>
+
+          <div class="hero-buttons">
+            <a
+              href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20get%20started."
+              target="_blank"
+              class="btn btn-primary"
+              data-i18n="getStarted"
+            >
+              Get Started
+            </a>
+            <button
+              id="openQuoteBtnHero"
+              class="btn btn-outline"
+              data-i18n="requestQuote"
+            >
+              Request Quote
+            </button>
+          </div>
+
+          <div class="hero-highlights">
+            <div class="hero-highlight-item">
+              <span class="highlight-icon">⚡</span>
+              <span>24-48h Delivery</span>
+            </div>
+            <div class="hero-highlight-item">
+              <span class="highlight-icon">🎯</span>
+              <span>100% Bespoke Craft</span>
+            </div>
+            <div class="hero-highlight-item">
+              <span class="highlight-icon">🌍</span>
+              <span>Serving Clients Worldwide</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 Pillars Section -->
+    <section class="pillars-section">
+      <div class="container pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon">⚡</div>
+          <h4 data-i18n="pillar1Title">Precision Web Engineering</h4>
+          <p data-i18n="pillar1Desc">
+            Fully responsive, modern websites engineered to build credibility
+            and perform seamlessly on phones, tablets, and desktop computers.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">🎨</div>
+          <h4 data-i18n="pillar2Title">Distinctive Visual Design</h4>
+          <p data-i18n="pillar2Desc">
+            Striking promotional flyers, memorable logo marks, and cohesive
+            branding guidelines crafted to capture audience attention.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">🤝</div>
+          <h4 data-i18n="pillar3Title">Direct Client Collaboration</h4>
+          <p data-i18n="pillar3Desc">
+            Personalized attention from our studio team with quick communication
+            via WhatsApp, reliable revisions, and prompt delivery.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <div class="container about-container">
+        <div class="about-text">
+          <h2 class="section-title" data-i18n="aboutTitle">
+            About Sammie Digital Studio
+          </h2>
+          <h3 class="section-sub" data-i18n="aboutSub">
+            Dedicated to Elevating Businesses & Organizations Online
+          </h3>
+          <p class="text-muted">
+            <strong class="text-white">Sammie Digital Studio</strong> is a
+            premium creative and digital agency founded by
+            <strong class="text-orange">Adeniran Samuel Inioluwa</strong>. We
+            specialize in modern website development, distinctive brand
+            identity, high-impact graphic flyers, and active social media
+            management.
+          </p>
+          <p class="text-muted">
+            We empower businesses, churches, schools, corporate enterprises, and
+            ambitious individuals across Nigeria and globally to establish an
+            authoritative digital presence that inspires trust and converts
+            visitors into loyal clients.
+          </p>
+          <div class="about-meta">
+            <span class="founder-badge"
+              >Founder & Lead: Adeniran Samuel Inioluwa</span
+            >
+            <span class="founder-phone">WhatsApp & Calls: 08168874826</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Services Section -->
+    <section id="services" class="services-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="servicesTitle">
+            Our Core Services
+          </h2>
+          <p class="section-sub" data-i18n="servicesSub">
+            Tailored creative and technical solutions designed to help your
+            brand stand out.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">🌐</div>
+            <h3 data-i18n="webDevTitle">Website Development</h3>
+            <p data-i18n="webDevDesc">
+              High-converting, responsive websites engineered with clean
+              architecture to build immediate credibility on any screen.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">📄</div>
+            <h3 data-i18n="graphicDesignTitle">Graphic Design & Flyers</h3>
+            <p data-i18n="graphicDesignDesc">
+              Eye-catching church flyers, event announcements, and corporate
+              marketing materials delivered in print-ready and digital formats.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">✨</div>
+            <h3 data-i18n="logoDesignTitle">Logo Design</h3>
+            <p data-i18n="logoDesignDesc">
+              Distinctive and memorable logo marks tailored to encapsulate your
+              company's mission and unique value proposition.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🎯</div>
+            <h3 data-i18n="brandingTitle">Branding & Identity</h3>
+            <p data-i18n="brandingDesc">
+              Comprehensive brand identity design, encompassing typography
+              pairings, custom color systems, and usage guidelines.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">📱</div>
+            <h3 data-i18n="socialMediaTitle">Social Media Management</h3>
+            <p data-i18n="socialMediaDesc">
+              Strategic content planning, graphic asset creation, post
+              scheduling, and brand consistency across Instagram and TikTok.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4-Step Process Section -->
+    <section id="process" class="process-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="processTitle">How We Work</h2>
+          <p class="section-sub" data-i18n="processSub">
+            A seamless, collaborative process from initial concept to final
+            delivery.
+          </p>
+        </div>
+
+        <div class="process-grid">
+          <div class="process-card">
+            <div class="process-step">01</div>
+            <h4>Discovery & Brief</h4>
+            <p>
+              We discuss your goals, audience, brand style, and specific
+              requirements directly via WhatsApp or call.
+            </p>
+          </div>
+          <div class="process-card">
+            <div class="process-step">02</div>
+            <h4>Concept & Design</h4>
+            <p>
+              We draft creative visual directions or website prototypes aligned
+              with your business vision.
+            </p>
+          </div>
+          <div class="process-card">
+            <div class="process-step">03</div>
+            <h4>Review & Refine</h4>
+            <p>
+              You provide feedback. We make clean, prompt revisions until the
+              project meets your exact expectations.
+            </p>
+          </div>
+          <div class="process-card">
+            <div class="process-step">04</div>
+            <h4>Launch & Delivery</h4>
+            <p>
+              We deliver all high-resolution files (print and digital) or launch
+              your website live to the world.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real-Time Cloud Firestore Portfolio -->
+    <section id="portfolio" class="portfolio-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="portfolioTitle">Our Works</h2>
+          <p class="section-sub" data-i18n="portfolioSub">
+            Explore our curated selection of high-impact websites, brand designs, and creative flyers.
+          </p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="portfolio-filters" id="portfolioFilters">
+          <button
+            class="filter-btn active"
+            data-filter="all"
+            data-i18n="allProjects"
+          >
+            All Works
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="websites"
+            data-i18n="websitesFilter"
+          >
+            Websites
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="flyers"
+            data-i18n="flyersFilter"
+          >
+            Flyers
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="branding"
+            data-i18n="brandingFilter"
+          >
+            Logos & Brands
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="social"
+            data-i18n="socialFilter"
+          >
+            Social Media
+          </button>
+        </div>
+
+        <!-- Dynamic Portfolio Grid -->
+        <div class="portfolio-grid" id="portfolioGrid">
+          <div class="loading-spinner" role="status" aria-live="polite">
+            <div class="spinner-ring"></div>
+            <p class="spinner-text">Loading studio portfolio...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-sub">
+            Quick answers to common questions about our services and process.
+          </p>
+        </div>
+
+        <div class="faq-accordion">
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>How fast can you design an event or church flyer?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Most flyers are delivered within 24 to 48 hours. Urgent
+                turnaround is also available upon request.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>How long does a full website take to build?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                A standard business landing page or corporate website typically
+                takes 3 to 7 business days, including design, mobile
+                responsiveness, and testing.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span
+                >Do you provide print-ready files for physical banners and
+                posters?</span
+              >
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Yes! We provide 300 DPI high-resolution files in CMYK format
+                (PDF/JPEG) ready for any commercial printing press, alongside
+                digital RGB versions for WhatsApp and social media.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>How do payments work?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                We accept local Nigerian bank transfers as well as international
+                payments. We typically work with a 50% initial commitment and
+                the remaining balance upon final approval.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="cta-section">
+      <div class="container cta-container">
+        <h2 class="cta-title" data-i18n="ctaReadyTitle">
+          Ready to Build Your Website or Flyer Design?
+        </h2>
+        <p class="cta-sub" data-i18n="ctaReadySub">
+          Contact Sammie Digital Studio today for professional website
+          development, branding, graphic design, and social media management
+          services.
+        </p>
+        <div class="cta-buttons">
+          <a
+            href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20chat%20about%20a%20project."
+            target="_blank"
+            class="btn btn-whatsapp"
+          >
+            💬 Chat us on WhatsApp
+          </a>
+          <button
+            id="openQuoteBtnCta"
+            class="btn btn-primary"
+            data-i18n="requestQuoteBtn"
+          >
+            Request Quote
+          </button>
+        </div>
+        <p class="cta-note" data-i18n="directLineNote">
+          Direct Line & WhatsApp: 08168874826 • Nigeria and worldwide
+        </p>
+      </div>
+    </section>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <div class="container footer-container">
+        <div class="footer-grid">
+          <!-- Column 1: Brand & Logo -->
+          <div class="footer-col footer-brand-col">
+            <a href="#home" class="logo-link footer-logo-link" id="footerLogoLink" aria-label="Sammie Digital Studio Home">
+              <img src="/assets/images/logo.png" alt="Sammie Digital Studio Logo" class="brand-logo-img" width="44" height="44" loading="lazy" />
+              <div class="logo-text">
+                <span class="brand-name">SAMMIE</span>
+                <span class="brand-sub">DIGITAL STUDIO</span>
+              </div>
+            </a>
+            <p class="footer-desc">
+              Premium creative & digital agency founded by Adeniran Samuel Inioluwa. 
+              We build high-converting websites, striking flyer designs, memorable logos, and powerful brand identities.
+            </p>
+            <div class="footer-status">
+              <span class="live-dot"></span>
+              <span>Available for new projects worldwide</span>
+            </div>
+          </div>
+
+          <!-- Column 2: Quick Links -->
+          <div class="footer-col">
+            <h4 class="footer-heading">Quick Links</h4>
+            <ul class="footer-nav-list">
+              <li><a href="#home" class="footer-link">Home</a></li>
+              <li><a href="#about" class="footer-link">About Us</a></li>
+              <li><a href="#services" class="footer-link">Our Services</a></li>
+              <li><a href="#portfolio" class="footer-link">Portfolio</a></li>
+              <li><a href="#process" class="footer-link">How We Work</a></li>
+              <li><a href="#faq" class="footer-link">FAQ</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Services -->
+          <div class="footer-col">
+            <h4 class="footer-heading">Services</h4>
+            <ul class="footer-nav-list">
+              <li><a href="#services" class="footer-link">Website Development</a></li>
+              <li><a href="#services" class="footer-link">Church & Event Flyers</a></li>
+              <li><a href="#services" class="footer-link">Logo & Brand Identity</a></li>
+              <li><a href="#services" class="footer-link">Social Media Graphics</a></li>
+              <li><a href="#services" class="footer-link">Marketing Materials</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 4: Social Media & Direct Contact -->
+          <div class="footer-col footer-contact-col">
+            <h4 class="footer-heading">Connect With Us</h4>
+            <div class="footer-contact-items">
+              <a href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20inquire%20about%20a%20project." target="_blank" class="footer-contact-link">
+                <span class="contact-icon">💬</span>
+                <span><strong>WhatsApp:</strong> 08168874826</span>
+              </a>
+              <a href="tel:+2348168874826" class="footer-contact-link">
+                <span class="contact-icon">📞</span>
+                <span><strong>Phone:</strong> 08168874826</span>
+              </a>
+              <a href="mailto:sammiedigitalstudio1@gmail.com" class="footer-contact-link">
+                <span class="contact-icon">✉️</span>
+                <span><strong>Email:</strong> sammiedigitalstudio1@gmail.com</span>
+              </a>
+            </div>
+
+            <!-- Social Media Handles (Official Studio Channels) -->
+            <div class="footer-social-wrapper">
+              <span class="social-label">Official Social Media:</span>
+              <div class="social-links-grid">
+                <a href="https://wa.me/2348168874826" target="_blank" rel="noopener noreferrer" class="social-chip whatsapp" aria-label="WhatsApp Direct">
+                  <svg class="social-chip-svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.004 2C6.48 2 2 6.48 2 12c0 1.99.584 3.844 1.597 5.405L2 22l4.735-1.547C8.257 21.37 10.07 22 12.004 22 17.526 22 22 17.522 22 12c0-5.522-4.474-10-9.996-10zm5.468 12.382c-.301.15-1.78.878-2.056.979-.276.1-.476.15-.677-.15-.2-.301-.777-.979-.952-1.18-.176-.2-.351-.226-.652-.075-.301.15-1.272.469-2.423 1.496-.895.799-1.5 1.786-1.676 2.087-.176.301-.019.464.132.614.135.135.301.351.451.527.151.176.2.301.301.502.101.2.05.376-.025.526-.075.151-.677 1.632-.928 2.235-.245.588-.493.508-.677.518l-.577.01c-.2 0-.527.075-.803.376s-1.054 1.029-1.054 2.51c0 1.48 1.079 2.91 1.23 3.111.15.2 2.122 3.24 5.141 4.544.718.31 1.279.495 1.716.634.721.23 1.378.197 1.9.12.581-.087 1.78-.727 2.032-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.351z"/>
+                  </svg>
+                  <span>WhatsApp</span>
+                </a>
+                <a href="https://instagram.com/sammiedigitalstudio" target="_blank" rel="noopener noreferrer" class="social-chip instagram" aria-label="Instagram">
+                  <svg class="social-chip-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                  <span>Instagram</span>
+                </a>
+                <a href="https://tiktok.com/@sammiedigitalstudio" target="_blank" rel="noopener noreferrer" class="social-chip tiktok" aria-label="TikTok">
+                  <svg class="social-chip-svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298 0 .592.04.87.12V9.4a6.33 6.33 0 0 0-.87-.06A6.34 6.34 0 0 0 3.14 15.7a6.34 6.34 0 0 0 9.07 5.67 6.27 6.27 0 0 0 3.61-5.65V8.82a8.27 8.27 0 0 0 4.84 1.55V6.92a4.85 4.85 0 0 1-1.07-.23z"/>
+                  </svg>
+                  <span>TikTok</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span
+            >© 2026 <strong>Sammie Digital Studio</strong>. All Rights Reserved. Lead by <strong>Adeniran Samuel Inioluwa</strong>.</span
+          >
+          <div class="footer-bottom-links">
+            <span class="text-orange">Design. Develop. Grow.</span>
+            <a href="#admin" id="footerAdminLink" class="admin-portal-link" title="Studio Admin Management">
+              🔒 Studio Admin
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Fast Quote Builder Modal -->
+    <div id="quoteModal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Request a Quote</h3>
+          <button id="closeQuoteBtn" class="close-btn" aria-label="Close modal">
+            &times;
+          </button>
+        </div>
+        <form id="quoteForm" class="modal-body">
+          <div class="form-group">
+            <label for="quoteService">Select Service Needed</label>
+            <select id="quoteService" required>
+              <option value="Website Development">Website Development</option>
+              <option value="Graphic Design & Church Flyers">
+                Graphic Design & Church Flyers
+              </option>
+              <option value="Logo & Brand Identity">
+                Logo & Brand Identity
+              </option>
+              <option value="Social Media Management">
+                Social Media Management
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="quoteName">Your Name</label>
+            <input
+              type="text"
+              id="quoteName"
+              placeholder="e.g. Adeniran Samuel"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="quotePhone">Your Phone / WhatsApp</label>
+            <input
+              type="tel"
+              id="quotePhone"
+              placeholder="e.g. 08168874826"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="quoteDetails">Project Details</label>
+            <textarea
+              id="quoteDetails"
+              rows="3"
+              placeholder="Tell us what you need for your website or design..."
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            Send via WhatsApp &rarr;
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lightbox Modal for Full-Screen Image Viewing -->
+    <div id="lightboxModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+      <div class="lightbox-box">
+        <button
+          id="closeLightboxBtn"
+          class="lightbox-close"
+          aria-label="Close image"
+        >
+          &times;
+        </button>
+        <div class="lightbox-img-container">
+          <img
+            id="lightboxImg"
+            src=""
+            alt="Enlarged Artwork"
+            class="lightbox-image"
+          />
+        </div>
+        <div class="lightbox-caption-wrap">
+          <div class="lightbox-caption" id="lightboxCaption"></div>
+          <div class="lightbox-actions">
+            <a id="lightboxWaBtn" href="https://wa.me/2348168874826" target="_blank" class="btn btn-whatsapp btn-sm">
+              💬 Inquire via WhatsApp
+            </a>
+            <button id="lightboxQuoteBtn" class="btn btn-outline btn-sm">
+              Request Similar Design
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Studio Admin Modal (#admin portal) -->
+    <div id="adminModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+      <div class="modal-box admin-modal-box">
+        <div class="modal-header">
+          <div class="admin-header-title-wrap">
+            <span class="admin-lock-icon">🔒</span>
+            <h3 id="adminModalTitle" class="modal-title">Studio Admin Portal</h3>
+          </div>
+          <button id="closeAdminBtn" class="close-btn" aria-label="Close Admin Modal">&times;</button>
+        </div>
+
+        <div class="modal-body admin-modal-body">
+          <!-- Auth Section: Not Logged In -->
+          <div id="adminAuthSection" class="admin-panel-section">
+            <p class="admin-instruction">
+              Authorized studio management portal for <strong>samadeniran15@gmail.com</strong>. Sign in with Google to manage artworks, flyers, and website items stored in Cloud Firestore.
+            </p>
+            <div class="admin-login-box">
+              <button id="adminGoogleSignInBtn" class="btn btn-primary btn-block">
+                <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 8px; vertical-align: middle;">
+                  <path fill="#ffffff" d="M21.35 11.1H12v2.98h5.36c-.23 1.25-.94 2.31-1.99 3.02v2.51h3.22c1.88-1.73 2.97-4.28 2.97-7.41 0-.74-.07-1.45-.21-2.1z"/>
+                  <path fill="#ffffff" d="M12 21c2.7 0 4.96-.9 6.62-2.43l-3.22-2.51c-.9.6-2.04.96-3.4.96-2.6 0-4.81-1.76-5.6-4.12H3.06v2.59C4.75 18.73 8.11 21 12 21z"/>
+                  <path fill="#ffffff" d="M6.4 12.9c-.2-.6-.31-1.24-.31-1.9s.11-1.3.31-1.9V6.51H3.06C2.39 7.84 2 9.38 2 11s.39 3.16 1.06 4.49l3.34-2.59z"/>
+                  <path fill="#ffffff" d="M12 4.96c1.47 0 2.79.51 3.82 1.5l2.87-2.87C16.95 1.93 14.7 1 12 1 8.11 1 4.75 3.27 3.06 6.51l3.34 2.59c.79-2.36 3-4.14 5.6-4.14z"/>
+                </svg>
+                Sign in with Google
+              </button>
+              <div id="adminAuthStatus" class="admin-status-msg"></div>
+            </div>
+          </div>
+
+          <!-- Logged In / Management Section -->
+          <div id="adminDashboardSection" class="admin-panel-section" style="display: none;">
+            <div class="admin-user-bar">
+              <div class="admin-user-info">
+                <span id="adminUserBadge" class="admin-badge">Admin</span>
+                <span id="adminUserEmail" class="admin-email"></span>
+              </div>
+              <button id="adminSignOutBtn" class="btn btn-outline btn-sm">Sign Out</button>
+            </div>
+
+            <!-- Add New Artwork Form -->
+            <form id="adminAddWorkForm" class="admin-form">
+              <h4 class="admin-subheading">Add New Portfolio Artwork</h4>
+              <div class="form-group">
+                <label for="workTitle">Artwork / Project Title *</label>
+                <input type="text" id="workTitle" placeholder="e.g., Youth Revival Sunday Flyer" required />
+              </div>
+              <div class="form-group">
+                <label for="workCategory">Category *</label>
+                <select id="workCategory" required>
+                  <option value="flyers">Graphic Design & Flyers</option>
+                  <option value="websites">Websites & Apps</option>
+                  <option value="branding">Logos & Brand Identity</option>
+                  <option value="social">Social Media Artwork</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="workImage">Image URL *</label>
+                <input type="text" id="workImage" placeholder="https://... or /assets/images/flyer-church.svg" required />
+                <span class="form-hint">Enter image link or uploaded artwork URL</span>
+              </div>
+              <div class="form-group">
+                <label for="workDesc">Description (Optional)</label>
+                <textarea id="workDesc" rows="2" placeholder="Brief note about the project, client, or purpose..."></textarea>
+              </div>
+              <button type="submit" id="adminSubmitWorkBtn" class="btn btn-primary btn-block">
+                Add to Live Portfolio
+              </button>
+              <div id="adminFormStatus" class="admin-status-msg"></div>
+            </form>
+
+            <!-- Current Portfolio Items in Firestore with Delete option -->
+            <div class="admin-existing-wrap">
+              <h4 class="admin-subheading">Live Portfolio Items (<span id="adminWorksCount">0</span>)</h4>
+              <div id="adminWorksList" class="admin-works-list">
+                <p class="admin-empty">Loading items from Firestore...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating WhatsApp & Back to Top -->
+    <div class="floating-controls">
+      <button
+        id="backToTopBtn"
+        class="floating-btn top-float"
+        aria-label="Back to top"
+        style="display: none"
+      >
+        ▲
+      </button>
+      <a
+        href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!"
+        target="_blank"
+        class="floating-btn whatsapp-float"
+        title="Chat with Sammie Digital Studio"
+      >
+        💬 Chat on WhatsApp
+      </a>
+    </div>
+
+    <!-- Clean Vanilla JavaScript Application Engine with Firebase & Cloud Firestore -->
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
