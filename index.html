@@ -435,54 +435,6 @@
       </div>
     </section>
 
-    <!-- 4-Step Process Section -->
-    <section id="process" class="process-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="processTitle">How We Work</h2>
-          <p class="section-sub" data-i18n="processSub">
-            A seamless, collaborative process from initial concept to final
-            delivery.
-          </p>
-        </div>
-
-        <div class="process-grid">
-          <div class="process-card">
-            <div class="process-step">01</div>
-            <h4>Discovery & Brief</h4>
-            <p>
-              We discuss your goals, audience, brand style, and specific
-              requirements directly via WhatsApp or call.
-            </p>
-          </div>
-          <div class="process-card">
-            <div class="process-step">02</div>
-            <h4>Concept & Design</h4>
-            <p>
-              We draft creative visual directions or website prototypes aligned
-              with your business vision.
-            </p>
-          </div>
-          <div class="process-card">
-            <div class="process-step">03</div>
-            <h4>Review & Refine</h4>
-            <p>
-              You provide feedback. We make clean, prompt revisions until the
-              project meets your exact expectations.
-            </p>
-          </div>
-          <div class="process-card">
-            <div class="process-step">04</div>
-            <h4>Launch & Delivery</h4>
-            <p>
-              We deliver all high-resolution files (print and digital) or launch
-              your website live to the world.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Real-Time Cloud Firestore Portfolio -->
     <section id="portfolio" class="portfolio-section">
       <div class="container">
@@ -537,6 +489,54 @@
           <div class="loading-spinner" role="status" aria-live="polite">
             <div class="spinner-ring"></div>
             <p class="spinner-text">Loading studio portfolio...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4-Step Process Section -->
+    <section id="process" class="process-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="processTitle">How We Work</h2>
+          <p class="section-sub" data-i18n="processSub">
+            A seamless, collaborative process from initial concept to final
+            delivery.
+          </p>
+        </div>
+
+        <div class="process-grid">
+          <div class="process-card">
+            <div class="process-step">01</div>
+            <h4>Discovery & Brief</h4>
+            <p>
+              We discuss your goals, audience, brand style, and specific
+              requirements directly via WhatsApp or call.
+            </p>
+          </div>
+          <div class="process-card">
+            <div class="process-step">02</div>
+            <h4>Concept & Design</h4>
+            <p>
+              We draft creative visual directions or website prototypes aligned
+              with your business vision.
+            </p>
+          </div>
+          <div class="process-card">
+            <div class="process-step">03</div>
+            <h4>Review & Refine</h4>
+            <p>
+              You provide feedback. We make clean, prompt revisions until the
+              project meets your exact expectations.
+            </p>
+          </div>
+          <div class="process-card">
+            <div class="process-step">04</div>
+            <h4>Launch & Delivery</h4>
+            <p>
+              We deliver all high-resolution files (print and digital) or launch
+              your website live to the world.
+            </p>
           </div>
         </div>
       </div>
@@ -822,16 +822,27 @@
           &times;
         </button>
         <div class="lightbox-img-container">
+          <button id="lightboxPrevBtn" class="lightbox-nav-btn prev" aria-label="Previous image" style="display: none;">&#10094;</button>
           <img
             id="lightboxImg"
             src=""
             alt="Enlarged Artwork"
             class="lightbox-image"
           />
+          <button id="lightboxNextBtn" class="lightbox-nav-btn next" aria-label="Next image" style="display: none;">&#10095;</button>
+          <div id="lightboxCounter" class="lightbox-counter" style="display: none;">1 / 1</div>
         </div>
+
+        <!-- Lightbox thumbnails strip when multiple images are available -->
+        <div id="lightboxThumbs" class="lightbox-thumbs-strip" style="display: none;"></div>
+
         <div class="lightbox-caption-wrap">
           <div class="lightbox-caption" id="lightboxCaption"></div>
           <div class="lightbox-actions">
+            <!-- Dynamic Live Project link button if available -->
+            <a id="lightboxProjectBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" style="display: none;">
+              🌐 Visit Live Project &rarr;
+            </a>
             <a id="lightboxWaBtn" href="https://wa.me/2348168874826" target="_blank" class="btn btn-whatsapp btn-sm">
               💬 Inquire via WhatsApp
             </a>
@@ -843,24 +854,37 @@
       </div>
     </div>
 
-    <!-- Studio Admin Modal (#admin portal) -->
-    <div id="adminModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
-      <div class="modal-box admin-modal-box">
-        <div class="modal-header">
-          <div class="admin-header-title-wrap">
-            <span class="admin-lock-icon">🔒</span>
-            <h3 id="adminModalTitle" class="modal-title">Studio Admin Portal</h3>
+    <!-- Full-Screen Studio Admin Portal (#admin portal) -->
+    <div id="adminModal" class="admin-fullscreen-portal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+      <header class="admin-portal-header">
+        <div class="admin-portal-branding">
+          <img src="/assets/images/logo.png" alt="Sammie Digital Studio" class="admin-portal-logo" width="36" height="36" />
+          <div class="admin-portal-titles">
+            <span class="admin-portal-title">SAMMIE DIGITAL STUDIO</span>
+            <span class="admin-portal-subtitle">WORKSPACE & PORTFOLIO ENGINE</span>
           </div>
-          <button id="closeAdminBtn" class="close-btn" aria-label="Close Admin Modal">&times;</button>
         </div>
 
-        <div class="modal-body admin-modal-body">
-          <!-- Auth Section: Passcode Verification -->
-          <div id="adminAuthSection" class="admin-panel-section">
-            <p class="admin-instruction">
-              Enter your Studio Master Passcode to unlock portfolio and artwork management:
+        <div class="admin-portal-header-actions">
+          <span id="adminPortalStatusChip" class="admin-status-chip locked">🔒 Passcode Protected</span>
+          <button id="closeAdminBtn" class="btn btn-outline btn-sm admin-exit-btn" aria-label="Exit Admin Workspace">
+            ✕ Exit Workspace
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-portal-content">
+        <!-- Auth Section: Passcode Verification -->
+        <div id="adminAuthSection" class="admin-auth-card-wrap">
+          <div class="admin-auth-card">
+            <div class="admin-auth-icon-wrap">
+              <span class="admin-lock-icon">🔒</span>
+            </div>
+            <h2 id="adminModalTitle" class="admin-auth-title">Studio Master Passcode</h2>
+            <p class="admin-auth-desc">
+              Enter your Studio Master Passcode to upload new artworks, add project links, and manage your live portfolio.
             </p>
-            <form id="adminPasscodeForm" class="admin-form" style="padding: 1.5rem;">
+            <form id="adminPasscodeForm" class="admin-form">
               <div class="form-group">
                 <label for="adminPasscodeInput">Master Secret Passcode *</label>
                 <div style="position: relative; display: flex; align-items: center;">
@@ -870,70 +894,142 @@
                     placeholder="Enter Master Secret Passcode"
                     autocomplete="off"
                     required
-                    style="width: 100%; padding-right: 42px;"
+                    style="width: 100%; padding-right: 44px;"
                   />
                   <button
                     type="button"
                     id="togglePasscodeVisibility"
                     aria-label="Toggle password visibility"
-                    style="position: absolute; right: 8px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;"
+                    style="position: absolute; right: 10px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; font-size: 1.1rem;"
                   >
                     👁️
                   </button>
                 </div>
               </div>
-              <button type="submit" id="adminUnlockBtn" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
-                Unlock Studio Dashboard
+              <button type="submit" id="adminUnlockBtn" class="btn btn-primary btn-block">
+                Unlock Studio Workspace &rarr;
               </button>
               <div id="adminAuthStatus" class="admin-status-msg" style="display: none; width: 100%; margin-top: 0.75rem;"></div>
             </form>
           </div>
+        </div>
 
-          <!-- Logged In / Management Section -->
-          <div id="adminDashboardSection" class="admin-panel-section" style="display: none;">
-            <div class="admin-user-bar">
-              <div class="admin-user-info">
-                <span id="adminUserBadge" class="admin-badge">Admin</span>
-                <span id="adminUserEmail" class="admin-email"></span>
+        <!-- Logged In / Studio Management Section -->
+        <div id="adminDashboardSection" class="admin-dashboard-layout" style="display: none;">
+          <!-- Top Sub-Bar with Session Info -->
+          <div class="admin-dashboard-subbar">
+            <div class="admin-dashboard-user">
+              <span class="admin-badge">Studio Lead</span>
+              <span class="admin-lead-name">Adeniran Samuel Inioluwa</span>
+              <span class="admin-session-dot"></span>
+              <span class="admin-session-label">Cloud Firestore Connected</span>
+            </div>
+            <button id="adminSignOutBtn" class="btn btn-outline btn-sm">
+              🔒 Lock & Sign Out
+            </button>
+          </div>
+
+          <!-- 2-Column Responsive Workspace Grid -->
+          <div class="admin-dashboard-grid">
+            <!-- Left Column: Add New Artwork & Project -->
+            <div class="admin-dash-card" id="adminFormContainer">
+              <div class="admin-card-header">
+                <h3 id="adminFormCardTitle" class="admin-card-title">✨ Add New Portfolio Artwork</h3>
+                <p id="adminFormCardSub" class="admin-card-sub">Upload flyer graphics, web screenshots, and include direct project links.</p>
               </div>
-              <button id="adminSignOutBtn" class="btn btn-outline btn-sm">Sign Out</button>
+
+              <form id="adminAddWorkForm" class="admin-dash-form">
+                <!-- Hidden input tracking currently edited item (empty when creating new) -->
+                <input type="hidden" id="editWorkId" value="" />
+
+                <div class="form-group">
+                  <label for="workTitle">Artwork / Project Title *</label>
+                  <input type="text" id="workTitle" placeholder="e.g., Youth Revival Sunday Flyer or E-Commerce App" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="workCategory">Category *</label>
+                  <select id="workCategory" required>
+                    <option value="flyers">Graphic Design & Flyers</option>
+                    <option value="websites">Websites & Apps</option>
+                    <option value="branding">Logos & Brand Identity</option>
+                    <option value="social">Social Media Artwork</option>
+                  </select>
+                </div>
+
+                <!-- Picture File Upload Area (Supports Multiple Pictures) -->
+                <div class="form-group">
+                  <div class="label-with-badge">
+                    <label>Artwork Pictures / Photos *</label>
+                    <span class="field-badge-sub" id="photosCountBadge">0 pictures added</span>
+                  </div>
+                  <input type="file" id="workFileInput" accept="image/*" multiple style="display: none;" />
+                  
+                  <div id="workDropzone" class="work-dropzone" tabindex="0" role="button" aria-label="Upload artwork photos">
+                    <div class="dropzone-prompt">
+                      <span class="dropzone-icon">📷</span>
+                      <span class="dropzone-title">Click or Drag & Drop Pictures</span>
+                      <span class="dropzone-sub">Upload single or multiple images (PNG, JPG, WEBP, SVG)</span>
+                    </div>
+                  </div>
+
+                  <!-- Multi-Image Preview Gallery Container -->
+                  <div id="workMultiImagePreviewBox" class="work-multi-preview-container" style="display: none;">
+                    <div class="multi-preview-header">
+                      <span class="multi-preview-title">Project Pictures (<span id="previewCountLabel">0</span>)</span>
+                      <button type="button" id="addMoreImagesBtn" class="btn btn-outline btn-xs">
+                        + Add More Pictures
+                      </button>
+                    </div>
+                    <div id="workMultiPreviewGrid" class="work-multi-preview-grid"></div>
+                  </div>
+
+                  <!-- Optional Direct Image URL fallback -->
+                  <div class="image-url-toggle-wrap">
+                    <div class="url-input-row">
+                      <input type="text" id="workImage" placeholder="Or paste direct image URL (https://...)" />
+                      <button type="button" id="addUrlImageBtn" class="btn btn-outline btn-sm">Add URL</button>
+                    </div>
+                    <span class="form-hint">You can upload from your gallery or attach via URL</span>
+                  </div>
+                </div>
+
+                <!-- Project Link (URL) -->
+                <div class="form-group">
+                  <label for="workLink">Project Link / Live URL (Optional)</label>
+                  <input type="url" id="workLink" placeholder="e.g. https://clientwebsite.com or https://instagram.com/..." />
+                  <span class="form-hint">Visitors can click "🌐 Visit Live Project" directly from your works gallery & preview!</span>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                  <label for="workDesc">Description / Client Note (Optional)</label>
+                  <textarea id="workDesc" rows="3" placeholder="Brief note about the project, design purpose, tools used, or client results..."></textarea>
+                </div>
+
+                <div class="admin-form-actions-stack">
+                  <button type="submit" id="adminSubmitWorkBtn" class="btn btn-primary btn-block">
+                    🚀 Publish to Live Portfolio
+                  </button>
+                  <button type="button" id="adminCancelEditBtn" class="btn btn-outline btn-block" style="display: none;">
+                    ✕ Cancel Editing & Create New
+                  </button>
+                </div>
+                <div id="adminFormStatus" class="admin-status-msg"></div>
+              </form>
             </div>
 
-            <!-- Add New Artwork Form -->
-            <form id="adminAddWorkForm" class="admin-form">
-              <h4 class="admin-subheading">Add New Portfolio Artwork</h4>
-              <div class="form-group">
-                <label for="workTitle">Artwork / Project Title *</label>
-                <input type="text" id="workTitle" placeholder="e.g., Youth Revival Sunday Flyer" required />
+            <!-- Right Column: Current Live Works in Cloud Firestore -->
+            <div class="admin-dash-card">
+              <div class="admin-card-header">
+                <div class="admin-count-badge-wrap">
+                  <h3 class="admin-card-title">📂 Live Works in Cloud Firestore</h3>
+                  <span class="admin-works-counter" id="adminWorksCount">0</span>
+                </div>
+                <p class="admin-card-sub">Real-time sync. Any item deleted here is removed live from your public site.</p>
               </div>
-              <div class="form-group">
-                <label for="workCategory">Category *</label>
-                <select id="workCategory" required>
-                  <option value="flyers">Graphic Design & Flyers</option>
-                  <option value="websites">Websites & Apps</option>
-                  <option value="branding">Logos & Brand Identity</option>
-                  <option value="social">Social Media Artwork</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="workImage">Image URL *</label>
-                <input type="text" id="workImage" placeholder="https://... or /assets/images/flyer-church.svg" required />
-                <span class="form-hint">Enter image link or uploaded artwork URL</span>
-              </div>
-              <div class="form-group">
-                <label for="workDesc">Description (Optional)</label>
-                <textarea id="workDesc" rows="2" placeholder="Brief note about the project, client, or purpose..."></textarea>
-              </div>
-              <button type="submit" id="adminSubmitWorkBtn" class="btn btn-primary btn-block">
-                Add to Live Portfolio
-              </button>
-              <div id="adminFormStatus" class="admin-status-msg"></div>
-            </form>
 
-            <!-- Current Portfolio Items in Firestore with Delete option -->
-            <div class="admin-existing-wrap">
-              <h4 class="admin-subheading">Live Portfolio Items (<span id="adminWorksCount">0</span>)</h4>
-              <div id="adminWorksList" class="admin-works-list">
+              <div id="adminWorksList" class="admin-works-grid-list">
                 <p class="admin-empty">Loading items from Firestore...</p>
               </div>
             </div>

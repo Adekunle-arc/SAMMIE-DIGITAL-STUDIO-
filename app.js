@@ -1,6 +1,6 @@
 // Sammie Digital Studio - Clean Pure JavaScript Engine
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 // 1. Firebase & Cloud Firestore Setup
 const firebaseConfig = {
@@ -488,28 +488,32 @@ const starterItems = [
     title: 'Church Conference Flyer',
     category: 'flyers',
     description: 'Dynamic event publicity flyer designed for Sunday praise service.',
-    image: '/assets/images/flyer-church.svg'
+    image: '/assets/images/flyer-church.svg',
+    link: 'https://wa.me/2348168874826?text=Hello%20Samuel,%20I%20saw%20your%20Church%20Conference%20Flyer'
   },
   {
     id: 'starter_2',
     title: 'Digital Studio Corporate Web',
     category: 'websites',
     description: 'High-speed business website with dark mode and WhatsApp bookings.',
-    image: '/assets/images/web-portfolio.svg'
+    image: '/assets/images/web-portfolio.svg',
+    link: 'https://github.com/samadeniran15'
   },
   {
     id: 'starter_3',
     title: 'Modern Brand Identity & Emblem',
     category: 'branding',
     description: 'Minimalist logo mark and typography system for technology studio.',
-    image: '/assets/images/brand-identity.svg'
+    image: '/assets/images/brand-identity.svg',
+    link: 'https://instagram.com/sammiedigitalstudio'
   },
   {
     id: 'starter_4',
     title: 'Social Media Event Campaign',
     category: 'social',
     description: 'Instagram and WhatsApp status promotional flyers for annual youth conference.',
-    image: '/assets/images/flyer-studio.svg'
+    image: '/assets/images/flyer-studio.svg',
+    link: 'https://wa.me/2348168874826?text=Hello%20Samuel,%20I%20want%20a%20social%20media%20campaign%20design'
   }
 ];
 
@@ -573,14 +577,24 @@ function renderPortfolio(items, filter = currentPortfolioFilter) {
   filtered.forEach((item) => {
     const card = document.createElement('div');
     card.className = 'portfolio-card';
-    const imgSrc = item.image || '/assets/images/flyer-studio.svg';
+    const allImages = Array.isArray(item.images) && item.images.length > 0 
+      ? item.images 
+      : (item.image ? [item.image] : ['/assets/images/flyer-studio.svg']);
+    const imgSrc = allImages[0] || item.image || '/assets/images/flyer-studio.svg';
     const catLabel = getCategoryLabel(item.category);
     const safeTitle = escapeHtml(item.title);
     const safeDesc = escapeHtml(item.description || 'Crafted with precision by Sammie Digital Studio.');
+    const projectLink = item.link || item.externalUrl || '';
 
     card.innerHTML = `
       <div class="portfolio-img-wrap">
         <img src="${imgSrc}" alt="${safeTitle}" class="portfolio-img" loading="lazy" />
+        ${allImages.length > 1 ? `
+          <div class="portfolio-photo-count-pill">
+            <span>📷</span>
+            <span>${allImages.length} Photos</span>
+          </div>
+        ` : ''}
         <div class="portfolio-overlay">
           <span class="portfolio-zoom-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -589,7 +603,7 @@ function renderPortfolio(items, filter = currentPortfolioFilter) {
               <line x1="11" y1="8" x2="11" y2="14"></line>
               <line x1="8" y1="11" x2="14" y2="11"></line>
             </svg>
-            <span>View Project</span>
+            <span>View Artwork</span>
           </span>
         </div>
       </div>
@@ -597,12 +611,18 @@ function renderPortfolio(items, filter = currentPortfolioFilter) {
         <div class="portfolio-category-badge">${catLabel}</div>
         <h4 class="portfolio-title">${safeTitle}</h4>
         <p class="portfolio-desc">${safeDesc}</p>
+        ${projectLink ? `
+          <a href="${escapeHtml(projectLink)}" target="_blank" rel="noopener noreferrer" class="portfolio-external-pill" onclick="event.stopPropagation();">
+            <span>🌐</span>
+            <span>Visit Live Project &rarr;</span>
+          </a>
+        ` : ''}
       </div>
     `;
 
-    // Click to enlarge in lightbox
+    // Click to enlarge in lightbox (passes all photos for carousel)
     card.addEventListener('click', () => {
-      openLightbox(imgSrc, item.title, item.description, item.category);
+      openLightbox(allImages, item.title, item.description, item.category, projectLink);
     });
 
     portfolioGrid.appendChild(card);
@@ -749,21 +769,109 @@ document.querySelectorAll('.faq-question').forEach((button) => {
   });
 });
 
-// 5. Lightbox Modal
+// 5. Lightbox Modal (Multi-Image Carousel Supported)
 const lightboxModal = document.getElementById('lightboxModal');
 const lightboxImg = document.getElementById('lightboxImg');
 const lightboxCaption = document.getElementById('lightboxCaption');
 const closeLightboxBtn = document.getElementById('closeLightboxBtn');
 const lightboxWaBtn = document.getElementById('lightboxWaBtn');
 const lightboxQuoteBtn = document.getElementById('lightboxQuoteBtn');
+const lightboxProjectBtn = document.getElementById('lightboxProjectBtn');
+const lightboxPrevBtn = document.getElementById('lightboxPrevBtn');
+const lightboxNextBtn = document.getElementById('lightboxNextBtn');
+const lightboxCounter = document.getElementById('lightboxCounter');
+const lightboxThumbs = document.getElementById('lightboxThumbs');
 
 let currentLightboxItem = null;
+let currentLightboxImages = [];
+let currentLightboxIndex = 0;
 
-function openLightbox(src, title, desc, category) {
+function updateLightboxView() {
+  if (!lightboxImg || currentLightboxImages.length === 0) return;
+  const currentSrc = currentLightboxImages[currentLightboxIndex] || '/assets/images/flyer-studio.svg';
+  lightboxImg.src = currentSrc;
+
+  const total = currentLightboxImages.length;
+  if (total > 1) {
+    if (lightboxPrevBtn) lightboxPrevBtn.style.display = 'flex';
+    if (lightboxNextBtn) lightboxNextBtn.style.display = 'flex';
+    if (lightboxCounter) {
+      lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${total}`;
+      lightboxCounter.style.display = 'block';
+    }
+    if (lightboxThumbs) {
+      lightboxThumbs.style.display = 'flex';
+      const thumbButtons = lightboxThumbs.querySelectorAll('.lightbox-thumb-btn');
+      thumbButtons.forEach((btn, idx) => {
+        if (idx === currentLightboxIndex) {
+          btn.classList.add('active');
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+  } else {
+    if (lightboxPrevBtn) lightboxPrevBtn.style.display = 'none';
+    if (lightboxNextBtn) lightboxNextBtn.style.display = 'none';
+    if (lightboxCounter) lightboxCounter.style.display = 'none';
+    if (lightboxThumbs) lightboxThumbs.style.display = 'none';
+  }
+}
+
+function prevLightboxImage() {
+  if (currentLightboxImages.length <= 1) return;
+  currentLightboxIndex = (currentLightboxIndex - 1 + currentLightboxImages.length) % currentLightboxImages.length;
+  updateLightboxView();
+}
+
+function nextLightboxImage() {
+  if (currentLightboxImages.length <= 1) return;
+  currentLightboxIndex = (currentLightboxIndex + 1) % currentLightboxImages.length;
+  updateLightboxView();
+}
+
+function openLightbox(imagesInput, title, desc, category, link = null) {
   if (!lightboxModal) return;
-  currentLightboxItem = { src, title, desc, category };
-  lightboxImg.src = src;
+  
+  const imgs = Array.isArray(imagesInput) 
+    ? imagesInput.filter(Boolean) 
+    : (imagesInput ? [imagesInput] : []);
+  currentLightboxImages = imgs.length > 0 ? imgs : ['/assets/images/flyer-studio.svg'];
+  currentLightboxIndex = 0;
+  currentLightboxItem = { images: currentLightboxImages, title, desc, category, link };
+
+  // Render thumbnail strip if multi-image
+  if (lightboxThumbs) {
+    lightboxThumbs.innerHTML = '';
+    if (currentLightboxImages.length > 1) {
+      currentLightboxImages.forEach((thumbSrc, idx) => {
+        const thumbBtn = document.createElement('button');
+        thumbBtn.type = 'button';
+        thumbBtn.className = `lightbox-thumb-btn ${idx === 0 ? 'active' : ''}`;
+        thumbBtn.setAttribute('aria-label', `View photo ${idx + 1}`);
+        thumbBtn.innerHTML = `<img src="${thumbSrc}" alt="Thumbnail ${idx + 1}" loading="lazy" />`;
+        thumbBtn.addEventListener('click', () => {
+          currentLightboxIndex = idx;
+          updateLightboxView();
+        });
+        lightboxThumbs.appendChild(thumbBtn);
+      });
+    }
+  }
+
+  updateLightboxView();
+
   lightboxCaption.innerHTML = `<h3 class="lightbox-title">${title}</h3><p class="lightbox-sub">${desc || ''}</p>`;
+
+  if (lightboxProjectBtn) {
+    if (link) {
+      lightboxProjectBtn.href = link;
+      lightboxProjectBtn.style.display = 'inline-flex';
+    } else {
+      lightboxProjectBtn.style.display = 'none';
+    }
+  }
   
   if (lightboxWaBtn) {
     const waText = `Hello Sammie Digital Studio! I saw your portfolio work "${title}" (${category || 'design'}) on your website and I'd like to get something similar done for my business/organization.`;
@@ -772,6 +880,9 @@ function openLightbox(src, title, desc, category) {
 
   lightboxModal.classList.add('open');
 }
+
+if (lightboxPrevBtn) lightboxPrevBtn.addEventListener('click', prevLightboxImage);
+if (lightboxNextBtn) lightboxNextBtn.addEventListener('click', nextLightboxImage);
 
 function closeLightbox() {
   if (!lightboxModal) return;
@@ -951,7 +1062,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// 11. Studio Admin Portal (#admin) & Firebase Auth/Firestore Management
+// 11. Full-Screen Studio Admin Portal (#admin) & Firebase Auth/Firestore Management
 const adminModal = document.getElementById('adminModal');
 const closeAdminBtn = document.getElementById('closeAdminBtn');
 const footerAdminLink = document.getElementById('footerAdminLink');
@@ -961,16 +1072,239 @@ const adminPasscodeForm = document.getElementById('adminPasscodeForm');
 const adminPasscodeInput = document.getElementById('adminPasscodeInput');
 const togglePasscodeVisibility = document.getElementById('togglePasscodeVisibility');
 const adminSignOutBtn = document.getElementById('adminSignOutBtn');
-const adminUserEmail = document.getElementById('adminUserEmail');
 const adminAuthStatus = document.getElementById('adminAuthStatus');
 const adminAddWorkForm = document.getElementById('adminAddWorkForm');
 const adminFormStatus = document.getElementById('adminFormStatus');
 const adminWorksList = document.getElementById('adminWorksList');
 const adminWorksCount = document.getElementById('adminWorksCount');
+const adminPortalStatusChip = document.getElementById('adminPortalStatusChip');
+
+// Picture Upload & Admin Workspace Elements
+const workFileInput = document.getElementById('workFileInput');
+const workDropzone = document.getElementById('workDropzone');
+const workImageInput = document.getElementById('workImage');
+const addUrlImageBtn = document.getElementById('addUrlImageBtn');
+const workLinkInput = document.getElementById('workLink');
+const photosCountBadge = document.getElementById('photosCountBadge');
+const workMultiImagePreviewBox = document.getElementById('workMultiImagePreviewBox');
+const previewCountLabel = document.getElementById('previewCountLabel');
+const addMoreImagesBtn = document.getElementById('addMoreImagesBtn');
+const workMultiPreviewGrid = document.getElementById('workMultiPreviewGrid');
+const editWorkIdInput = document.getElementById('editWorkId');
+const adminFormCardTitle = document.getElementById('adminFormCardTitle');
+const adminFormCardSub = document.getElementById('adminFormCardSub');
+const adminSubmitWorkBtn = document.getElementById('adminSubmitWorkBtn');
+const adminCancelEditBtn = document.getElementById('adminCancelEditBtn');
+const adminFormContainer = document.getElementById('adminFormContainer');
 
 const MASTER_PASSCODE = 'Adekunle2008';
 const OWNER_EMAIL = 'samadeniran15@gmail.com';
 let isMasterAuthenticated = false;
+let selectedImages = []; // Array of Base64 or URL strings
+
+// Render Multi-Image Preview Grid in Admin Form
+function updateMultiImageUI() {
+  const total = selectedImages.length;
+  if (photosCountBadge) {
+    photosCountBadge.textContent = total === 1 ? '1 picture added' : `${total} pictures added`;
+  }
+  if (previewCountLabel) {
+    previewCountLabel.textContent = total;
+  }
+
+  if (total > 0) {
+    if (workMultiImagePreviewBox) workMultiImagePreviewBox.style.display = 'block';
+  } else {
+    if (workMultiImagePreviewBox) workMultiImagePreviewBox.style.display = 'none';
+  }
+
+  if (workMultiPreviewGrid) {
+    workMultiPreviewGrid.innerHTML = '';
+    selectedImages.forEach((imgSrc, idx) => {
+      const card = document.createElement('div');
+      card.className = 'multi-preview-card';
+      card.innerHTML = `
+        <div class="multi-preview-img-wrap">
+          <img src="${imgSrc}" alt="Photo ${idx + 1}" loading="lazy" />
+          ${idx === 0 ? '<span class="multi-preview-cover-badge">COVER</span>' : ''}
+          <button type="button" class="multi-preview-remove-btn" data-idx="${idx}" title="Remove this photo">&times;</button>
+        </div>
+      `;
+
+      const removeBtn = card.querySelector('.multi-preview-remove-btn');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          removeImageAt(idx);
+        });
+      }
+
+      workMultiPreviewGrid.appendChild(card);
+    });
+  }
+}
+
+function removeImageAt(index) {
+  if (index >= 0 && index < selectedImages.length) {
+    selectedImages.splice(index, 1);
+    updateMultiImageUI();
+  }
+}
+
+function clearAllImages() {
+  selectedImages = [];
+  updateMultiImageUI();
+  if (workFileInput) workFileInput.value = '';
+  if (workImageInput) workImageInput.value = '';
+}
+
+// Picture compression helper (Processes single or multiple files)
+function processImageFiles(fileList) {
+  if (!fileList || fileList.length === 0) return;
+
+  const files = Array.from(fileList);
+  const remainingSlots = 10 - selectedImages.length;
+  if (remainingSlots <= 0) {
+    if (adminFormStatus) {
+      adminFormStatus.className = 'admin-status-msg error';
+      adminFormStatus.textContent = 'Maximum of 10 pictures per artwork reached.';
+      adminFormStatus.style.display = 'block';
+    }
+    return;
+  }
+
+  const toProcess = files.slice(0, remainingSlots);
+
+  toProcess.forEach((file) => {
+    if (!file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const rawDataUrl = e.target.result;
+
+      // If SVG, push directly
+      if (file.type === 'image/svg+xml') {
+        selectedImages.push(rawDataUrl);
+        updateMultiImageUI();
+        return;
+      }
+
+      // Optimize raster images using Canvas
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 1100;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedUrl = canvas.toDataURL('image/jpeg', 0.82);
+        selectedImages.push(compressedUrl);
+        updateMultiImageUI();
+      };
+      img.src = rawDataUrl;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Add direct URL image button handler
+if (addUrlImageBtn && workImageInput) {
+  addUrlImageBtn.addEventListener('click', () => {
+    const url = workImageInput.value.trim();
+    if (!url) return;
+    if (selectedImages.length >= 10) {
+      alert('Maximum of 10 pictures reached for this project.');
+      return;
+    }
+    selectedImages.push(url);
+    workImageInput.value = '';
+    updateMultiImageUI();
+  });
+}
+
+// Add More Images button handler
+if (addMoreImagesBtn && workFileInput) {
+  addMoreImagesBtn.addEventListener('click', () => {
+    workFileInput.click();
+  });
+}
+
+// Dropzone and file input handlers
+if (workDropzone) {
+  workDropzone.addEventListener('click', () => {
+    if (workFileInput) workFileInput.click();
+  });
+  workDropzone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (workFileInput) workFileInput.click();
+    }
+  });
+
+  ['dragenter', 'dragover'].forEach((eventName) => {
+    workDropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      workDropzone.classList.add('dragover');
+    });
+  });
+
+  ['dragleave', 'drop'].forEach((eventName) => {
+    workDropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      workDropzone.classList.remove('dragover');
+    });
+  });
+
+  workDropzone.addEventListener('drop', (e) => {
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processImageFiles(e.dataTransfer.files);
+    }
+  });
+}
+
+if (workFileInput) {
+  workFileInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processImageFiles(e.target.files);
+    }
+  });
+}
+
+// Cancel Editing Mode and restore Add New form
+function resetAdminForm() {
+  if (editWorkIdInput) editWorkIdInput.value = '';
+  if (adminAddWorkForm) adminAddWorkForm.reset();
+  clearAllImages();
+  if (adminFormCardTitle) adminFormCardTitle.textContent = '✨ Add New Portfolio Artwork';
+  if (adminFormCardSub) adminFormCardSub.textContent = 'Upload flyer graphics, web screenshots, and include direct project links.';
+  if (adminSubmitWorkBtn) adminSubmitWorkBtn.textContent = '🚀 Publish to Live Portfolio';
+  if (adminCancelEditBtn) adminCancelEditBtn.style.display = 'none';
+  if (adminFormStatus) {
+    adminFormStatus.style.display = 'none';
+    adminFormStatus.textContent = '';
+  }
+}
+
+if (adminCancelEditBtn) {
+  adminCancelEditBtn.addEventListener('click', resetAdminForm);
+}
 
 function showAdminModal() {
   if (adminModal) {
@@ -982,11 +1316,19 @@ function showAdminModal() {
     if (!isMasterAuthenticated) {
       if (adminAuthSection) adminAuthSection.style.display = 'block';
       if (adminDashboardSection) adminDashboardSection.style.display = 'none';
+      if (adminPortalStatusChip) {
+        adminPortalStatusChip.className = 'admin-status-chip locked';
+        adminPortalStatusChip.textContent = '🔒 Passcode Protected';
+      }
       if (adminPasscodeInput) {
         adminPasscodeInput.value = '';
         setTimeout(() => adminPasscodeInput.focus(), 150);
       }
     } else {
+      if (adminPortalStatusChip) {
+        adminPortalStatusChip.className = 'admin-status-chip unlocked';
+        adminPortalStatusChip.textContent = '🔓 Studio Full Access';
+      }
       renderAdminWorksList();
     }
   }
@@ -997,8 +1339,13 @@ function hideAdminModal() {
     adminModal.classList.remove('open');
     // Lock the dashboard every time modal is closed so password is always required next time
     isMasterAuthenticated = false;
+    clearSelectedImage();
     if (adminAuthSection) adminAuthSection.style.display = 'block';
     if (adminDashboardSection) adminDashboardSection.style.display = 'none';
+    if (adminPortalStatusChip) {
+      adminPortalStatusChip.className = 'admin-status-chip locked';
+      adminPortalStatusChip.textContent = '🔒 Passcode Protected';
+    }
     if (adminPasscodeInput) adminPasscodeInput.value = '';
     if (adminAuthStatus) {
       adminAuthStatus.style.display = 'none';
@@ -1032,20 +1379,18 @@ if (closeAdminBtn) {
   closeAdminBtn.addEventListener('click', hideAdminModal);
 }
 
-if (adminModal) {
-  adminModal.addEventListener('click', (e) => {
-    if (e.target === adminModal) {
-      hideAdminModal();
-    }
-  });
-}
-
-// Escape key closes modals
+// Keyboard navigation for modals and lightbox
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     hideAdminModal();
     if (lightboxModal) lightboxModal.classList.remove('open');
     if (quoteModal) quoteModal.classList.remove('open');
+  } else if (lightboxModal && lightboxModal.classList.contains('open')) {
+    if (e.key === 'ArrowLeft') {
+      prevLightboxImage();
+    } else if (e.key === 'ArrowRight') {
+      nextLightboxImage();
+    }
   }
 });
 
@@ -1073,13 +1418,16 @@ if (adminPasscodeForm) {
     if (entered === MASTER_PASSCODE) {
       isMasterAuthenticated = true;
       adminAuthStatus.className = 'admin-status-msg success';
-      adminAuthStatus.textContent = '✓ Passcode verified! Opening Studio Dashboard...';
+      adminAuthStatus.textContent = '✓ Passcode verified! Opening Studio Workspace...';
       adminAuthStatus.style.display = 'block';
 
       setTimeout(() => {
         if (adminAuthSection) adminAuthSection.style.display = 'none';
         if (adminDashboardSection) adminDashboardSection.style.display = 'block';
-        if (adminUserEmail) adminUserEmail.textContent = OWNER_EMAIL;
+        if (adminPortalStatusChip) {
+          adminPortalStatusChip.className = 'admin-status-chip unlocked';
+          adminPortalStatusChip.textContent = '🔓 Studio Full Access';
+        }
         if (adminFormStatus) {
           adminFormStatus.className = 'admin-status-msg success';
           adminFormStatus.textContent = 'Welcome Samuel! Master privileges active.';
@@ -1102,12 +1450,17 @@ if (adminPasscodeForm) {
 if (adminSignOutBtn) {
   adminSignOutBtn.addEventListener('click', () => {
     isMasterAuthenticated = false;
+    clearSelectedImage();
     if (adminDashboardSection) adminDashboardSection.style.display = 'none';
     if (adminAuthSection) adminAuthSection.style.display = 'block';
+    if (adminPortalStatusChip) {
+      adminPortalStatusChip.className = 'admin-status-chip locked';
+      adminPortalStatusChip.textContent = '🔒 Passcode Protected';
+    }
     if (adminPasscodeInput) adminPasscodeInput.value = '';
     if (adminAuthStatus) {
       adminAuthStatus.className = 'admin-status-msg info';
-      adminAuthStatus.textContent = 'Dashboard locked. Enter passcode to access.';
+      adminAuthStatus.textContent = 'Workspace locked. Enter master passcode to access.';
       adminAuthStatus.style.display = 'block';
     }
   });
@@ -1120,59 +1473,125 @@ function renderAdminWorksList() {
   if (adminWorksCount) adminWorksCount.textContent = items.length;
 
   if (items.length === 0) {
-    adminWorksList.innerHTML = '<p class="admin-empty">No portfolio items found.</p>';
+    adminWorksList.innerHTML = '<p class="admin-empty">No portfolio items found in Cloud Firestore.</p>';
     return;
   }
 
   adminWorksList.innerHTML = '';
   items.forEach((item) => {
-    const row = document.createElement('div');
-    row.className = 'admin-work-row';
-    const imgSrc = item.image || '/assets/images/flyer-studio.svg';
-    row.innerHTML = `
-      <div class="admin-work-left">
-        <img src="${imgSrc}" alt="${item.title}" class="admin-work-thumb" />
-        <div class="admin-work-meta">
-          <span class="admin-work-name">${item.title}</span>
-          <span class="admin-work-tag">${item.category || 'work'}</span>
+    const card = document.createElement('div');
+    card.className = 'admin-work-card';
+    const allImgs = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+    const imgSrc = allImgs[0] || '/assets/images/flyer-studio.svg';
+    const linkUrl = item.link || item.externalUrl || '';
+
+    card.innerHTML = `
+      <div class="admin-work-card-info">
+        <img src="${imgSrc}" alt="${escapeHtml(item.title)}" class="admin-work-card-thumb" />
+        <div class="admin-work-card-details">
+          <span class="admin-work-card-title">${escapeHtml(item.title)}</span>
+          <div class="admin-work-card-meta">
+            <span class="admin-work-badge">${escapeHtml(item.category || 'work')}</span>
+            ${allImgs.length > 1 ? `<span class="admin-work-badge" style="background: rgba(255,255,255,0.08); color: #E2E8F0;">📷 ${allImgs.length} photos</span>` : ''}
+            ${linkUrl ? `
+              <a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" class="admin-work-test-link" title="Open and test live link">
+                🌐 Test Link ↗
+              </a>
+            ` : ''}
+          </div>
         </div>
       </div>
-      <button class="admin-del-btn" data-id="${item.id}" title="Delete from Cloud Firestore">Delete</button>
+      <div class="admin-work-card-actions">
+        <button type="button" class="admin-edit-btn" data-id="${item.id}" title="Edit this artwork">✏️ Edit</button>
+        <button type="button" class="admin-del-btn" data-id="${item.id}" title="Delete from Cloud Firestore">🗑️ Delete</button>
+      </div>
     `;
 
-    const delBtn = row.querySelector('.admin-del-btn');
-    delBtn.addEventListener('click', async () => {
-      const confirmDel = confirm(`Are you sure you want to remove "${item.title}"?`);
-      if (!confirmDel) return;
-
-      if (!isMasterAuthenticated) {
-        alert('Please enter your Master Secret Passcode to delete items.');
-        return;
-      }
-
-      try {
-        delBtn.disabled = true;
-        delBtn.textContent = '...';
-        await deleteDoc(doc(db, 'portfolio', item.id));
-        row.remove();
-        console.log('Artwork deleted from Firestore:', item.id);
-      } catch (err) {
-        handleFirestoreError(err, OperationType.DELETE, `portfolio/${item.id}`);
-        console.error('Error deleting artwork:', err);
-        if (adminFormStatus) {
-          adminFormStatus.className = 'admin-status-msg error';
-          adminFormStatus.textContent = `Could not delete: ${err.message || 'Permission denied. Verify you are signed in with samadeniran15@gmail.com'}`;
+    // Edit button click handler
+    const editBtn = card.querySelector('.admin-edit-btn');
+    if (editBtn) {
+      editBtn.addEventListener('click', () => {
+        if (!isMasterAuthenticated) {
+          alert('Please unlock with your Master Secret Passcode to edit items.');
+          return;
         }
-        delBtn.disabled = false;
-        delBtn.textContent = 'Delete';
-      }
-    });
 
-    adminWorksList.appendChild(row);
+        if (editWorkIdInput) editWorkIdInput.value = item.id;
+        const titleField = document.getElementById('workTitle');
+        const catField = document.getElementById('workCategory');
+        const linkField = document.getElementById('workLink');
+        const descField = document.getElementById('workDesc');
+
+        if (titleField) titleField.value = item.title || '';
+        if (catField) catField.value = item.category || 'flyers';
+        if (linkField) linkField.value = item.link || item.externalUrl || '';
+        if (descField) descField.value = item.description || '';
+
+        // Populate images
+        selectedImages = Array.isArray(item.images) && item.images.length > 0 
+          ? [...item.images] 
+          : (item.image ? [item.image] : []);
+        updateMultiImageUI();
+
+        // Update form headers and action buttons
+        if (adminFormCardTitle) adminFormCardTitle.textContent = `✏️ Edit Artwork: ${item.title}`;
+        if (adminFormCardSub) adminFormCardSub.textContent = 'Update pictures, live project links, category, or notes. Saved instantly.';
+        if (adminSubmitWorkBtn) adminSubmitWorkBtn.textContent = '💾 Save Changes to Live Portfolio';
+        if (adminCancelEditBtn) adminCancelEditBtn.style.display = 'block';
+
+        if (adminFormStatus) {
+          adminFormStatus.className = 'admin-status-msg info';
+          adminFormStatus.textContent = `Now editing "${item.title}". Make changes above and click Save.`;
+          adminFormStatus.style.display = 'block';
+        }
+
+        if (adminFormContainer) {
+          adminFormContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
+    // Delete button click handler
+    const delBtn = card.querySelector('.admin-del-btn');
+    if (delBtn) {
+      delBtn.addEventListener('click', async () => {
+        const confirmDel = confirm(`Are you sure you want to remove "${item.title}" from your live portfolio?`);
+        if (!confirmDel) return;
+
+        if (!isMasterAuthenticated) {
+          alert('Please unlock with your Master Secret Passcode to delete items.');
+          return;
+        }
+
+        try {
+          delBtn.disabled = true;
+          delBtn.textContent = '...';
+          await deleteDoc(doc(db, 'portfolio', item.id));
+          card.remove();
+          console.log('Artwork deleted from Firestore:', item.id);
+          // If currently editing this item, reset form
+          if (editWorkIdInput && editWorkIdInput.value === item.id) {
+            resetAdminForm();
+          }
+        } catch (err) {
+          handleFirestoreError(err, OperationType.DELETE, `portfolio/${item.id}`);
+          console.error('Error deleting artwork:', err);
+          if (adminFormStatus) {
+            adminFormStatus.className = 'admin-status-msg error';
+            adminFormStatus.textContent = `Could not delete: ${err.message || 'Permission denied'}`;
+            adminFormStatus.style.display = 'block';
+          }
+          delBtn.disabled = false;
+          delBtn.textContent = '🗑️ Delete';
+        }
+      });
+    }
+
+    adminWorksList.appendChild(card);
   });
 }
 
-// Add New Portfolio Artwork Form Handler
+// Add / Edit Portfolio Artwork Form Handler
 if (adminAddWorkForm) {
   adminAddWorkForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -1180,60 +1599,107 @@ if (adminAddWorkForm) {
       if (adminFormStatus) {
         adminFormStatus.className = 'admin-status-msg error';
         adminFormStatus.textContent = 'Passcode required. Please enter your secret passcode to publish.';
+        adminFormStatus.style.display = 'block';
       }
       return;
     }
+
+    const isEditMode = editWorkIdInput && editWorkIdInput.value.trim() !== '';
+    const editId = isEditMode ? editWorkIdInput.value.trim() : null;
 
     const title = document.getElementById('workTitle').value.trim();
     const category = document.getElementById('workCategory').value;
-    const image = document.getElementById('workImage').value.trim();
     const description = document.getElementById('workDesc').value.trim();
+    const rawUrlImage = workImageInput ? workImageInput.value.trim() : '';
+    
+    // Collect final images list
+    const finalImagesList = [...selectedImages];
+    if (rawUrlImage && !finalImagesList.includes(rawUrlImage)) {
+      finalImagesList.push(rawUrlImage);
+    }
 
-    if (!title || !image) {
+    if (!title || finalImagesList.length === 0) {
       if (adminFormStatus) {
         adminFormStatus.className = 'admin-status-msg error';
-        adminFormStatus.textContent = 'Title and Image URL are required.';
+        adminFormStatus.textContent = 'Please provide an artwork title and at least one picture (upload or image URL).';
+        adminFormStatus.style.display = 'block';
       }
       return;
     }
 
+    const primaryImage = finalImagesList[0];
+    const projectLink = workLinkInput ? workLinkInput.value.trim() : '';
+
     const submitBtn = document.getElementById('adminSubmitWorkBtn');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving to Cloud Firestore...';
+    submitBtn.textContent = isEditMode ? 'Saving Changes to Firestore...' : 'Publishing to Cloud Firestore...';
 
     if (adminFormStatus) {
       adminFormStatus.className = 'admin-status-msg info';
-      adminFormStatus.textContent = 'Uploading artwork record to Firestore...';
+      adminFormStatus.textContent = isEditMode ? 'Updating artwork in Firestore...' : 'Uploading artwork record to Firestore...';
+      adminFormStatus.style.display = 'block';
     }
 
     try {
-      const docId = 'item_' + Date.now();
-      const newArtwork = {
-        title,
-        category,
-        image,
-        description,
-        createdAt: new Date().toISOString()
-      };
+      if (isEditMode) {
+        // UPDATE EXISTING ITEM
+        const updateData = {
+          title,
+          category,
+          image: primaryImage,
+          images: finalImagesList,
+          description,
+          link: projectLink || null,
+          externalUrl: projectLink || null,
+          updatedAt: new Date().toISOString()
+        };
 
-      await setDoc(doc(db, 'portfolio', docId), newArtwork);
+        await updateDoc(doc(db, 'portfolio', editId), updateData);
 
-      if (adminFormStatus) {
-        adminFormStatus.className = 'admin-status-msg success';
-        adminFormStatus.textContent = `✓ "${title}" added to live portfolio successfully!`;
+        if (adminFormStatus) {
+          adminFormStatus.className = 'admin-status-msg success';
+          adminFormStatus.textContent = `✓ "${title}" updated successfully in live portfolio!`;
+          adminFormStatus.style.display = 'block';
+        }
+
+        resetAdminForm();
+      } else {
+        // CREATE NEW ITEM
+        const docId = 'item_' + Date.now();
+        const newArtwork = {
+          title,
+          category,
+          image: primaryImage,
+          images: finalImagesList,
+          description,
+          link: projectLink || null,
+          externalUrl: projectLink || null,
+          createdAt: new Date().toISOString()
+        };
+
+        await setDoc(doc(db, 'portfolio', docId), newArtwork);
+
+        if (adminFormStatus) {
+          adminFormStatus.className = 'admin-status-msg success';
+          adminFormStatus.textContent = `✓ "${title}" added to live portfolio successfully!`;
+          adminFormStatus.style.display = 'block';
+        }
+
+        resetAdminForm();
       }
-
-      adminAddWorkForm.reset();
     } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `portfolio/${docId}`);
-      console.error('Failed to write to Firestore:', err);
+      const opType = isEditMode ? OperationType.UPDATE : OperationType.WRITE;
+      const targetPath = isEditMode ? `portfolio/${editId}` : 'portfolio/new';
+      handleFirestoreError(err, opType, targetPath);
+      console.error('Failed Firestore operation:', err);
       if (adminFormStatus) {
         adminFormStatus.className = 'admin-status-msg error';
-        adminFormStatus.textContent = `Error publishing: ${err.message || 'Check your permissions'}`;
+        adminFormStatus.textContent = `Error: ${err.message || 'Check your permissions'}`;
+        adminFormStatus.style.display = 'block';
       }
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Add to Live Portfolio';
+      submitBtn.textContent = isEditMode ? '💾 Save Changes to Live Portfolio' : '🚀 Publish to Live Portfolio';
     }
   });
 }
