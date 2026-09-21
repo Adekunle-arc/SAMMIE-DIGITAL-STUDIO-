@@ -1803,6 +1803,7 @@ body.nav-open {
   inset: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 100000;
   background-color: #080A0F;
   display: flex;
@@ -1812,6 +1813,7 @@ body.nav-open {
   pointer-events: none;
   transition: opacity 0.25s ease, visibility 0.25s ease;
   overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .admin-fullscreen-portal.open {
@@ -1909,6 +1911,9 @@ body.nav-open {
   overflow-y: auto;
   position: relative;
   background-color: #080A0F;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
 }
 
 /* Centered Auth Card */
@@ -2661,6 +2666,371 @@ body.nav-open {
   color: #F8FAFC;
 }
 
+/* ==========================================================================
+   Mobile-Friendly Admin Portal (Phones & Touch Devices)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .admin-portal-header {
+    height: auto;
+    min-height: 56px;
+    padding: 0.6rem 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .admin-portal-branding {
+    gap: 0.55rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .admin-portal-logo {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .admin-portal-title {
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .admin-portal-subtitle {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .admin-portal-header-actions {
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .admin-status-chip {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.45rem;
+  }
+
+  .admin-exit-btn {
+    font-size: 0.76rem;
+    padding: 0.35rem 0.65rem;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Centered Auth Card on Mobile */
+  .admin-auth-card-wrap {
+    min-height: calc(100dvh - 58px);
+    padding: 1.5rem 0.85rem;
+    align-items: flex-start;
+  }
+
+  .admin-auth-card {
+    padding: 1.75rem 1.15rem;
+    border-radius: var(--radius-md);
+  }
+
+  .admin-auth-title {
+    font-size: 1.18rem;
+  }
+
+  .admin-auth-desc {
+    font-size: 0.84rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .admin-auth-card input {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+    min-height: 46px;
+  }
+
+  .admin-auth-card button[type="submit"] {
+    min-height: 46px;
+    font-size: 0.92rem;
+  }
+
+  /* Admin Dashboard Layout on Mobile */
+  .admin-dashboard-layout {
+    padding: 0.75rem 0.75rem 3.5rem;
+  }
+
+  .admin-dashboard-subbar {
+    padding: 0.75rem 0.85rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-dashboard-user {
+    justify-content: flex-start;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+  }
+
+  .admin-dashboard-subbar button {
+    width: 100%;
+    min-height: 40px;
+    justify-content: center;
+    font-size: 0.82rem;
+  }
+
+  /* Admin Dashboard Cards & Form */
+  .admin-dash-card {
+    padding: 1rem 0.85rem;
+    border-radius: var(--radius-md);
+  }
+
+  .admin-card-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .admin-card-title {
+    font-size: 1rem;
+  }
+
+  .admin-card-sub {
+    font-size: 0.78rem;
+  }
+
+  /* Form inputs mobile styling (16px base font size prevents iOS zoom) */
+  .admin-dash-form input,
+  .admin-dash-form select,
+  .admin-dash-form textarea,
+  .admin-seo-input-row input {
+    font-size: 16px !important;
+    min-height: 44px;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .admin-dash-form textarea {
+    min-height: 80px;
+  }
+
+  .work-dropzone {
+    padding: 1.2rem 0.75rem;
+  }
+
+  .dropzone-icon {
+    font-size: 1.6rem;
+  }
+
+  .dropzone-title {
+    font-size: 0.88rem;
+  }
+
+  .dropzone-sub {
+    font-size: 0.72rem;
+  }
+
+  .work-multi-preview-container {
+    padding: 0.7rem;
+  }
+
+  .work-multi-preview-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .multi-preview-img-wrap {
+    height: 70px;
+  }
+
+  .multi-preview-remove-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.85rem;
+  }
+
+  .url-input-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .url-input-row button {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .admin-form-actions-stack button {
+    min-height: 46px;
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+
+  /* Admin Works List on Mobile */
+  .admin-works-grid-list {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+    gap: 0.75rem;
+  }
+
+  .admin-work-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    border-radius: var(--radius-md);
+  }
+
+  .admin-work-card-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .admin-work-card-thumb {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+  }
+
+  .admin-work-card-details {
+    flex: 1;
+    min-width: 0;
+    gap: 0.25rem;
+  }
+
+  .admin-work-card-title {
+    font-size: 0.88rem;
+    white-space: normal;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .admin-work-card-meta {
+    gap: 0.35rem;
+  }
+
+  .admin-work-badge {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.4rem;
+  }
+
+  .admin-work-test-link {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.5rem;
+    min-height: 26px;
+  }
+
+  .admin-work-card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+    padding-top: 0.65rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .admin-edit-btn,
+  .admin-del-btn {
+    width: 100%;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.4rem 0.5rem;
+  }
+
+  /* Admin SEO / Google Search Console on Mobile */
+  .admin-seo-full-card {
+    padding: 1rem 0.85rem;
+    margin-top: 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
+  .admin-seo-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .admin-seo-title {
+    font-size: 0.98rem;
+  }
+
+  .admin-seo-sub {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .admin-seo-input-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .admin-seo-input-row input {
+    width: 100%;
+  }
+
+  .admin-seo-input-row button {
+    width: 100%;
+    min-height: 44px;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .admin-seo-active-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .admin-seo-code-chip {
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-all;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .admin-seo-quick-links {
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .admin-seo-link-btn {
+    width: 100%;
+    min-height: 40px;
+    justify-content: center;
+    font-size: 0.78rem;
+  }
+
+  .admin-seo-guide-col {
+    padding: 0.85rem 0.75rem;
+  }
+
+  .admin-seo-steps li {
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-portal-subtitle {
+    display: none;
+  }
+
+  .admin-status-chip {
+    display: none;
+  }
+
+  .work-multi-preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* Portfolio Card External Link Pill */
 .portfolio-external-pill {
   display: inline-flex;
@@ -2718,44 +3088,62 @@ body.nav-open {
 }
 
 .preloader-symbol {
-  width: 78px !important;
-  height: 78px !important;
-  max-width: 78px !important;
-  max-height: 78px !important;
+  width: 140px !important;
+  height: 140px !important;
+  max-width: 140px !important;
+  max-height: 140px !important;
   object-fit: contain !important;
   aspect-ratio: 1 / 1;
   display: block;
-  animation: preloaderSymbolBounce 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
-  filter: drop-shadow(0 0 20px rgba(255, 107, 0, 0.45));
+  animation: preloaderSymbolBounce 1.1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+  filter: drop-shadow(0 0 35px rgba(255, 107, 0, 0.55)) drop-shadow(0 0 10px rgba(255, 107, 0, 0.3));
 }
 
 .preloader-shadow {
-  width: 52px;
-  height: 8px;
-  background: radial-gradient(ellipse at center, rgba(255, 107, 0, 0.45) 0%, transparent 70%);
+  width: 96px;
+  height: 12px;
+  background: radial-gradient(ellipse at center, rgba(255, 107, 0, 0.5) 0%, transparent 70%);
   border-radius: 50%;
-  margin-top: 6px;
-  animation: preloaderShadowPulse 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+  margin-top: 10px;
+  animation: preloaderShadowPulse 1.1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
 }
 
 .preloader-brand-label {
   display: flex;
   align-items: center;
-  gap: 6px;
-  letter-spacing: 0.16em;
+  gap: 8px;
+  letter-spacing: 0.2em;
   font-family: var(--font-heading);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #F8FAFC;
   text-transform: uppercase;
+  margin-top: 0.25rem;
 }
 
 .preloader-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background-color: var(--primary-orange);
-  box-shadow: 0 0 8px var(--primary-orange);
+  box-shadow: 0 0 10px var(--primary-orange);
+}
+
+@media (max-width: 600px) {
+  .preloader-symbol {
+    width: 115px !important;
+    height: 115px !important;
+    max-width: 115px !important;
+    max-height: 115px !important;
+  }
+  .preloader-shadow {
+    width: 80px;
+    height: 10px;
+  }
+  .preloader-brand-label {
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+  }
 }
 
 @keyframes preloaderSymbolBounce {

@@ -65,6 +65,9 @@ const translations = {
     heroTitleHighlight: "Digital Experiences",
     heroTitleSuffix: " That Help Businesses Grow",
     heroSubtitle: "Modern websites, branding, and digital solutions designed to give businesses, organizations, and individuals a strong and credible online presence.",
+    heroHighlight1: "Fast & Reliable Delivery",
+    heroHighlight2: "Bespoke Design & Development",
+    heroHighlight3: "Digital Solutions for Businesses & Organizations",
     getStarted: "Get Started",
     requestQuote: "Request Quote",
     readyForProjects: "Ready for new projects",
@@ -118,6 +121,9 @@ const translations = {
     heroTitleHighlight: "Expériences Numériques",
     heroTitleSuffix: " qui Font Grandir les Entreprises",
     heroSubtitle: "Sites web modernes, identités de marque et solutions numériques conçus pour offrir aux entreprises et églises une visibilité crédible et puissante.",
+    heroHighlight1: "Livraison Rapide & Fiable",
+    heroHighlight2: "Conception & Développement Sur Mesure",
+    heroHighlight3: "Solutions Numériques pour Entreprises & Organisations",
     getStarted: "Commencer",
     requestQuote: "Demander un Devis",
     readyForProjects: "Disponible pour nouveaux projets",
@@ -171,6 +177,9 @@ const translations = {
     heroTitleHighlight: "Experiencias Digitales",
     heroTitleSuffix: " que Impulsan tu Negocio",
     heroSubtitle: "Sitios web modernos, identidad de marca y soluciones digitales diseñadas para dar a empresas y organizaciones una presencia sólida y creíble.",
+    heroHighlight1: "Entrega Rápida y Confiable",
+    heroHighlight2: "Diseño y Desarrollo a Medida",
+    heroHighlight3: "Soluciones Digitales para Empresas y Organizaciones",
     getStarted: "Comenzar Ahora",
     requestQuote: "Solicitar Cotización",
     readyForProjects: "Disponible para nuevos proyectos",
@@ -224,6 +233,9 @@ const translations = {
     heroTitleHighlight: "Digitale Erlebnisse",
     heroTitleSuffix: " für Nachhaltiges Wachstum",
     heroSubtitle: "Moderne Websites, Markenidentitäten und digitale Lösungen, die Unternehmen und Organisationen einen überzeugenden Online-Auftritt verleihen.",
+    heroHighlight1: "Schnelle & Zuverlässige Lieferung",
+    heroHighlight2: "Maßgeschneidertes Design & Entwicklung",
+    heroHighlight3: "Digitale Lösungen für Unternehmen & Organisationen",
     getStarted: "Jetzt Starten",
     requestQuote: "Angebot Anfragen",
     readyForProjects: "Bereit für neue Projekte",
@@ -277,6 +289,9 @@ const translations = {
     heroTitleHighlight: "Experiências Digitais",
     heroTitleSuffix: " que Fazem Seu Negócio Crescer",
     heroSubtitle: "Websites modernos, identidade de marca e soluções digitais criadas para dar a empresas e organizações uma presença online confiável e impactante.",
+    heroHighlight1: "Entrega Rápida e Confiável",
+    heroHighlight2: "Design e Desenvolvimento Sob Medida",
+    heroHighlight3: "Soluções Digitais para Empresas e Organizações",
     getStarted: "Começar Agora",
     requestQuote: "Solicitar Orçamento",
     readyForProjects: "Disponível para novos projetos",
@@ -330,6 +345,9 @@ const translations = {
     heroTitleHighlight: "تجارب رقمية استثنائية",
     heroTitleSuffix: " تساعد الشركات على النمو والازدهار",
     heroSubtitle: "مواقع إلكترونية حديثة، هويات بصرية وحلول رقمية مصممة لتعزيز حضور الشركات والمؤسسات بثقة ومصداقية عبر الإنترنت.",
+    heroHighlight1: "تسليم سريع وموثوق",
+    heroHighlight2: "تصميم وتطوير مخصص واحترافي",
+    heroHighlight3: "حلول رقمية للشركات والمؤسسات",
     getStarted: "ابدأ الآن",
     requestQuote: "طلب عرض سعر",
     readyForProjects: "جاهزون لاستقبال مشاريع جديدة",
@@ -383,6 +401,9 @@ const translations = {
     heroTitleHighlight: "Solid Digital Experiences",
     heroTitleSuffix: " Wey Dey Help Business Blow",
     heroSubtitle: "Modern websites, clean branding, and sharp flyers wey dey make businesses, churches, schools, and organizations get solid respect for internet.",
+    heroHighlight1: "Fast & Reliable Delivery",
+    heroHighlight2: "Bespoke Design & Development",
+    heroHighlight3: "Digital Solutions for Businesses & Organizations",
     getStarted: "Start Now",
     requestQuote: "Ask for Price",
     readyForProjects: "Ready to take new projects now",
@@ -1309,6 +1330,7 @@ if (adminCancelEditBtn) {
 function showAdminModal() {
   if (adminModal) {
     adminModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
     if (window.location.hash !== '#admin') {
       history.pushState(null, '', '#admin');
     }
@@ -1337,6 +1359,7 @@ function showAdminModal() {
 function hideAdminModal() {
   if (adminModal) {
     adminModal.classList.remove('open');
+    document.body.style.overflow = '';
     // Lock the dashboard every time modal is closed so password is always required next time
     isMasterAuthenticated = false;
     clearSelectedImage();
