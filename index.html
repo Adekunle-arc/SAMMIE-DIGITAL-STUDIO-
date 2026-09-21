@@ -109,12 +109,48 @@
       .lang-menu.open {
         display: block !important;
       }
+      /* Preloader Critical Display */
+      .site-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 999999;
+        background-color: #090B10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .site-preloader.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s ease;
+      }
     </style>
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/style.css?v=2.1" />
+    <link rel="stylesheet" href="/style.css?v=2.2" />
   </head>
   <body>
+    <!-- Standalone Symbol Logo Preloader & Animated Intro -->
+    <div id="sitePreloader" class="site-preloader" aria-label="Loading Sammie Digital Studio">
+      <div class="preloader-inner">
+        <div class="preloader-logo-container">
+          <img
+            src="/assets/images/logo.png"
+            alt="Sammie Digital Studio Standalone Symbol Logo"
+            class="preloader-symbol"
+            width="78"
+            height="78"
+            loading="eager"
+          />
+          <div class="preloader-shadow"></div>
+        </div>
+        <div class="preloader-brand-label">
+          <span>SAMMIE</span>
+          <span class="preloader-dot"></span>
+        </div>
+      </div>
+    </div>
     <!-- Site Navigation Header -->
     <header class="site-header" id="header">
       <div class="container header-container">
@@ -229,7 +265,7 @@
 
           <h1 class="hero-title">
             <span data-i18n="heroTitlePrefix">We Build </span>
-            <span class="text-orange" data-i18n="heroTitleHighlight"
+            <span class="text-orange hero-highlight-underline" data-i18n="heroTitleHighlight"
               >Digital Experiences</span
             >
             <span data-i18n="heroTitleSuffix"> That Help Businesses Grow</span>
@@ -707,14 +743,11 @@
         </div>
 
         <div class="footer-bottom">
-          <span
-            >© 2026 <strong>Sammie Digital Studio</strong>. All Rights Reserved. Lead by <strong>Adeniran Samuel Inioluwa</strong>.</span
-          >
+          <span class="copyright-text">
+            © 2026 <a href="#admin" id="footerAdminLink" class="copyright-portal-link" title="Sammie Digital Studio"><strong>Sammie Digital Studio</strong></a>. All Rights Reserved. Lead by <strong>Adeniran Samuel Inioluwa</strong>.
+          </span>
           <div class="footer-bottom-links">
             <span class="text-orange">Design. Develop. Grow.</span>
-            <a href="#admin" id="footerAdminLink" class="admin-portal-link" title="Studio Admin Management">
-              🔒 Studio Admin
-            </a>
           </div>
         </div>
       </div>
@@ -822,23 +855,38 @@
         </div>
 
         <div class="modal-body admin-modal-body">
-          <!-- Auth Section: Not Logged In -->
+          <!-- Auth Section: Passcode Verification -->
           <div id="adminAuthSection" class="admin-panel-section">
             <p class="admin-instruction">
-              Authorized studio management portal for <strong>samadeniran15@gmail.com</strong>. Sign in with Google to manage artworks, flyers, and website items stored in Cloud Firestore.
+              Enter your Studio Master Passcode to unlock portfolio and artwork management:
             </p>
-            <div class="admin-login-box">
-              <button id="adminGoogleSignInBtn" class="btn btn-primary btn-block">
-                <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 8px; vertical-align: middle;">
-                  <path fill="#ffffff" d="M21.35 11.1H12v2.98h5.36c-.23 1.25-.94 2.31-1.99 3.02v2.51h3.22c1.88-1.73 2.97-4.28 2.97-7.41 0-.74-.07-1.45-.21-2.1z"/>
-                  <path fill="#ffffff" d="M12 21c2.7 0 4.96-.9 6.62-2.43l-3.22-2.51c-.9.6-2.04.96-3.4.96-2.6 0-4.81-1.76-5.6-4.12H3.06v2.59C4.75 18.73 8.11 21 12 21z"/>
-                  <path fill="#ffffff" d="M6.4 12.9c-.2-.6-.31-1.24-.31-1.9s.11-1.3.31-1.9V6.51H3.06C2.39 7.84 2 9.38 2 11s.39 3.16 1.06 4.49l3.34-2.59z"/>
-                  <path fill="#ffffff" d="M12 4.96c1.47 0 2.79.51 3.82 1.5l2.87-2.87C16.95 1.93 14.7 1 12 1 8.11 1 4.75 3.27 3.06 6.51l3.34 2.59c.79-2.36 3-4.14 5.6-4.14z"/>
-                </svg>
-                Sign in with Google
+            <form id="adminPasscodeForm" class="admin-form" style="padding: 1.5rem;">
+              <div class="form-group">
+                <label for="adminPasscodeInput">Master Secret Passcode *</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input
+                    type="password"
+                    id="adminPasscodeInput"
+                    placeholder="Enter Master Secret Passcode"
+                    autocomplete="off"
+                    required
+                    style="width: 100%; padding-right: 42px;"
+                  />
+                  <button
+                    type="button"
+                    id="togglePasscodeVisibility"
+                    aria-label="Toggle password visibility"
+                    style="position: absolute; right: 8px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;"
+                  >
+                    👁️
+                  </button>
+                </div>
+              </div>
+              <button type="submit" id="adminUnlockBtn" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
+                Unlock Studio Dashboard
               </button>
-              <div id="adminAuthStatus" class="admin-status-msg"></div>
-            </div>
+              <div id="adminAuthStatus" class="admin-status-msg" style="display: none; width: 100%; margin-top: 0.75rem;"></div>
+            </form>
           </div>
 
           <!-- Logged In / Management Section -->
@@ -913,6 +961,36 @@
         💬 Chat on WhatsApp
       </a>
     </div>
+
+    <!-- Preloader Animation & Entrance Controller -->
+    <script>
+      (function() {
+        const preloader = document.getElementById('sitePreloader');
+        if (!preloader) return;
+        const startTime = Date.now();
+        const MIN_DISPLAY_TIME = 950; // Plays the energetic bouncing logo animation cleanly
+
+        function dismissPreloader() {
+          const elapsed = Date.now() - startTime;
+          const remaining = Math.max(0, MIN_DISPLAY_TIME - elapsed);
+          setTimeout(function() {
+            preloader.classList.add('fade-out');
+            setTimeout(function() {
+              if (preloader.parentNode) {
+                preloader.remove();
+              }
+            }, 450);
+          }, remaining);
+        }
+
+        if (document.readyState === 'complete') {
+          dismissPreloader();
+        } else {
+          window.addEventListener('load', dismissPreloader);
+          setTimeout(dismissPreloader, 2500);
+        }
+      })();
+    </script>
 
     <!-- Clean Vanilla JavaScript Application Engine with Firebase & Cloud Firestore -->
     <script type="module" src="/app.js"></script>

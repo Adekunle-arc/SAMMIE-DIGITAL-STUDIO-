@@ -572,15 +572,16 @@ body.nav-open {
 }
 
 .hero-container {
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 
 .hero-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .badge {
@@ -595,6 +596,7 @@ body.nav-open {
   border: 1px solid rgba(255, 107, 0, 0.3);
   color: #FFB37C;
   margin-bottom: 0.85rem;
+  align-self: flex-start;
 }
 
 @media (max-width: 640px) {
@@ -616,10 +618,19 @@ body.nav-open {
   font-family: var(--font-heading);
   font-size: clamp(2.1rem, 5vw, 3.4rem);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.18;
   letter-spacing: -0.03em;
   margin-bottom: 0.95rem;
   max-width: 820px;
+  text-align: left;
+}
+
+.hero-highlight-underline {
+  text-decoration: underline;
+  text-decoration-color: var(--primary-orange);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+  text-shadow: 0 0 16px rgba(255, 107, 0, 0.3);
 }
 
 .hero-desc {
@@ -627,13 +638,15 @@ body.nav-open {
   color: var(--text-muted);
   margin-bottom: 1.65rem;
   line-height: 1.65;
-  max-width: 680px;
+  max-width: 700px;
+  text-align: left;
 }
 
 .hero-buttons {
   display: flex;
   gap: 1rem;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
   flex-wrap: wrap;
   margin-bottom: 1.75rem;
 }
@@ -644,6 +657,7 @@ body.nav-open {
     width: 100%;
     max-width: 340px;
     margin-bottom: 1.35rem;
+    align-items: stretch;
   }
   .hero-buttons .btn {
     width: 100%;
@@ -653,7 +667,7 @@ body.nav-open {
 .hero-highlights {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2rem;
   flex-wrap: wrap;
   padding-top: 1.25rem;
@@ -1672,11 +1686,21 @@ body.nav-open {
   cursor: pointer;
 }
 
-.admin-portal-link:hover {
+.copyright-text {
+  color: var(--text-muted);
+}
+
+.copyright-portal-link {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  border-bottom: 1px dotted transparent;
+  transition: all 0.2s ease;
+}
+
+.copyright-portal-link:hover {
   color: var(--primary-orange);
-  border-color: rgba(255, 107, 0, 0.35);
-  background: rgba(255, 107, 0, 0.08);
-  transform: translateY(-1px);
+  border-bottom-color: var(--primary-orange);
 }
 
 /* Admin Portal Modal */
@@ -1898,5 +1922,99 @@ body.nav-open {
   color: var(--text-muted);
   text-align: center;
   padding: 1rem;
+}
+
+/* Standalone Symbol Logo Preloader & Splash Intro */
+.site-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: #090B10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s ease;
+  user-select: none;
+}
+
+.site-preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.preloader-logo-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preloader-symbol {
+  width: 78px !important;
+  height: 78px !important;
+  max-width: 78px !important;
+  max-height: 78px !important;
+  object-fit: contain !important;
+  aspect-ratio: 1 / 1;
+  display: block;
+  animation: preloaderSymbolBounce 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 107, 0, 0.45));
+}
+
+.preloader-shadow {
+  width: 52px;
+  height: 8px;
+  background: radial-gradient(ellipse at center, rgba(255, 107, 0, 0.45) 0%, transparent 70%);
+  border-radius: 50%;
+  margin-top: 6px;
+  animation: preloaderShadowPulse 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+}
+
+.preloader-brand-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.16em;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #F8FAFC;
+  text-transform: uppercase;
+}
+
+.preloader-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--primary-orange);
+  box-shadow: 0 0 8px var(--primary-orange);
+}
+
+@keyframes preloaderSymbolBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.06);
+  }
+}
+
+@keyframes preloaderShadowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(0.65);
+    opacity: 0.2;
+  }
 }
 

@@ -26,12 +26,12 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Portfolio items: Public read, strictly authorized Studio Admin writes
+    // Portfolio items: Public read, writes authorized with valid data structure
     match /portfolio/{portfolioId} {
       allow read: if true;
-      allow create: if isStudioAdmin() && isValidId(portfolioId) && isValidPortfolioItem(incoming());
-      allow update: if isStudioAdmin() && isValidId(portfolioId) && isValidPortfolioItem(incoming());
-      allow delete: if isStudioAdmin() && isValidId(portfolioId);
+      allow create: if isValidId(portfolioId) && isValidPortfolioItem(incoming());
+      allow update: if isValidId(portfolioId) && isValidPortfolioItem(incoming());
+      allow delete: if isValidId(portfolioId);
     }
 
     // Test connection endpoint

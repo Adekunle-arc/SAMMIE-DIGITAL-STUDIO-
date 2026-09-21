@@ -1,7 +1,6 @@
 // Sammie Digital Studio - Clean Pure JavaScript Engine
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 
 // 1. Firebase & Cloud Firestore Setup
 const firebaseConfig = {
@@ -18,10 +17,6 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Firestore with the studio database ID
 const db = getFirestore(app, "ai-studio-sammiedigitalstu-d0267da7-ad4a-4e5d-b71b-6a0163321355");
-
-// Initialize Firebase Authentication
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
 
 // Firestore Error Handler & Operation Types
 const OperationType = {
@@ -962,7 +957,9 @@ const closeAdminBtn = document.getElementById('closeAdminBtn');
 const footerAdminLink = document.getElementById('footerAdminLink');
 const adminAuthSection = document.getElementById('adminAuthSection');
 const adminDashboardSection = document.getElementById('adminDashboardSection');
-const adminGoogleSignInBtn = document.getElementById('adminGoogleSignInBtn');
+const adminPasscodeForm = document.getElementById('adminPasscodeForm');
+const adminPasscodeInput = document.getElementById('adminPasscodeInput');
+const togglePasscodeVisibility = document.getElementById('togglePasscodeVisibility');
 const adminSignOutBtn = document.getElementById('adminSignOutBtn');
 const adminUserEmail = document.getElementById('adminUserEmail');
 const adminAuthStatus = document.getElementById('adminAuthStatus');
@@ -971,8 +968,9 @@ const adminFormStatus = document.getElementById('adminFormStatus');
 const adminWorksList = document.getElementById('adminWorksList');
 const adminWorksCount = document.getElementById('adminWorksCount');
 
-const AUTHORIZED_ADMIN_EMAIL = 'samadeniran15@gmail.com';
-let currentUser = null;
+const MASTER_PASSCODE = 'Adekunle2008';
+const OWNER_EMAIL = 'samadeniran15@gmail.com';
+let isMasterAuthenticated = false;
 
 function showAdminModal() {
   if (adminModal) {
@@ -980,13 +978,33 @@ function showAdminModal() {
     if (window.location.hash !== '#admin') {
       history.pushState(null, '', '#admin');
     }
-    renderAdminWorksList();
+    // Always prompt for password on open for security
+    if (!isMasterAuthenticated) {
+      if (adminAuthSection) adminAuthSection.style.display = 'block';
+      if (adminDashboardSection) adminDashboardSection.style.display = 'none';
+      if (adminPasscodeInput) {
+        adminPasscodeInput.value = '';
+        setTimeout(() => adminPasscodeInput.focus(), 150);
+      }
+    } else {
+      renderAdminWorksList();
+    }
   }
 }
 
 function hideAdminModal() {
   if (adminModal) {
     adminModal.classList.remove('open');
+    // Lock the dashboard every time modal is closed so password is always required next time
+    isMasterAuthenticated = false;
+    if (adminAuthSection) adminAuthSection.style.display = 'block';
+    if (adminDashboardSection) adminDashboardSection.style.display = 'none';
+    if (adminPasscodeInput) adminPasscodeInput.value = '';
+    if (adminAuthStatus) {
+      adminAuthStatus.style.display = 'none';
+      adminAuthStatus.textContent = '';
+    }
+
     if (window.location.hash === '#admin') {
       history.pushState(null, '', window.location.pathname + window.location.search);
     }
@@ -1031,72 +1049,66 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Update Admin UI according to Auth State
-function updateAdminAuthState(user) {
-  currentUser = user;
-  if (!user) {
-    if (adminAuthSection) adminAuthSection.style.display = 'block';
-    if (adminDashboardSection) adminDashboardSection.style.display = 'none';
-    if (adminAuthStatus) {
-      adminAuthStatus.className = 'admin-status-msg';
-      adminAuthStatus.textContent = '';
-      adminAuthStatus.style.display = 'none';
-    }
-  } else {
-    const isOwner = user.email && user.email.toLowerCase() === AUTHORIZED_ADMIN_EMAIL.toLowerCase();
-    if (adminUserEmail) adminUserEmail.textContent = user.email;
-
-    if (adminAuthSection) adminAuthSection.style.display = 'none';
-    if (adminDashboardSection) adminDashboardSection.style.display = 'block';
-
-    if (!isOwner) {
-      if (adminFormStatus) {
-        adminFormStatus.className = 'admin-status-msg error';
-        adminFormStatus.textContent = `Signed in as ${user.email}. Notice: Only ${AUTHORIZED_ADMIN_EMAIL} has Firestore write authorization.`;
-      }
+// Toggle password visibility
+if (togglePasscodeVisibility && adminPasscodeInput) {
+  togglePasscodeVisibility.addEventListener('click', () => {
+    if (adminPasscodeInput.type === 'password') {
+      adminPasscodeInput.type = 'text';
+      togglePasscodeVisibility.textContent = '🔒';
     } else {
-      if (adminFormStatus) {
-        adminFormStatus.className = 'admin-status-msg success';
-        adminFormStatus.textContent = 'Welcome Samuel! You are authorized to manage portfolio items.';
-      }
+      adminPasscodeInput.type = 'password';
+      togglePasscodeVisibility.textContent = '👁️';
     }
-    renderAdminWorksList();
-  }
+  });
 }
 
-// Track Auth State changes
-onAuthStateChanged(auth, (user) => {
-  updateAdminAuthState(user);
-});
+// Handle Passcode Submission
+if (adminPasscodeForm) {
+  adminPasscodeForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const entered = adminPasscodeInput ? adminPasscodeInput.value.trim() : '';
 
-// Google Sign-In button
-if (adminGoogleSignInBtn) {
-  adminGoogleSignInBtn.addEventListener('click', async () => {
-    try {
-      if (adminAuthStatus) {
-        adminAuthStatus.className = 'admin-status-msg info';
-        adminAuthStatus.textContent = 'Connecting to Google Authentication...';
-      }
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log('Admin logged in:', result.user.email);
-    } catch (err) {
-      console.error('Sign in error:', err);
-      if (adminAuthStatus) {
-        adminAuthStatus.className = 'admin-status-msg error';
-        adminAuthStatus.textContent = `Sign-in error: ${err.message || 'Popup closed or blocked'}`;
+    if (!adminAuthStatus) return;
+
+    if (entered === MASTER_PASSCODE) {
+      isMasterAuthenticated = true;
+      adminAuthStatus.className = 'admin-status-msg success';
+      adminAuthStatus.textContent = '✓ Passcode verified! Opening Studio Dashboard...';
+      adminAuthStatus.style.display = 'block';
+
+      setTimeout(() => {
+        if (adminAuthSection) adminAuthSection.style.display = 'none';
+        if (adminDashboardSection) adminDashboardSection.style.display = 'block';
+        if (adminUserEmail) adminUserEmail.textContent = OWNER_EMAIL;
+        if (adminFormStatus) {
+          adminFormStatus.className = 'admin-status-msg success';
+          adminFormStatus.textContent = 'Welcome Samuel! Master privileges active.';
+          adminFormStatus.style.display = 'block';
+        }
+        renderAdminWorksList();
+      }, 400);
+    } else {
+      adminAuthStatus.className = 'admin-status-msg error';
+      adminAuthStatus.textContent = 'Incorrect passcode. Please verify and try again.';
+      adminAuthStatus.style.display = 'block';
+      if (adminPasscodeInput) {
+        adminPasscodeInput.select();
       }
     }
   });
 }
 
-// Sign-Out button
+// Sign-Out button (Lock dashboard immediately)
 if (adminSignOutBtn) {
-  adminSignOutBtn.addEventListener('click', async () => {
-    try {
-      await signOut(auth);
-      updateAdminAuthState(null);
-    } catch (err) {
-      console.error('Sign out error:', err);
+  adminSignOutBtn.addEventListener('click', () => {
+    isMasterAuthenticated = false;
+    if (adminDashboardSection) adminDashboardSection.style.display = 'none';
+    if (adminAuthSection) adminAuthSection.style.display = 'block';
+    if (adminPasscodeInput) adminPasscodeInput.value = '';
+    if (adminAuthStatus) {
+      adminAuthStatus.className = 'admin-status-msg info';
+      adminAuthStatus.textContent = 'Dashboard locked. Enter passcode to access.';
+      adminAuthStatus.style.display = 'block';
     }
   });
 }
@@ -1133,8 +1145,8 @@ function renderAdminWorksList() {
       const confirmDel = confirm(`Are you sure you want to remove "${item.title}"?`);
       if (!confirmDel) return;
 
-      if (!currentUser) {
-        alert('Please sign in as Studio Admin to delete items.');
+      if (!isMasterAuthenticated) {
+        alert('Please enter your Master Secret Passcode to delete items.');
         return;
       }
 
@@ -1164,10 +1176,10 @@ function renderAdminWorksList() {
 if (adminAddWorkForm) {
   adminAddWorkForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!currentUser) {
+    if (!isMasterAuthenticated) {
       if (adminFormStatus) {
         adminFormStatus.className = 'admin-status-msg error';
-        adminFormStatus.textContent = 'You must be signed in with samadeniran15@gmail.com to publish.';
+        adminFormStatus.textContent = 'Passcode required. Please enter your secret passcode to publish.';
       }
       return;
     }
