@@ -31,12 +31,25 @@
         "createdAt": { "type": "string" }
       },
       "required": ["email", "role"]
+    },
+    "StudioSettings": {
+      "title": "StudioSettings",
+      "description": "Studio configuration settings including SEO and Google Search Console verification.",
+      "type": "object",
+      "properties": {
+        "googleSiteVerification": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
     }
   },
   "firestore": {
     "/portfolio/{portfolioId}": {
       "schema": "PortfolioItem",
       "description": "Publicly readable portfolio works managed by studio administrator."
+    },
+    "/settings/{settingId}": {
+      "schema": "StudioSettings",
+      "description": "Studio settings including Google Search Console verification token."
     },
     "/admins/{adminId}": {
       "schema": "AdminUser",

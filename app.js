@@ -1704,5 +1704,167 @@ if (adminAddWorkForm) {
   });
 }
 
+// ==========================================
+// 12. Google Search Console & SEO Management
+// ==========================================
+const googleSiteVerificationMeta = document.getElementById('googleSiteVerificationMeta');
+const adminGscForm = document.getElementById('adminGscForm');
+const gscVerificationInput = document.getElementById('gscVerificationInput');
+const saveGscBtn = document.getElementById('saveGscBtn');
+const clearGscBtn = document.getElementById('clearGscBtn');
+const gscActiveCodeDisplay = document.getElementById('gscActiveCodeDisplay');
+const gscStatusBadge = document.getElementById('gscStatusBadge');
+const gscFormStatus = document.getElementById('gscFormStatus');
+
+let currentGscToken = localStorage.getItem('sammie_gsc_token') || '';
+
+// Clean input: extracts content from <meta name="google-site-verification" content="..." /> or raw token
+function extractGscToken(raw) {
+  if (!raw) return '';
+  const trimmed = raw.trim();
+  const metaMatch = trimmed.match(/content=["']([^"']+)["']/i);
+  if (metaMatch && metaMatch[1]) {
+    return metaMatch[1].trim();
+  }
+  return trimmed;
+}
+
+function updateGscUI(token) {
+  currentGscToken = token || '';
+  if (googleSiteVerificationMeta) {
+    googleSiteVerificationMeta.setAttribute('content', currentGscToken);
+  }
+
+  if (currentGscToken) {
+    if (gscActiveCodeDisplay) {
+      gscActiveCodeDisplay.textContent = currentGscToken;
+      gscActiveCodeDisplay.title = currentGscToken;
+    }
+    if (gscStatusBadge) {
+      gscStatusBadge.className = 'admin-seo-badge';
+      gscStatusBadge.innerHTML = '<span class="status-dot" style="background:#22C55E; display:inline-block; width:8px; height:8px; border-radius:50%;"></span> Active in HTML';
+    }
+    if (clearGscBtn) clearGscBtn.style.display = 'inline-block';
+    if (gscVerificationInput) gscVerificationInput.value = currentGscToken;
+  } else {
+    if (gscActiveCodeDisplay) {
+      gscActiveCodeDisplay.textContent = 'None set yet';
+    }
+    if (gscStatusBadge) {
+      gscStatusBadge.className = 'admin-seo-badge pending';
+      gscStatusBadge.innerHTML = '<span class="status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#FACC15;"></span> Needs Verification Tag';
+    }
+    if (clearGscBtn) clearGscBtn.style.display = 'none';
+    if (gscVerificationInput) gscVerificationInput.value = '';
+  }
+}
+
+// Initial update from local storage if available
+if (currentGscToken) {
+  updateGscUI(currentGscToken);
+}
+
+// Real-time listener for settings/seo in Firestore
+try {
+  onSnapshot(doc(db, 'settings', 'seo'), (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const token = data?.googleSiteVerification || '';
+      localStorage.setItem('sammie_gsc_token', token);
+      updateGscUI(token);
+    }
+  }, (err) => {
+    console.warn('GSC settings listener using local cache:', err.message);
+  });
+} catch (err) {
+  console.warn('GSC Firestore listener setup note:', err);
+}
+
+// GSC Form Submit
+if (adminGscForm) {
+  adminGscForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!isMasterAuthenticated) {
+      alert('Please unlock with your Master Secret Passcode first.');
+      return;
+    }
+
+    const rawInput = gscVerificationInput ? gscVerificationInput.value : '';
+    const cleanToken = extractGscToken(rawInput);
+
+    if (!cleanToken) {
+      if (gscFormStatus) {
+        gscFormStatus.className = 'admin-status-msg error';
+        gscFormStatus.textContent = 'Please enter your Google verification code or meta tag.';
+        gscFormStatus.style.display = 'block';
+      }
+      return;
+    }
+
+    if (saveGscBtn) {
+      saveGscBtn.disabled = true;
+      saveGscBtn.textContent = 'Saving...';
+    }
+
+    try {
+      await setDoc(doc(db, 'settings', 'seo'), {
+        googleSiteVerification: cleanToken,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      localStorage.setItem('sammie_gsc_token', cleanToken);
+      updateGscUI(cleanToken);
+
+      if (gscFormStatus) {
+        gscFormStatus.className = 'admin-status-msg success';
+        gscFormStatus.textContent = '✓ Google Site Verification activated successfully! You can now click "Verify" in Google Search Console.';
+        gscFormStatus.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Failed to save GSC token:', err);
+      handleFirestoreError(err, OperationType.WRITE, 'settings/seo');
+      if (gscFormStatus) {
+        gscFormStatus.className = 'admin-status-msg error';
+        gscFormStatus.textContent = `Could not save to Cloud Firestore: ${err.message}`;
+        gscFormStatus.style.display = 'block';
+      }
+    } finally {
+      if (saveGscBtn) {
+        saveGscBtn.disabled = false;
+        saveGscBtn.textContent = '💾 Save & Activate';
+      }
+    }
+  });
+}
+
+// Clear / Remove verification tag
+if (clearGscBtn) {
+  clearGscBtn.addEventListener('click', async () => {
+    if (!confirm('Remove this Google Search Console verification token?')) return;
+    if (!isMasterAuthenticated) {
+      alert('Please unlock with your Master Secret Passcode first.');
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, 'settings', 'seo'), {
+        googleSiteVerification: '',
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      localStorage.removeItem('sammie_gsc_token');
+      updateGscUI('');
+
+      if (gscFormStatus) {
+        gscFormStatus.className = 'admin-status-msg info';
+        gscFormStatus.textContent = 'Google Site Verification tag removed.';
+        gscFormStatus.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Failed to clear GSC token:', err);
+    }
+  });
+}
+
 // Initialize default language on load
 applyLanguage(currentLang);

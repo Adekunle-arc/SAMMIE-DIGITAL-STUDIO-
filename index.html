@@ -21,6 +21,9 @@
     <meta name="geo.region" content="NG" />
     <meta name="geo.placename" content="Nigeria" />
 
+    <!-- Google Search Console Site Verification -->
+    <meta name="google-site-verification" id="googleSiteVerificationMeta" content="" />
+
     <!-- OpenGraph Social Sharing Metadata -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Sammie Digital Studio" />
@@ -62,6 +65,66 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+
+    <!-- Schema.org JSON-LD Structured Data for Google Search Console & Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Sammie Digital Studio",
+      "alternateName": "Sammie Digital",
+      "url": "https://sammiedigitalstudio.com",
+      "logo": "/assets/images/logo.png",
+      "image": "/assets/images/logo.png",
+      "description": "Expert website development, flyer design, branding, and social media marketing agency in Nigeria.",
+      "telephone": "+2348168874826",
+      "email": "samadeniran15@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "NG",
+        "addressRegion": "Lagos"
+      },
+      "priceRange": "₦₦",
+      "openingHours": "Mo-Sa 08:00-20:00",
+      "sameAs": [
+        "https://wa.me/2348168874826"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Digital Studio Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Website Development"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Flyer & Graphic Design"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Brand Identity & Logo Design"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Social Media Marketing"
+            }
+          }
+        ]
+      }
+    }
+    </script>
 
     <!-- Google Fonts: Premium Agency Typography (Outfit + Plus Jakarta Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1031,6 +1094,96 @@
 
               <div id="adminWorksList" class="admin-works-grid-list">
                 <p class="admin-empty">Loading items from Firestore...</p>
+              </div>
+            </div>
+
+            <!-- Full Width Row: Google Search Console & SEO Tools -->
+            <div class="admin-seo-full-card">
+              <div class="admin-seo-header">
+                <div class="admin-seo-title-group">
+                  <span class="admin-seo-icon">🔍</span>
+                  <div>
+                    <h3 class="admin-seo-title">Google Search Console & SEO Verification</h3>
+                    <p class="admin-seo-sub">Connect your studio website directly to Google Search Console to index on Google Search.</p>
+                  </div>
+                </div>
+                <span id="gscStatusBadge" class="admin-seo-badge pending">
+                  <span class="status-dot"></span> Needs Verification Tag
+                </span>
+              </div>
+
+              <div class="admin-seo-body">
+                <!-- Left: Form to paste verification code -->
+                <div class="admin-seo-form-col">
+                  <form id="adminGscForm">
+                    <div class="form-group">
+                      <label for="gscVerificationInput">Google Site Verification Code / Meta Tag</label>
+                      <div class="admin-seo-input-row">
+                        <input
+                          type="text"
+                          id="gscVerificationInput"
+                          placeholder="e.g. google2894hf893hfd... or <meta name='google-site-verification' content='...' />"
+                          autocomplete="off"
+                        />
+                        <button type="submit" id="saveGscBtn" class="btn btn-primary btn-sm">
+                          💾 Save & Activate
+                        </button>
+                      </div>
+                      <span class="form-hint">
+                        Paste either the <code>content="..."</code> token or the entire <code>&lt;meta&gt;</code> tag provided by Google Search Console.
+                      </span>
+                    </div>
+                  </form>
+
+                  <div class="admin-seo-active-status" id="gscActiveStatusBox">
+                    <span>Active Meta Tag: <code class="admin-seo-code-chip" id="gscActiveCodeDisplay">None set yet</code></span>
+                    <button type="button" id="clearGscBtn" class="btn btn-outline btn-xs" style="display: none;">Remove</button>
+                  </div>
+
+                  <div id="gscFormStatus" class="admin-status-msg" style="display: none;"></div>
+
+                  <div>
+                    <span class="sub-label" style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">
+                      Crawler & Sitemaps Links:
+                    </span>
+                    <div class="admin-seo-quick-links">
+                      <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" class="admin-seo-link-btn">
+                        🌐 Open Google Search Console ↗
+                      </a>
+                      <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" class="admin-seo-link-btn">
+                        🗺️ View sitemap.xml ↗
+                      </a>
+                      <a href="/robots.txt" target="_blank" rel="noopener noreferrer" class="admin-seo-link-btn">
+                        🤖 View robots.txt ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Quick 4-Step Instructions -->
+                <div class="admin-seo-guide-col">
+                  <h4 class="admin-seo-guide-title">
+                    <span>⚡</span> 4-Step Verification Guide
+                  </h4>
+                  <ul class="admin-seo-steps">
+                    <li>
+                      <span class="admin-seo-step-num">1</span>
+                      <div>Open <strong>Google Search Console</strong> and enter your site URL under <em>URL prefix</em>.</div>
+                    </li>
+                    <li>
+                      <span class="admin-seo-step-num">2</span>
+                      <div>Select <strong>HTML tag</strong> as the verification method.</div>
+                    </li>
+                    <li>
+                      <span class="admin-seo-step-num">3</span>
+                      <div>Copy the code, paste it into the box on the left, and click <strong>Save & Activate</strong>.</div>
+                    </li>
+                    <li>
+                      <span class="admin-seo-step-num">4</span>
+                      <div>In Google Search Console, click <strong>Verify</strong>! Then go to <em>Sitemaps</em> and submit <code>sitemap.xml</code>.</div>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
