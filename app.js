@@ -29,15 +29,16 @@ const OperationType = {
 };
 
 function handleFirestoreError(error, operationType, path) {
+  const currentAuth = typeof auth !== 'undefined' ? auth : null;
   const errInfo = {
     error: error instanceof Error ? error.message : String(error),
     authInfo: {
-      userId: auth.currentUser?.uid || null,
-      email: auth.currentUser?.email || null,
-      emailVerified: auth.currentUser?.emailVerified || null,
-      isAnonymous: auth.currentUser?.isAnonymous || false,
-      tenantId: auth.currentUser?.tenantId || null,
-      providerInfo: auth.currentUser?.providerData?.map((p) => ({
+      userId: currentAuth?.currentUser?.uid || null,
+      email: currentAuth?.currentUser?.email || null,
+      emailVerified: currentAuth?.currentUser?.emailVerified || null,
+      isAnonymous: currentAuth?.currentUser?.isAnonymous || false,
+      tenantId: currentAuth?.currentUser?.tenantId || null,
+      providerInfo: currentAuth?.currentUser?.providerData?.map((p) => ({
         providerId: p.providerId,
         email: p.email,
       })) || []
@@ -1226,12 +1227,121 @@ const OWNER_EMAIL = 'samadeniran15@gmail.com';
 let isMasterAuthenticated = false;
 let selectedImages = []; // Array of Base64 or URL strings
 
+// Picture compression & optimization engine to respect Firestore's 1MB limit
+function compressImageToDataUrl(dataUrlOrFile, targetMaxDim, targetQuality) {
+  return new Promise((resolve) => {
+    if (!dataUrlOrFile) return resolve('');
+    if (typeof dataUrlOrFile === 'string' && (dataUrlOrFile.startsWith('data:image/svg+xml') || dataUrlOrFile.startsWith('http://') || dataUrlOrFile.startsWith('https://'))) {
+      return resolve(dataUrlOrFile);
+    }
+    const img = new Image();
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      if (width > targetMaxDim || height > targetMaxDim) {
+        if (width > height) {
+          height = Math.round((height * targetMaxDim) / width);
+          width = targetMaxDim;
+        } else {
+          width = Math.round((width * targetMaxDim) / height);
+          height = targetMaxDim;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, width);
+      canvas.height = Math.max(1, height);
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, width, height);
+
+      let compressedUrl = '';
+      try {
+        compressedUrl = canvas.toDataURL('image/webp', targetQuality);
+        if (!compressedUrl.startsWith('data:image/webp')) {
+          compressedUrl = canvas.toDataURL('image/jpeg', targetQuality);
+        }
+      } catch (err) {
+        compressedUrl = canvas.toDataURL('image/jpeg', targetQuality);
+      }
+      resolve(compressedUrl);
+    };
+    img.onerror = () => resolve(dataUrlOrFile);
+    img.src = dataUrlOrFile;
+  });
+}
+
+function getOptimalImageSpecs(totalCount) {
+  if (totalCount <= 1) return { maxDim: 1200, quality: 0.80 };
+  if (totalCount <= 3) return { maxDim: 1000, quality: 0.74 };
+  if (totalCount <= 5) return { maxDim: 900, quality: 0.68 };
+  if (totalCount <= 8) return { maxDim: 800, quality: 0.64 };
+  return { maxDim: 750, quality: 0.58 }; // 9-10 images: ~35-45KB each, 10 images = ~400KB total! Safely under 1MB Firestore limit
+}
+
+function calculateImagesSizeKB(list = selectedImages) {
+  if (!list || list.length === 0) return 0;
+  try {
+    const bytes = new Blob([JSON.stringify(list)]).size;
+    return Math.round(bytes / 1024);
+  } catch (e) {
+    return 0;
+  }
+}
+
+// Pre-flight document size guard & auto-optimizer for Cloud Firestore
+async function guaranteeFirestoreSafeImages(imagesList) {
+  if (!imagesList || imagesList.length === 0) return imagesList;
+
+  let currentImages = [...imagesList];
+  let totalBytes = new Blob([JSON.stringify(currentImages)]).size;
+  const MAX_SAFE_BYTES = 720 * 1024; // 720 KB (Firestore limit is 1,048,576 bytes)
+
+  if (totalBytes <= MAX_SAFE_BYTES) {
+    return currentImages;
+  }
+
+  console.log(`Document payload (${Math.round(totalBytes / 1024)} KB) is approaching Firestore 1MB limit. Running adaptive compression...`);
+  if (adminFormStatus) {
+    adminFormStatus.textContent = 'Optimizing pictures for Cloud Firestore safe storage...';
+  }
+
+  // Pass 1: Scale to 720px, quality 0.58
+  const pass1 = await Promise.all(
+    currentImages.map((img) => compressImageToDataUrl(img, 720, 0.58))
+  );
+  totalBytes = new Blob([JSON.stringify(pass1)]).size;
+  if (totalBytes <= MAX_SAFE_BYTES) {
+    return pass1;
+  }
+
+  // Pass 2: Scale to 620px, quality 0.50 (guarantees safe fit even for 10 very complex flyer graphics)
+  const pass2 = await Promise.all(
+    pass1.map((img) => compressImageToDataUrl(img, 620, 0.50))
+  );
+  return pass2;
+}
+
 // Render Multi-Image Preview Grid in Admin Form
 function updateMultiImageUI() {
   const total = selectedImages.length;
+  const sizeKB = calculateImagesSizeKB();
+
   if (photosCountBadge) {
-    photosCountBadge.textContent = total === 1 ? '1 picture added' : `${total} pictures added`;
+    if (total === 0) {
+      photosCountBadge.textContent = 'No pictures added';
+      photosCountBadge.style.color = '';
+    } else if (total === 1) {
+      photosCountBadge.textContent = `1 picture attached (~${sizeKB} KB • Ready)`;
+      photosCountBadge.style.color = '#38bdf8';
+    } else {
+      photosCountBadge.textContent = `${total} pictures attached (~${sizeKB} KB / 1 MB limit • Ready)`;
+      photosCountBadge.style.color = sizeKB > 750 ? '#f59e0b' : '#38bdf8';
+    }
   }
+
   if (previewCountLabel) {
     previewCountLabel.textContent = total;
   }
@@ -1283,8 +1393,8 @@ function clearAllImages() {
 }
 const clearSelectedImage = clearAllImages;
 
-// Picture compression helper (Processes single or multiple files)
-function processImageFiles(fileList) {
+// Picture compression helper (Processes single or multiple files with adaptive specs)
+async function processImageFiles(fileList) {
   if (!fileList || fileList.length === 0) return;
 
   const files = Array.from(fileList);
@@ -1299,52 +1409,45 @@ function processImageFiles(fileList) {
   }
 
   const toProcess = files.slice(0, remainingSlots);
+  const projectedTotal = selectedImages.length + toProcess.length;
+  const specs = getOptimalImageSpecs(projectedTotal);
 
-  toProcess.forEach((file) => {
-    if (!file.type.startsWith('image/')) return;
+  if (photosCountBadge) {
+    photosCountBadge.textContent = `Optimizing ${toProcess.length} picture${toProcess.length > 1 ? 's' : ''}...`;
+  }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const rawDataUrl = e.target.result;
+  for (const file of toProcess) {
+    if (!file.type.startsWith('image/')) continue;
 
-      // If SVG, push directly
+    try {
+      const rawDataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
       if (file.type === 'image/svg+xml') {
         selectedImages.push(rawDataUrl);
-        updateMultiImageUI();
-        return;
+      } else {
+        const optimized = await compressImageToDataUrl(rawDataUrl, specs.maxDim, specs.quality);
+        selectedImages.push(optimized);
       }
+      updateMultiImageUI();
+    } catch (err) {
+      console.warn('Failed to read or optimize file:', file.name, err);
+    }
+  }
 
-      // Optimize raster images using Canvas
-      const img = new Image();
-      img.onload = () => {
-        const maxDim = 1100;
-        let width = img.width;
-        let height = img.height;
+  // If total collection has grown to 6+ images, run a quick adaptive tune to keep whole set lightweight
+  if (selectedImages.length >= 6) {
+    const tunedSpecs = getOptimalImageSpecs(selectedImages.length);
+    selectedImages = await Promise.all(
+      selectedImages.map((img) => compressImageToDataUrl(img, tunedSpecs.maxDim, tunedSpecs.quality))
+    );
+  }
 
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const compressedUrl = canvas.toDataURL('image/jpeg', 0.82);
-        selectedImages.push(compressedUrl);
-        updateMultiImageUI();
-      };
-      img.src = rawDataUrl;
-    };
-    reader.readAsDataURL(file);
-  });
+  updateMultiImageUI();
 }
 
 // Add direct URL image button handler
@@ -1765,18 +1868,26 @@ if (adminAddWorkForm) {
 
     if (adminFormStatus) {
       adminFormStatus.className = 'admin-status-msg info';
-      adminFormStatus.textContent = isEditMode ? 'Updating artwork in Firestore...' : 'Uploading artwork record to Firestore...';
+      adminFormStatus.textContent = isEditMode ? 'Preparing and optimizing artwork...' : 'Optimizing artwork for Cloud Firestore...';
       adminFormStatus.style.display = 'block';
     }
 
     try {
+      // Pre-flight optimization guarantees document payload fits comfortably under Firestore's 1MB limit
+      const safeImagesList = await guaranteeFirestoreSafeImages(finalImagesList);
+      const safePrimaryImage = safeImagesList[0];
+
+      if (adminFormStatus) {
+        adminFormStatus.textContent = isEditMode ? 'Updating artwork in Firestore...' : 'Uploading artwork record to Firestore...';
+      }
+
       if (isEditMode) {
         // UPDATE EXISTING ITEM
         const updateData = {
           title,
           category,
-          image: primaryImage,
-          images: finalImagesList,
+          image: safePrimaryImage,
+          images: safeImagesList,
           description,
           link: projectLink || null,
           externalUrl: projectLink || null,
@@ -1787,7 +1898,7 @@ if (adminAddWorkForm) {
 
         if (adminFormStatus) {
           adminFormStatus.className = 'admin-status-msg success';
-          adminFormStatus.textContent = `✓ "${title}" updated successfully in live portfolio!`;
+          adminFormStatus.textContent = `✓ "${title}" updated successfully in live works!`;
           adminFormStatus.style.display = 'block';
         }
 
@@ -1798,8 +1909,8 @@ if (adminAddWorkForm) {
         const newArtwork = {
           title,
           category,
-          image: primaryImage,
-          images: finalImagesList,
+          image: safePrimaryImage,
+          images: safeImagesList,
           description,
           link: projectLink || null,
           externalUrl: projectLink || null,
@@ -1810,20 +1921,24 @@ if (adminAddWorkForm) {
 
         if (adminFormStatus) {
           adminFormStatus.className = 'admin-status-msg success';
-          adminFormStatus.textContent = `✓ "${title}" added to live portfolio successfully!`;
+          adminFormStatus.textContent = `✓ "${title}" (${safeImagesList.length} photo${safeImagesList.length > 1 ? 's' : ''}) published successfully!`;
           adminFormStatus.style.display = 'block';
         }
 
         resetAdminForm();
       }
     } catch (err) {
-      const opType = isEditMode ? OperationType.UPDATE : OperationType.WRITE;
-      const targetPath = isEditMode ? `portfolio/${editId}` : 'portfolio/new';
-      handleFirestoreError(err, opType, targetPath);
       console.error('Failed Firestore operation:', err);
+      try {
+        const opType = isEditMode ? OperationType.UPDATE : OperationType.WRITE;
+        const targetPath = isEditMode ? `portfolio/${editId}` : 'portfolio/new';
+        handleFirestoreError(err, opType, targetPath);
+      } catch (logErr) {
+        console.warn('Logging error:', logErr);
+      }
       if (adminFormStatus) {
         adminFormStatus.className = 'admin-status-msg error';
-        adminFormStatus.textContent = `Error: ${err.message || 'Check your permissions'}`;
+        adminFormStatus.textContent = `Upload failed: ${err.message || 'Please check your connection and try again'}`;
         adminFormStatus.style.display = 'block';
       }
     } finally {
