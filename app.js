@@ -609,6 +609,7 @@ function renderPortfolio(items, filter = currentPortfolioFilter) {
 
     card.innerHTML = `
       <div class="portfolio-img-wrap">
+        <div class="portfolio-img-backdrop" style="background-image: url('${imgSrc}');"></div>
         <img src="${imgSrc}" alt="${safeTitle}" class="portfolio-img" loading="lazy" />
         ${allImages.length > 1 ? `
           <div class="portfolio-photo-count-pill">
@@ -624,7 +625,7 @@ function renderPortfolio(items, filter = currentPortfolioFilter) {
               <line x1="11" y1="8" x2="11" y2="14"></line>
               <line x1="8" y1="11" x2="14" y2="11"></line>
             </svg>
-            <span>View Artwork</span>
+            <span>View Full Image</span>
           </span>
         </div>
       </div>
@@ -802,12 +803,35 @@ const lightboxPrevBtn = document.getElementById('lightboxPrevBtn');
 const lightboxNextBtn = document.getElementById('lightboxNextBtn');
 const lightboxCounter = document.getElementById('lightboxCounter');
 const lightboxThumbs = document.getElementById('lightboxThumbs');
+const lightboxZoomToggleBtn = document.getElementById('lightboxZoomToggleBtn');
+const lightboxImgContainer = document.querySelector('.lightbox-img-container');
 
 let currentLightboxItem = null;
 let currentLightboxImages = [];
 let currentLightboxIndex = 0;
 
+function resetLightboxZoom() {
+  if (lightboxImgContainer) lightboxImgContainer.classList.remove('zoomed');
+  if (lightboxZoomToggleBtn) lightboxZoomToggleBtn.textContent = '🔍 Full View';
+}
+
+function toggleLightboxZoom() {
+  if (!lightboxImgContainer) return;
+  const isZoomed = lightboxImgContainer.classList.toggle('zoomed');
+  if (lightboxZoomToggleBtn) {
+    lightboxZoomToggleBtn.textContent = isZoomed ? '🔎 Fit to Screen' : '🔍 Full View';
+  }
+}
+
+if (lightboxZoomToggleBtn) {
+  lightboxZoomToggleBtn.addEventListener('click', toggleLightboxZoom);
+}
+if (lightboxImg) {
+  lightboxImg.addEventListener('click', toggleLightboxZoom);
+}
+
 function updateLightboxView() {
+  resetLightboxZoom();
   if (!lightboxImg || currentLightboxImages.length === 0) return;
   const currentSrc = currentLightboxImages[currentLightboxIndex] || '/assets/images/flyer-studio.svg';
   lightboxImg.src = currentSrc;
@@ -907,6 +931,7 @@ if (lightboxNextBtn) lightboxNextBtn.addEventListener('click', nextLightboxImage
 
 function closeLightbox() {
   if (!lightboxModal) return;
+  resetLightboxZoom();
   lightboxModal.classList.remove('open');
 }
 

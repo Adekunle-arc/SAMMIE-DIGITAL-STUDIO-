@@ -19,7 +19,7 @@
         "order": { "type": "number" },
         "authorId": { "type": "string" }
       },
-      "required": ["title", "category", "description", "image", "createdAt", "authorId"]
+      "required": ["title", "category", "image"]
     },
     "AdminUser": {
       "title": "AdminUser",
