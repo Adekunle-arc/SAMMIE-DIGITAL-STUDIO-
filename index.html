@@ -888,13 +888,24 @@
     <!-- Lightbox Modal for Full-Screen Image Viewing -->
     <div id="lightboxModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
       <div class="lightbox-box">
-        <button
-          id="closeLightboxBtn"
-          class="lightbox-close"
-          aria-label="Close image"
-        >
-          &times;
-        </button>
+        <!-- Lightbox Top Navigation & Meta Header -->
+        <div class="lightbox-top-bar">
+          <div class="lightbox-title-meta">
+            <span id="lightboxCategoryBadge" class="lightbox-cat-badge">Graphic Design</span>
+            <h3 class="lightbox-title" id="lightboxTitle">Artwork Title</h3>
+          </div>
+          <div class="lightbox-top-tools">
+            <div id="lightboxCounter" class="lightbox-counter-pill" style="display: none;">1 / 2</div>
+            <button id="lightboxZoomToggleBtn" type="button" class="lightbox-tool-btn" title="Toggle full zoom / fit">
+              🔍 Full View
+            </button>
+            <button id="closeLightboxBtn" class="lightbox-close" aria-label="Close image">
+              &times;
+            </button>
+          </div>
+        </div>
+
+        <!-- Lightbox Image Stage (Maximum viewport area) -->
         <div class="lightbox-img-container">
           <button id="lightboxPrevBtn" class="lightbox-nav-btn prev" aria-label="Previous image" style="display: none;">&#10094;</button>
           <img
@@ -904,22 +915,18 @@
             class="lightbox-image"
           />
           <button id="lightboxNextBtn" class="lightbox-nav-btn next" aria-label="Next image" style="display: none;">&#10095;</button>
-          <div id="lightboxCounter" class="lightbox-counter" style="display: none;">1 / 1</div>
         </div>
 
         <!-- Lightbox thumbnails strip when multiple images are available -->
         <div id="lightboxThumbs" class="lightbox-thumbs-strip" style="display: none;"></div>
 
+        <!-- Lightbox Bottom Actions Bar (Compact & responsive on mobile) -->
         <div class="lightbox-caption-wrap">
-          <div class="lightbox-caption" id="lightboxCaption"></div>
+          <p class="lightbox-sub" id="lightboxDesc"></p>
           <div class="lightbox-actions">
-            <!-- Full View / Original Zoom Button -->
-            <button id="lightboxZoomToggleBtn" type="button" class="btn btn-outline btn-sm" title="Toggle full resolution image">
-              🔍 Full View
-            </button>
             <!-- Dynamic Live Project link button if available -->
-            <a id="lightboxProjectBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" style="display: none;">
-              🌐 Visit Live Project &rarr;
+            <a id="lightboxProjectBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="display: none;">
+              🌐 Visit Live Site &rarr;
             </a>
             <a id="lightboxWaBtn" href="https://wa.me/2348168874826" target="_blank" class="btn btn-whatsapp btn-sm">
               💬 Inquire via WhatsApp

@@ -625,26 +625,73 @@ function renderPortfolio(items, filter = currentPortfolioFilter) {
               <line x1="11" y1="8" x2="11" y2="14"></line>
               <line x1="8" y1="11" x2="14" y2="11"></line>
             </svg>
-            <span>View Full Image</span>
+            <span>View Full Design</span>
           </span>
         </div>
       </div>
+
+      ${allImages.length > 1 ? `
+        <div class="card-multi-preview" onclick="event.stopPropagation();">
+          ${allImages.map((thumbSrc, idx) => `
+            <button type="button" class="card-multi-thumb-btn ${idx === 0 ? 'active' : ''}" data-idx="${idx}" title="Preview photo ${idx + 1}" aria-label="Preview photo ${idx + 1}">
+              <img src="${thumbSrc}" alt="Preview ${idx + 1}" loading="lazy" />
+            </button>
+          `).join('')}
+          <span class="card-multi-hint">Tap photo to preview</span>
+        </div>
+      ` : ''}
+
       <div class="portfolio-info">
         <div class="portfolio-category-badge">${catLabel}</div>
         <h4 class="portfolio-title">${safeTitle}</h4>
         <p class="portfolio-desc">${safeDesc}</p>
-        ${projectLink ? `
-          <a href="${escapeHtml(projectLink)}" target="_blank" rel="noopener noreferrer" class="portfolio-external-pill" onclick="event.stopPropagation();">
-            <span>🌐</span>
-            <span>Visit Live Project &rarr;</span>
-          </a>
-        ` : ''}
+        <div class="portfolio-card-footer">
+          <button type="button" class="btn-card-view-work" aria-label="View design for ${safeTitle}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>View Work ${allImages.length > 1 ? `(${allImages.length} Photos)` : ''} &rarr;</span>
+          </button>
+          ${projectLink ? `
+            <a href="${escapeHtml(projectLink)}" target="_blank" rel="noopener noreferrer" class="portfolio-external-pill" onclick="event.stopPropagation();">
+              <span>🌐</span>
+              <span>Visit Live Project &rarr;</span>
+            </a>
+          ` : ''}
+        </div>
       </div>
     `;
 
-    // Click to enlarge in lightbox (passes all photos for carousel)
+    // Multi-photo preview switcher on the card
+    let activeCardIndex = 0;
+    const thumbBtns = card.querySelectorAll('.card-multi-thumb-btn');
+    const cardImg = card.querySelector('.portfolio-img');
+    const cardBackdrop = card.querySelector('.portfolio-img-backdrop');
+
+    thumbBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        if (!isNaN(idx) && allImages[idx]) {
+          activeCardIndex = idx;
+          if (cardImg) cardImg.src = allImages[idx];
+          if (cardBackdrop) cardBackdrop.style.backgroundImage = `url('${allImages[idx]}')`;
+          thumbBtns.forEach((b, bIdx) => b.classList.toggle('active', bIdx === idx));
+        }
+      });
+    });
+
+    const viewWorkBtn = card.querySelector('.btn-card-view-work');
+    if (viewWorkBtn) {
+      viewWorkBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openLightbox(allImages, item.title, item.description, item.category, projectLink, activeCardIndex);
+      });
+    }
+
     card.addEventListener('click', () => {
-      openLightbox(allImages, item.title, item.description, item.category, projectLink);
+      openLightbox(allImages, item.title, item.description, item.category, projectLink, activeCardIndex);
     });
 
     portfolioGrid.appendChild(card);
@@ -712,12 +759,27 @@ try {
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         if (data && data.title) {
+          // Robust collection of all project photos
+          let rawImages = [];
+          if (Array.isArray(data.images) && data.images.length > 0) {
+            rawImages = data.images.filter(Boolean);
+          }
+          if (data.image && !rawImages.includes(data.image)) {
+            rawImages.unshift(data.image);
+          }
+          if (rawImages.length === 0) {
+            rawImages = ['/assets/images/flyer-studio.svg'];
+          }
+
           items.push({
             id: docSnap.id,
             title: data.title,
             category: data.category || 'flyers',
             description: data.description || '',
-            image: data.image || '/assets/images/flyer-studio.svg',
+            image: rawImages[0],
+            images: rawImages,
+            link: data.link || data.externalUrl || '',
+            externalUrl: data.externalUrl || data.link || '',
             createdAt: data.createdAt || null
           });
         }
@@ -794,7 +856,9 @@ document.querySelectorAll('.faq-question').forEach((button) => {
 // 5. Lightbox Modal (Multi-Image Carousel Supported)
 const lightboxModal = document.getElementById('lightboxModal');
 const lightboxImg = document.getElementById('lightboxImg');
-const lightboxCaption = document.getElementById('lightboxCaption');
+const lightboxTitle = document.getElementById('lightboxTitle');
+const lightboxCategoryBadge = document.getElementById('lightboxCategoryBadge');
+const lightboxDesc = document.getElementById('lightboxDesc');
 const closeLightboxBtn = document.getElementById('closeLightboxBtn');
 const lightboxWaBtn = document.getElementById('lightboxWaBtn');
 const lightboxQuoteBtn = document.getElementById('lightboxQuoteBtn');
@@ -830,6 +894,35 @@ if (lightboxImg) {
   lightboxImg.addEventListener('click', toggleLightboxZoom);
 }
 
+// Touch swipe gestures on mobile devices
+let touchStartX = 0;
+let touchStartY = 0;
+if (lightboxImgContainer) {
+  lightboxImgContainer.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches[0]) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  lightboxImgContainer.addEventListener('touchend', (e) => {
+    if (e.changedTouches && e.changedTouches[0]) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+      // Trigger slide change when horizontal swipe exceeds 40px and dominates vertical movement
+      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX < 0) {
+          nextLightboxImage();
+        } else {
+          prevLightboxImage();
+        }
+      }
+    }
+  }, { passive: true });
+}
+
 function updateLightboxView() {
   resetLightboxZoom();
   if (!lightboxImg || currentLightboxImages.length === 0) return;
@@ -842,7 +935,7 @@ function updateLightboxView() {
     if (lightboxNextBtn) lightboxNextBtn.style.display = 'flex';
     if (lightboxCounter) {
       lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${total}`;
-      lightboxCounter.style.display = 'block';
+      lightboxCounter.style.display = 'inline-block';
     }
     if (lightboxThumbs) {
       lightboxThumbs.style.display = 'flex';
@@ -876,15 +969,19 @@ function nextLightboxImage() {
   updateLightboxView();
 }
 
-function openLightbox(imagesInput, title, desc, category, link = null) {
+function openLightbox(imagesInput, title, desc, category, link = null, startIndex = 0) {
   if (!lightboxModal) return;
   
   const imgs = Array.isArray(imagesInput) 
     ? imagesInput.filter(Boolean) 
     : (imagesInput ? [imagesInput] : []);
   currentLightboxImages = imgs.length > 0 ? imgs : ['/assets/images/flyer-studio.svg'];
-  currentLightboxIndex = 0;
+  currentLightboxIndex = (startIndex >= 0 && startIndex < currentLightboxImages.length) ? startIndex : 0;
   currentLightboxItem = { images: currentLightboxImages, title, desc, category, link };
+
+  if (lightboxTitle) lightboxTitle.textContent = title || 'Studio Artwork';
+  if (lightboxCategoryBadge) lightboxCategoryBadge.textContent = getCategoryLabel(category);
+  if (lightboxDesc) lightboxDesc.textContent = desc || 'Crafted with precision by Sammie Digital Studio.';
 
   // Render thumbnail strip if multi-image
   if (lightboxThumbs) {
@@ -893,7 +990,7 @@ function openLightbox(imagesInput, title, desc, category, link = null) {
       currentLightboxImages.forEach((thumbSrc, idx) => {
         const thumbBtn = document.createElement('button');
         thumbBtn.type = 'button';
-        thumbBtn.className = `lightbox-thumb-btn ${idx === 0 ? 'active' : ''}`;
+        thumbBtn.className = `lightbox-thumb-btn ${idx === currentLightboxIndex ? 'active' : ''}`;
         thumbBtn.setAttribute('aria-label', `View photo ${idx + 1}`);
         thumbBtn.innerHTML = `<img src="${thumbSrc}" alt="Thumbnail ${idx + 1}" loading="lazy" />`;
         thumbBtn.addEventListener('click', () => {
@@ -902,12 +999,13 @@ function openLightbox(imagesInput, title, desc, category, link = null) {
         });
         lightboxThumbs.appendChild(thumbBtn);
       });
+      lightboxThumbs.style.display = 'flex';
+    } else {
+      lightboxThumbs.style.display = 'none';
     }
   }
 
   updateLightboxView();
-
-  lightboxCaption.innerHTML = `<h3 class="lightbox-title">${title}</h3><p class="lightbox-sub">${desc || ''}</p>`;
 
   if (lightboxProjectBtn) {
     if (link) {
@@ -1203,6 +1301,7 @@ function clearAllImages() {
   if (workFileInput) workFileInput.value = '';
   if (workImageInput) workImageInput.value = '';
 }
+const clearSelectedImage = clearAllImages;
 
 // Picture compression helper (Processes single or multiple files)
 function processImageFiles(fileList) {
@@ -1329,6 +1428,8 @@ if (workFileInput) {
   workFileInput.addEventListener('change', (e) => {
     if (e.target.files && e.target.files.length > 0) {
       processImageFiles(e.target.files);
+      // Reset input value so same files can be re-selected if removed
+      workFileInput.value = '';
     }
   });
 }
