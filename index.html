@@ -172,15 +172,19 @@
       .lang-menu.open {
         display: block !important;
       }
-      /* Preloader Critical Display */
+      /* Preloader Critical Display (100% opaque solid background so no website content shows through) */
       .site-preloader {
         position: fixed;
         inset: 0;
-        z-index: 999999;
-        background-color: #090B10;
+        width: 100%;
+        height: 100%;
+        z-index: 9999999;
+        background-color: #080A0F !important;
+        background-image: radial-gradient(circle at 50% 45%, #18120c 0%, #0c0d12 55%, #080a0f 85%) !important;
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
       }
       .site-preloader.fade-out {
         opacity: 0;
@@ -188,10 +192,13 @@
         pointer-events: none;
         transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s ease;
       }
+      body.is-preloading {
+        overflow: hidden !important;
+      }
     </style>
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/style.css?v=2.2" />
+    <link rel="stylesheet" href="/style.css?v=2.4" />
   </head>
   <body>
     <!-- Standalone Symbol Logo Preloader & Animated Intro (Exact user screenshot layout) -->
@@ -1226,6 +1233,7 @@
         const progressBar = document.getElementById('preloaderProgressBar');
         const percentText = document.getElementById('preloaderPercent');
         if (!preloader) return;
+        document.body.classList.add('is-preloading');
 
         let currentPercent = 0;
         let isWindowLoaded = false;
@@ -1258,6 +1266,7 @@
           if (isDone) {
             setTimeout(function() {
               preloader.classList.add('fade-out');
+              document.body.classList.remove('is-preloading');
               setTimeout(function() {
                 if (preloader.parentNode) preloader.remove();
               }, 450);

@@ -3093,15 +3093,18 @@ body.nav-open {
 .site-preloader {
   position: fixed;
   inset: 0;
-  z-index: 999999;
-  background-color: #080A0F;
-  background: radial-gradient(circle at 50% 45%, rgba(255, 107, 0, 0.16) 0%, rgba(255, 107, 0, 0.03) 48%, #080A0F 78%);
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999999;
+  background-color: #080A0F !important;
+  background-image: radial-gradient(circle at 50% 45%, #18120c 0%, #0c0d12 55%, #080a0f 85%) !important;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s ease;
   user-select: none;
   padding: 1.5rem;
+  overflow: hidden;
 }
 
 .site-preloader.fade-out {
