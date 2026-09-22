@@ -849,11 +849,122 @@ const lightboxNextBtn = document.getElementById('lightboxNextBtn');
 const lightboxCounter = document.getElementById('lightboxCounter');
 const lightboxThumbs = document.getElementById('lightboxThumbs');
 const lightboxZoomToggleBtn = document.getElementById('lightboxZoomToggleBtn');
+const lightboxAdminDownloadBtn = document.getElementById('lightboxAdminDownloadBtn');
 const lightboxImgContainer = document.querySelector('.lightbox-img-container');
 
 let currentLightboxItem = null;
 let currentLightboxImages = [];
 let currentLightboxIndex = 0;
+
+// Helper: Sanitize filenames for downloads
+function slugify(text) {
+  return String(text || 'artwork')
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'artwork';
+}
+
+// Helper: Download a single image (Data URL or Remote)
+function downloadImageFile(dataUrlOrUrl, filename = 'sammie-artwork.jpg') {
+  if (!dataUrlOrUrl) return;
+  try {
+    if (dataUrlOrUrl.startsWith('data:') || dataUrlOrUrl.startsWith('blob:')) {
+      const a = document.createElement('a');
+      a.href = dataUrlOrUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      return;
+    }
+
+    // For HTTP/HTTPS URLs, fetch as blob to avoid cross-origin download blocks
+    fetch(dataUrlOrUrl, { mode: 'cors' })
+      .then((res) => res.blob())
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+      })
+      .catch(() => {
+        // Fallback to direct anchor navigation
+        const a = document.createElement('a');
+        a.href = dataUrlOrUrl;
+        a.target = '_blank';
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+  } catch (err) {
+    console.warn('Image download error:', err);
+  }
+}
+
+// Helper: Download multiple photos in an artwork set
+function downloadArtworkSet(imagesList, title) {
+  const imgs = Array.isArray(imagesList) && imagesList.length > 0 ? imagesList : [];
+  if (imgs.length === 0) return;
+  const baseTitle = slugify(title);
+
+  if (imgs.length === 1) {
+    downloadImageFile(imgs[0], `${baseTitle}.jpg`);
+    return;
+  }
+
+  // Multi-image series: trigger downloads sequentially so the browser downloads each cleanly
+  imgs.forEach((img, idx) => {
+    setTimeout(() => {
+      downloadImageFile(img, `${baseTitle}-photo-${idx + 1}.jpg`);
+    }, idx * 280);
+  });
+}
+
+// Studio Copyright Protection Toast
+let copyrightToastTimer = null;
+function showCopyrightToast(msg = "© Sammie Digital Studio • Artworks are copyright protected. Inquire on WhatsApp to order or license designs.") {
+  let toast = document.getElementById('studioCopyrightToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'studioCopyrightToast';
+    toast.className = 'studio-copyright-toast';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `
+    <div class="toast-content">
+      <span class="toast-icon">🛡️</span>
+      <span class="toast-msg">${escapeHtml(msg)}</span>
+    </div>
+  `;
+  toast.classList.add('visible');
+  if (copyrightToastTimer) clearTimeout(copyrightToastTimer);
+  copyrightToastTimer = setTimeout(() => {
+    toast.classList.remove('visible');
+  }, 3500);
+}
+
+// Disable right click on public portfolio artworks for visitors
+document.addEventListener('contextmenu', (e) => {
+  if (isMasterAuthenticated) return; // Allow admin full access
+  const isArtworkImg = e.target.closest('.portfolio-img, .lightbox-image, .card-multi-thumb-btn, .portfolio-card');
+  if (isArtworkImg) {
+    e.preventDefault();
+    showCopyrightToast("© Sammie Digital Studio • Artworks are copyright protected. Please click 'Inquire via WhatsApp' to order designs.");
+  }
+});
+
+// Disable dragging images to new tabs / desktop
+document.addEventListener('dragstart', (e) => {
+  if (e.target.tagName === 'IMG' && e.target.closest('.portfolio-card, .lightbox-box')) {
+    e.preventDefault();
+  }
+});
 
 function resetLightboxZoom() {
   if (lightboxImgContainer) lightboxImgContainer.classList.remove('zoomed');
@@ -873,6 +984,21 @@ if (lightboxZoomToggleBtn) {
 }
 if (lightboxImg) {
   lightboxImg.addEventListener('click', toggleLightboxZoom);
+}
+
+if (lightboxAdminDownloadBtn) {
+  lightboxAdminDownloadBtn.addEventListener('click', () => {
+    if (!currentLightboxImages || currentLightboxImages.length === 0) return;
+    const currentImg = currentLightboxImages[currentLightboxIndex];
+    const baseTitle = slugify(currentLightboxItem?.title || 'artwork');
+    const filename = `${baseTitle}-photo-${currentLightboxIndex + 1}.jpg`;
+    downloadImageFile(currentImg, filename);
+    const originalText = lightboxAdminDownloadBtn.textContent;
+    lightboxAdminDownloadBtn.textContent = '✓ Saved!';
+    setTimeout(() => {
+      lightboxAdminDownloadBtn.textContent = originalText;
+    }, 1500);
+  });
 }
 
 // Touch swipe gestures on mobile devices
@@ -1000,6 +1126,15 @@ function openLightbox(imagesInput, title, desc, category, link = null, startInde
   if (lightboxWaBtn) {
     const waText = `Hello Sammie Digital Studio! I saw your portfolio work "${title}" (${category || 'design'}) on your website and I'd like to get something similar done for my business/organization.`;
     lightboxWaBtn.href = `https://wa.me/2348168874826?text=${encodeURIComponent(waText)}`;
+  }
+
+  // Exclusive Admin Tool: Allow studio admin to download original pictures when unlocked
+  if (lightboxAdminDownloadBtn) {
+    if (isMasterAuthenticated) {
+      lightboxAdminDownloadBtn.style.display = 'inline-flex';
+    } else {
+      lightboxAdminDownloadBtn.style.display = 'none';
+    }
   }
 
   lightboxModal.classList.add('open');
@@ -1735,9 +1870,23 @@ function renderAdminWorksList() {
       </div>
       <div class="admin-work-card-actions">
         <button type="button" class="admin-edit-btn" data-id="${item.id}" title="Edit this artwork">✏️ Edit</button>
+        <button type="button" class="admin-download-btn" data-id="${item.id}" title="Download original artwork picture(s)">⬇️ ${allImgs.length > 1 ? `Save All (${allImgs.length})` : 'Save Picture'}</button>
         <button type="button" class="admin-del-btn" data-id="${item.id}" title="Delete from Cloud Firestore">🗑️ Delete</button>
       </div>
     `;
+
+    // Download button click handler (Studio Admin only)
+    const downloadBtn = card.querySelector('.admin-download-btn');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        downloadArtworkSet(allImgs, item.title);
+        const origHtml = downloadBtn.innerHTML;
+        downloadBtn.textContent = '✓ Saved!';
+        setTimeout(() => {
+          downloadBtn.innerHTML = origHtml;
+        }, 1800);
+      });
+    }
 
     // Edit button click handler
     const editBtn = card.querySelector('.admin-edit-btn');

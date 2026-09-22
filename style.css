@@ -2701,6 +2701,79 @@ body.nav-open {
   color: #FFFFFF;
 }
 
+.admin-download-btn {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.admin-download-btn:hover {
+  background: #38bdf8;
+  color: #09090b;
+}
+
+/* Copyright & Artwork Download Protection */
+.portfolio-img,
+.lightbox-image,
+.card-multi-thumb-btn img,
+.multi-preview-img-wrap img {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+
+/* Studio Copyright Protection Toast */
+.studio-copyright-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #18181b;
+  border: 1px solid rgba(249, 115, 22, 0.45);
+  color: #f4f4f5;
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(249, 115, 22, 0.2);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 92vw;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+.studio-copyright-toast.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.studio-copyright-toast .toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.studio-copyright-toast .toast-icon {
+  font-size: 1.1rem;
+}
+
 .admin-empty {
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -3177,23 +3250,24 @@ body.nav-open {
 
   .admin-work-card-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
     width: 100%;
     padding-top: 0.65rem;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
   }
 
   .admin-edit-btn,
+  .admin-download-btn,
   .admin-del-btn {
     width: 100%;
-    min-height: 42px;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.82rem;
+    font-size: 0.76rem;
     font-weight: 600;
-    padding: 0.4rem 0.5rem;
+    padding: 0.35rem 0.35rem;
   }
 
   /* Admin SEO / Google Search Console on Mobile */
