@@ -502,42 +502,6 @@ const portfolioGrid = document.getElementById('portfolioGrid');
 let allPortfolioItems = [];
 let currentPortfolioFilter = 'all';
 
-// Default Starter Artworks using standardized vector assets
-const starterItems = [
-  {
-    id: 'starter_1',
-    title: 'Church Conference Flyer',
-    category: 'flyers',
-    description: 'Dynamic event publicity flyer designed for Sunday praise service.',
-    image: '/assets/images/flyer-church.svg',
-    link: 'https://wa.me/2348168874826?text=Hello%20Samuel,%20I%20saw%20your%20Church%20Conference%20Flyer'
-  },
-  {
-    id: 'starter_2',
-    title: 'Digital Studio Corporate Web',
-    category: 'websites',
-    description: 'High-speed business website with dark mode and WhatsApp bookings.',
-    image: '/assets/images/web-portfolio.svg',
-    link: 'https://github.com/samadeniran15'
-  },
-  {
-    id: 'starter_3',
-    title: 'Modern Brand Identity & Emblem',
-    category: 'branding',
-    description: 'Minimalist logo mark and typography system for technology studio.',
-    image: '/assets/images/brand-identity.svg',
-    link: 'https://instagram.com/sammiedigitalstudio'
-  },
-  {
-    id: 'starter_4',
-    title: 'Social Media Event Campaign',
-    category: 'social',
-    description: 'Instagram and WhatsApp status promotional flyers for annual youth conference.',
-    image: '/assets/images/flyer-studio.svg',
-    link: 'https://wa.me/2348168874826?text=Hello%20Samuel,%20I%20want%20a%20social%20media%20campaign%20design'
-  }
-];
-
 function getCategoryLabel(category) {
   switch (category) {
     case 'websites': return 'Websites & Apps';
@@ -571,26 +535,36 @@ function renderPortfolio(items, filter = currentPortfolioFilter) {
   currentPortfolioFilter = filter;
   portfolioGrid.innerHTML = '';
 
-  const activeItems = Array.isArray(items) && items.length > 0 ? items : starterItems;
+  const activeItems = Array.isArray(items) ? items : allPortfolioItems;
   const filtered = filter === 'all' 
     ? activeItems 
     : activeItems.filter((item) => item.category === filter);
 
   if (filtered.length === 0) {
-    portfolioGrid.innerHTML = `
-      <div class="loading-spinner">
-        <p>No artworks found in this category.</p>
-        <button class="btn btn-outline btn-sm" style="margin-top: 1rem;" id="resetFilterBtn">View All Works</button>
-      </div>
-    `;
-    const resetBtn = document.getElementById('resetFilterBtn');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
-        const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-        if (allBtn) allBtn.classList.add('active');
-        renderPortfolio(activeItems, 'all');
-      });
+    if (activeItems.length === 0) {
+      portfolioGrid.innerHTML = `
+        <div class="portfolio-empty-state" style="text-align: center; padding: 3.5rem 1.5rem; color: #a1a1aa; grid-column: 1 / -1;">
+          <p style="font-size: 1.15rem; margin-bottom: 0.75rem; color: #f4f4f5; font-weight: 600;">No works published yet</p>
+          <p style="font-size: 0.95rem; max-width: 440px; margin: 0 auto 1.5rem; line-height: 1.6;">Our latest graphic flyers, website projects, and branding designs will appear here.</p>
+          <a href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20get%20started." target="_blank" class="btn btn-primary btn-sm">Inquire on WhatsApp</a>
+        </div>
+      `;
+    } else {
+      portfolioGrid.innerHTML = `
+        <div class="loading-spinner" style="grid-column: 1 / -1;">
+          <p>No works found in this category.</p>
+          <button class="btn btn-outline btn-sm" style="margin-top: 1rem;" id="resetFilterBtn">View All Works</button>
+        </div>
+      `;
+      const resetBtn = document.getElementById('resetFilterBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+          const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+          if (allBtn) allBtn.classList.add('active');
+          renderPortfolio(activeItems, 'all');
+        });
+      }
     }
     return;
   }
@@ -735,15 +709,17 @@ function loadAndRenderPortfolio(items, filter = currentPortfolioFilter, delay = 
   }, delay);
 }
 
-// Initial render with realistic animated studio loading state
-loadAndRenderPortfolio(starterItems, 'all', 500, 'Loading studio portfolio...');
+// Initial render: show clean loading state until real Cloud Firestore works arrive
+showPortfolioLoading('Loading studio works...');
 
-// Listen for clicks on any Portfolio navigation links (desktop nav, mobile menu, footer)
-// Fulfills: "if you click on the link, it has to load before the main portfolio appears"
+// Listen for clicks on any Our Works navigation links (desktop nav, mobile menu, footer)
 document.querySelectorAll('a[href="#portfolio"]').forEach((link) => {
   link.addEventListener('click', () => {
-    const items = allPortfolioItems.length > 0 ? allPortfolioItems : starterItems;
-    loadAndRenderPortfolio(items, currentPortfolioFilter, 450, 'Loading studio portfolio...');
+    if (initialFirestoreSnapshotReceived && allPortfolioItems.length > 0) {
+      renderPortfolio(allPortfolioItems, currentPortfolioFilter);
+    } else if (!initialFirestoreSnapshotReceived) {
+      showPortfolioLoading('Loading studio works...');
+    }
   });
 });
 
@@ -793,25 +769,19 @@ try {
         return 0;
       });
 
-      allPortfolioItems = items.length > 0 ? items : starterItems;
-
-      if (!initialFirestoreSnapshotReceived) {
-        initialFirestoreSnapshotReceived = true;
-        // Smoothly display after initial load
-        loadAndRenderPortfolio(allPortfolioItems, currentPortfolioFilter, 400, 'Loading studio portfolio...');
-      } else {
-        renderPortfolio(allPortfolioItems, currentPortfolioFilter);
-      }
+      allPortfolioItems = items;
+      initialFirestoreSnapshotReceived = true;
+      renderPortfolio(allPortfolioItems, currentPortfolioFilter);
 
       if (typeof renderAdminWorksList === 'function') {
         renderAdminWorksList();
       }
-      console.log('✅ Real-time portfolio loaded from Cloud Firestore into #portfolioGrid:', items.length, 'artworks');
+      console.log('✅ Real-time works loaded from Cloud Firestore into #portfolioGrid:', items.length, 'artworks');
     } else {
-      // Empty Firestore collection: use starter items
-      allPortfolioItems = starterItems;
+      // Empty Firestore collection
+      allPortfolioItems = [];
       initialFirestoreSnapshotReceived = true;
-      renderPortfolio(starterItems, currentPortfolioFilter);
+      renderPortfolio([], currentPortfolioFilter);
       if (typeof renderAdminWorksList === 'function') {
         renderAdminWorksList();
       }
@@ -819,21 +789,31 @@ try {
   }, (err) => {
     handleFirestoreError(err, OperationType.LIST, 'portfolio');
     console.warn('Firestore live listener offline or using cache:', err.message);
+    if (!initialFirestoreSnapshotReceived) {
+      initialFirestoreSnapshotReceived = true;
+      if (portfolioGrid) {
+        portfolioGrid.innerHTML = `
+          <div class="portfolio-empty-state" style="text-align: center; padding: 3.5rem 1.5rem; color: #a1a1aa; grid-column: 1 / -1;">
+            <p style="font-size: 1.15rem; margin-bottom: 0.5rem; color: #f4f4f5; font-weight: 600;">Unable to load works right now</p>
+            <p style="font-size: 0.95rem; margin-bottom: 1.25rem;">Please check your internet connection.</p>
+            <a href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!" target="_blank" class="btn btn-whatsapp btn-sm">Contact on WhatsApp</a>
+          </div>
+        `;
+      }
+    }
   });
 } catch (err) {
   console.warn('Firestore setup error:', err);
 }
 
-// Portfolio filter pills with tactile loading transitions
+// Portfolio filter pills with instantaneous filter rendering
 document.querySelectorAll('.filter-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
     const filter = btn.getAttribute('data-filter') || 'all';
     currentPortfolioFilter = filter;
-    const catLabel = filter === 'all' ? 'studio portfolio' : getCategoryLabel(filter);
-    const items = allPortfolioItems.length > 0 ? allPortfolioItems : starterItems;
-    loadAndRenderPortfolio(items, filter, 320, `Loading ${catLabel}...`);
+    renderPortfolio(allPortfolioItems, filter);
   });
 });
 
@@ -1618,11 +1598,11 @@ if (adminSignOutBtn) {
 // Render list of current works in Admin modal
 function renderAdminWorksList() {
   if (!adminWorksList) return;
-  const items = allPortfolioItems.length > 0 ? allPortfolioItems : starterItems;
+  const items = allPortfolioItems;
   if (adminWorksCount) adminWorksCount.textContent = items.length;
 
   if (items.length === 0) {
-    adminWorksList.innerHTML = '<p class="admin-empty">No portfolio items found in Cloud Firestore.</p>';
+    adminWorksList.innerHTML = '<p class="admin-empty">No artworks published yet in Cloud Firestore.</p>';
     return;
   }
 
