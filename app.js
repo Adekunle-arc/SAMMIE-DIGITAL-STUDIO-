@@ -1839,6 +1839,7 @@ function hideAdminModal() {
     // Lock the dashboard every time modal is closed so password is always required next time
     isMasterAuthenticated = false;
     clearSelectedImage();
+    updateCeoAdminVisibility(false);
     if (adminAuthSection) adminAuthSection.style.display = 'block';
     if (adminDashboardSection) adminDashboardSection.style.display = 'none';
     if (adminPortalStatusChip) {
@@ -1928,6 +1929,7 @@ if (adminPasscodeForm) {
           adminFormStatus.style.display = 'block';
         }
         renderAdminWorksList();
+        updateCeoAdminVisibility(true);
       }, 400);
     } else {
       adminAuthStatus.className = 'admin-status-msg error';
@@ -1945,6 +1947,7 @@ if (adminSignOutBtn) {
   adminSignOutBtn.addEventListener('click', () => {
     isMasterAuthenticated = false;
     clearSelectedImage();
+    updateCeoAdminVisibility(false);
     if (adminDashboardSection) adminDashboardSection.style.display = 'none';
     if (adminAuthSection) adminAuthSection.style.display = 'block';
     if (adminPortalStatusChip) {
@@ -2383,6 +2386,358 @@ if (clearGscBtn) {
     } catch (err) {
       console.error('Failed to clear GSC token:', err);
     }
+  });
+}
+
+// ==========================================
+// CEO & FOUNDER PROFILE MANAGEMENT
+// ==========================================
+const DEFAULT_CEO_PROFILE = {
+  photoUrl: '/assets/images/ceo.jpg',
+  name: 'Adeniran Samuel Inioluwa',
+  title: 'Founder, Creative Director & Lead Engineer',
+  quote: 'Every business, church, and organization deserves digital craftsmanship that commands respect, builds trust, and converts visitors into lifelong clients.',
+  phone: '08168874826'
+};
+
+let currentCeoProfile = { ...DEFAULT_CEO_PROFILE };
+let pendingCeoPhotoData = ''; // Temporary Base64 or URL if edited in form
+
+// DOM References for CEO Profile in About Page
+const aboutCeoPhoto = document.getElementById('aboutCeoPhoto');
+const aboutCeoName = document.getElementById('aboutCeoName');
+const aboutCeoTitle = document.getElementById('aboutCeoTitle');
+const aboutCeoQuote = document.getElementById('aboutCeoQuote');
+const aboutCeoWhatsappLink = document.getElementById('aboutCeoWhatsappLink');
+const aboutCeoPhoneLink = document.getElementById('aboutCeoPhoneLink');
+const aboutFounderNameDisplay = document.getElementById('aboutFounderNameDisplay');
+const aboutFounderBadge = document.getElementById('aboutFounderBadge');
+const aboutFounderPhone = document.getElementById('aboutFounderPhone');
+const adminQuickEditCeoBtn = document.getElementById('adminQuickEditCeoBtn');
+
+// DOM References for CEO Manager in Admin Workspace
+const adminCeoManagerCard = document.getElementById('adminCeoManagerCard');
+const adminCeoPreviewImg = document.getElementById('adminCeoPreviewImg');
+const adminCeoPreviewName = document.getElementById('adminCeoPreviewName');
+const adminCeoPreviewRole = document.getElementById('adminCeoPreviewRole');
+const adminCeoForm = document.getElementById('adminCeoForm');
+const adminCeoFileInput = document.getElementById('adminCeoFileInput');
+const adminCeoUploadBtn = document.getElementById('adminCeoUploadBtn');
+const adminCeoFileNameLabel = document.getElementById('adminCeoFileNameLabel');
+const adminCeoUrlInput = document.getElementById('adminCeoUrlInput');
+const adminCeoNameInput = document.getElementById('adminCeoNameInput');
+const adminCeoTitleInput = document.getElementById('adminCeoTitleInput');
+const adminCeoPhoneInput = document.getElementById('adminCeoPhoneInput');
+const adminCeoQuoteInput = document.getElementById('adminCeoQuoteInput');
+const adminSaveCeoBtn = document.getElementById('adminSaveCeoBtn');
+const adminResetCeoBtn = document.getElementById('adminResetCeoBtn');
+const adminCeoFormStatus = document.getElementById('adminCeoFormStatus');
+
+function updateCeoAdminVisibility(isAuth) {
+  if (adminQuickEditCeoBtn) {
+    adminQuickEditCeoBtn.style.display = isAuth ? 'inline-flex' : 'none';
+  }
+}
+
+function updateCeoUI(profile) {
+  if (!profile) return;
+  const photo = profile.photoUrl || DEFAULT_CEO_PROFILE.photoUrl;
+  const name = profile.name || DEFAULT_CEO_PROFILE.name;
+  const title = profile.title || DEFAULT_CEO_PROFILE.title;
+  const quote = profile.quote || DEFAULT_CEO_PROFILE.quote;
+  const phone = profile.phone || DEFAULT_CEO_PROFILE.phone;
+
+  // 1. Update public About page showcase elements
+  if (aboutCeoPhoto) {
+    aboutCeoPhoto.src = photo;
+    aboutCeoPhoto.alt = `${name} - CEO & Founder`;
+  }
+  if (aboutCeoName) aboutCeoName.textContent = name;
+  if (aboutCeoTitle) aboutCeoTitle.textContent = title;
+  if (aboutCeoQuote) {
+    const cleanQuote = quote.replace(/^["']|["']$/g, '').trim();
+    aboutCeoQuote.textContent = `"${cleanQuote}"`;
+  }
+  if (aboutFounderNameDisplay) aboutFounderNameDisplay.textContent = name;
+  if (aboutFounderBadge) aboutFounderBadge.textContent = `Founder & Lead: ${name}`;
+  if (aboutFounderPhone) aboutFounderPhone.textContent = `WhatsApp & Calls: ${phone}`;
+
+  // WhatsApp link & direct telephone call
+  const cleanPhone = phone.replace(/[^0-9]/g, '');
+  if (aboutCeoWhatsappLink) {
+    const waNumber = cleanPhone.startsWith('0') ? `234${cleanPhone.slice(1)}` : cleanPhone;
+    aboutCeoWhatsappLink.href = `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(name)}!%20I'd%20like%20to%20discuss%20a%20project%20with%20Sammie%20Digital%20Studio.`;
+  }
+  if (aboutCeoPhoneLink) {
+    aboutCeoPhoneLink.href = `tel:${cleanPhone}`;
+  }
+
+  // 2. Update Admin Workspace Preview elements
+  if (adminCeoPreviewImg) adminCeoPreviewImg.src = photo;
+  if (adminCeoPreviewName) adminCeoPreviewName.textContent = name;
+  if (adminCeoPreviewRole) adminCeoPreviewRole.textContent = title;
+
+  // 3. Update Admin form inputs if not actively focused by admin user
+  if (adminCeoNameInput && document.activeElement !== adminCeoNameInput) {
+    adminCeoNameInput.value = name;
+  }
+  if (adminCeoTitleInput && document.activeElement !== adminCeoTitleInput) {
+    adminCeoTitleInput.value = title;
+  }
+  if (adminCeoPhoneInput && document.activeElement !== adminCeoPhoneInput) {
+    adminCeoPhoneInput.value = phone;
+  }
+  if (adminCeoQuoteInput && document.activeElement !== adminCeoQuoteInput) {
+    adminCeoQuoteInput.value = quote.replace(/^["']|["']$/g, '').trim();
+  }
+  if (adminCeoUrlInput && document.activeElement !== adminCeoUrlInput) {
+    adminCeoUrlInput.value = photo.startsWith('http') ? photo : '';
+  }
+}
+
+// Read local storage cache first for instant layout render
+try {
+  const cachedCeo = localStorage.getItem('sammie_ceo_profile');
+  if (cachedCeo) {
+    currentCeoProfile = { ...DEFAULT_CEO_PROFILE, ...JSON.parse(cachedCeo) };
+    updateCeoUI(currentCeoProfile);
+  }
+} catch (e) {
+  console.warn('Local CEO profile cache read note:', e);
+}
+
+// Real-time Firestore sync for settings/ceo
+try {
+  onSnapshot(doc(db, 'settings', 'ceo'), (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      currentCeoProfile = {
+        photoUrl: data.ceoPhotoUrl || DEFAULT_CEO_PROFILE.photoUrl,
+        name: data.ceoName || DEFAULT_CEO_PROFILE.name,
+        title: data.ceoTitle || DEFAULT_CEO_PROFILE.title,
+        quote: data.ceoQuote || DEFAULT_CEO_PROFILE.quote,
+        phone: data.ceoPhone || DEFAULT_CEO_PROFILE.phone
+      };
+      localStorage.setItem('sammie_ceo_profile', JSON.stringify(currentCeoProfile));
+      updateCeoUI(currentCeoProfile);
+    }
+  }, (err) => {
+    console.warn('CEO Firestore listener error:', err.message);
+  });
+} catch (err) {
+  console.warn('CEO Firestore listener setup note:', err);
+}
+
+// Choose New Photo button trigger
+if (adminCeoUploadBtn && adminCeoFileInput) {
+  adminCeoUploadBtn.addEventListener('click', () => {
+    adminCeoFileInput.click();
+  });
+}
+
+// Handle CEO photo file selection with adaptive compression & instant preview
+if (adminCeoFileInput) {
+  adminCeoFileInput.addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file (JPG, PNG, WEBP).');
+      return;
+    }
+
+    if (adminCeoFileNameLabel) {
+      adminCeoFileNameLabel.textContent = `Optimizing ${file.name}...`;
+    }
+
+    try {
+      const rawDataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (evt) => resolve(evt.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      // Compress to optimal square resolution (800px max, 0.82 quality)
+      const optimized = await compressImageToDataUrl(rawDataUrl, 800, 0.82);
+      pendingCeoPhotoData = optimized;
+
+      // Update live preview immediately
+      if (adminCeoPreviewImg) adminCeoPreviewImg.src = optimized;
+      if (adminCeoUrlInput) adminCeoUrlInput.value = '';
+      if (adminCeoFileNameLabel) {
+        const kbSize = Math.round(optimized.length * 0.75 / 1024);
+        adminCeoFileNameLabel.textContent = `✓ Selected: ${file.name} (~${kbSize} KB optimized)`;
+      }
+
+      if (adminCeoFormStatus) {
+        adminCeoFormStatus.className = 'admin-status-msg info';
+        adminCeoFormStatus.textContent = 'New picture ready! Click "Save & Update CEO Profile" below to publish it live.';
+        adminCeoFormStatus.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Failed to load CEO photo file:', err);
+      if (adminCeoFileNameLabel) {
+        adminCeoFileNameLabel.textContent = 'Error loading image file.';
+      }
+    }
+  });
+}
+
+// Direct URL input listener
+if (adminCeoUrlInput) {
+  adminCeoUrlInput.addEventListener('input', () => {
+    const url = adminCeoUrlInput.value.trim();
+    if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:image/'))) {
+      pendingCeoPhotoData = url;
+      if (adminCeoPreviewImg) adminCeoPreviewImg.src = url;
+      if (adminCeoFileNameLabel) adminCeoFileNameLabel.textContent = 'Using image URL';
+    }
+  });
+}
+
+// Live typing updates in admin preview card
+if (adminCeoNameInput) {
+  adminCeoNameInput.addEventListener('input', () => {
+    if (adminCeoPreviewName) {
+      adminCeoPreviewName.textContent = adminCeoNameInput.value.trim() || DEFAULT_CEO_PROFILE.name;
+    }
+  });
+}
+if (adminCeoTitleInput) {
+  adminCeoTitleInput.addEventListener('input', () => {
+    if (adminCeoPreviewRole) {
+      adminCeoPreviewRole.textContent = adminCeoTitleInput.value.trim() || DEFAULT_CEO_PROFILE.title;
+    }
+  });
+}
+
+// Form Submit: Save CEO Profile to Firestore & Cache
+if (adminCeoForm) {
+  adminCeoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!isMasterAuthenticated) {
+      alert('Please unlock with your Master Secret Passcode first.');
+      return;
+    }
+
+    const name = adminCeoNameInput ? adminCeoNameInput.value.trim() : DEFAULT_CEO_PROFILE.name;
+    const title = adminCeoTitleInput ? adminCeoTitleInput.value.trim() : DEFAULT_CEO_PROFILE.title;
+    const quote = adminCeoQuoteInput ? adminCeoQuoteInput.value.trim() : DEFAULT_CEO_PROFILE.quote;
+    const phone = adminCeoPhoneInput ? adminCeoPhoneInput.value.trim() : DEFAULT_CEO_PROFILE.phone;
+
+    let photoUrl = pendingCeoPhotoData || currentCeoProfile.photoUrl || DEFAULT_CEO_PROFILE.photoUrl;
+    if (adminCeoUrlInput && adminCeoUrlInput.value.trim()) {
+      photoUrl = adminCeoUrlInput.value.trim();
+    }
+
+    if (adminSaveCeoBtn) {
+      adminSaveCeoBtn.disabled = true;
+      adminSaveCeoBtn.textContent = 'Saving Profile...';
+    }
+
+    try {
+      const payload = {
+        ceoPhotoUrl: photoUrl,
+        ceoName: name,
+        ceoTitle: title,
+        ceoQuote: quote,
+        ceoPhone: phone,
+        updatedAt: new Date().toISOString()
+      };
+
+      await setDoc(doc(db, 'settings', 'ceo'), payload, { merge: true });
+
+      currentCeoProfile = {
+        photoUrl,
+        name,
+        title,
+        quote,
+        phone
+      };
+      localStorage.setItem('sammie_ceo_profile', JSON.stringify(currentCeoProfile));
+      updateCeoUI(currentCeoProfile);
+      pendingCeoPhotoData = '';
+
+      if (adminCeoFileNameLabel) {
+        adminCeoFileNameLabel.textContent = '✓ Profile photo published';
+      }
+
+      if (adminCeoFormStatus) {
+        adminCeoFormStatus.className = 'admin-status-msg success';
+        adminCeoFormStatus.textContent = '✓ CEO picture & profile updated successfully! The About Us page is now updated.';
+        adminCeoFormStatus.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Failed to save CEO profile:', err);
+      handleFirestoreError(err, OperationType.WRITE, 'settings/ceo');
+      if (adminCeoFormStatus) {
+        adminCeoFormStatus.className = 'admin-status-msg error';
+        adminCeoFormStatus.textContent = `Could not save to Cloud Firestore: ${err.message}`;
+        adminCeoFormStatus.style.display = 'block';
+      }
+    } finally {
+      if (adminSaveCeoBtn) {
+        adminSaveCeoBtn.disabled = false;
+        adminSaveCeoBtn.textContent = '💾 Save & Update CEO Profile';
+      }
+    }
+  });
+}
+
+// Reset to Default Studio Portrait
+if (adminResetCeoBtn) {
+  adminResetCeoBtn.addEventListener('click', async () => {
+    if (!confirm('Revert CEO picture and information to the default studio portrait?')) return;
+    if (!isMasterAuthenticated) {
+      alert('Please unlock with your Master Secret Passcode first.');
+      return;
+    }
+
+    pendingCeoPhotoData = DEFAULT_CEO_PROFILE.photoUrl;
+
+    try {
+      await setDoc(doc(db, 'settings', 'ceo'), {
+        ceoPhotoUrl: DEFAULT_CEO_PROFILE.photoUrl,
+        ceoName: DEFAULT_CEO_PROFILE.name,
+        ceoTitle: DEFAULT_CEO_PROFILE.title,
+        ceoQuote: DEFAULT_CEO_PROFILE.quote,
+        ceoPhone: DEFAULT_CEO_PROFILE.phone,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      currentCeoProfile = { ...DEFAULT_CEO_PROFILE };
+      localStorage.setItem('sammie_ceo_profile', JSON.stringify(currentCeoProfile));
+      updateCeoUI(currentCeoProfile);
+
+      if (adminCeoUrlInput) adminCeoUrlInput.value = '';
+      if (adminCeoFileInput) adminCeoFileInput.value = '';
+      if (adminCeoFileNameLabel) adminCeoFileNameLabel.textContent = 'Using default studio portrait';
+
+      if (adminCeoFormStatus) {
+        adminCeoFormStatus.className = 'admin-status-msg info';
+        adminCeoFormStatus.textContent = 'Reverted to default studio portrait.';
+        adminCeoFormStatus.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Failed to reset CEO profile:', err);
+    }
+  });
+}
+
+// Quick edit button on the About page
+if (adminQuickEditCeoBtn) {
+  adminQuickEditCeoBtn.addEventListener('click', () => {
+    showAdminModal();
+    setTimeout(() => {
+      if (adminCeoManagerCard) {
+        adminCeoManagerCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        adminCeoManagerCard.style.outline = '2px solid var(--primary-orange)';
+        setTimeout(() => {
+          adminCeoManagerCard.style.outline = '';
+        }, 1500);
+      }
+    }, 350);
   });
 }
 

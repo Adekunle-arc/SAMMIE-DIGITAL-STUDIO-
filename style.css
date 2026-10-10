@@ -1438,6 +1438,194 @@ body.nav-open {
   color: var(--primary-orange);
 }
 
+/* About Hero & CEO Showcase Grid */
+.about-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 960px) {
+  .about-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.about-ceo-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(22, 29, 46, 0.95), rgba(16, 21, 34, 0.98));
+  border: 1px solid rgba(255, 107, 0, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 40px rgba(255, 107, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-ceo-card:hover {
+  border-color: rgba(255, 107, 0, 0.45);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 50px rgba(255, 107, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.about-ceo-card-glow {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(255, 107, 0, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.about-ceo-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+}
+
+.about-ceo-photo-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-ceo-avatar-frame {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, var(--primary-orange), #FF8533, rgba(255, 255, 255, 0.2));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 107, 0, 0.25);
+}
+
+.about-ceo-photo-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-surface-elevated);
+  transition: transform 0.3s ease;
+}
+
+.about-ceo-card:hover .about-ceo-photo-img {
+  transform: scale(1.02);
+}
+
+.about-ceo-status-dot {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22C55E;
+  border: 3px solid var(--bg-surface);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+}
+
+.about-ceo-badge-tag {
+  margin-top: -12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid rgba(255, 107, 0, 0.35);
+  border-radius: 999px;
+  padding: 0.25rem 0.85rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #FFA559;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.ceo-spark-icon {
+  font-size: 0.85rem;
+}
+
+.about-ceo-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.about-ceo-kicker {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary-orange);
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.about-ceo-name {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.about-ceo-title {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+
+.about-ceo-quote {
+  font-style: italic;
+  font-size: 0.88rem;
+  color: #CBD5E1;
+  line-height: 1.55;
+  background: rgba(0, 0, 0, 0.22);
+  border-left: 3px solid var(--primary-orange);
+  padding: 0.75rem 1rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  text-align: left;
+  width: 100%;
+  margin: 0.25rem 0;
+}
+
+.about-ceo-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.ceo-chat-btn {
+  background: linear-gradient(135deg, var(--primary-orange), #FF8533);
+  font-weight: 700;
+}
+
+.admin-quick-edit-ceo {
+  border-color: rgba(255, 107, 0, 0.45);
+  color: #FFA559;
+}
+
+.admin-quick-edit-ceo:hover {
+  background: rgba(255, 107, 0, 0.15);
+  border-color: var(--primary-orange);
+  color: #FFFFFF;
+}
+
 /* Services Grid */
 .services-grid {
   display: grid;
@@ -3392,6 +3580,142 @@ body.nav-open {
   color: var(--text-muted);
   text-align: center;
   padding: 1.5rem;
+}
+
+/* Admin CEO & Founder Profile Manager Card */
+.admin-ceo-full-card {
+  grid-column: 1 / -1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-top: 1rem;
+}
+
+.admin-ceo-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.admin-ceo-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-ceo-badge-icon {
+  font-size: 1.5rem;
+}
+
+.admin-ceo-body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .admin-ceo-body {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.admin-ceo-preview-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1rem;
+}
+
+.admin-ceo-preview-frame {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--primary-orange);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 107, 0, 0.25);
+  margin-bottom: 0.85rem;
+  background: #090B10;
+}
+
+.admin-ceo-preview-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-ceo-preview-tag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.85);
+  color: #FFA559;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 0;
+}
+
+.admin-ceo-preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.admin-ceo-preview-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #FFFFFF;
+}
+
+.admin-ceo-preview-role {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.admin-ceo-form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.admin-ceo-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.admin-ceo-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .admin-ceo-fields-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-ceo-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.25rem;
 }
 
 /* Admin Google Search Console & SEO Management */

@@ -34,10 +34,15 @@
     },
     "StudioSettings": {
       "title": "StudioSettings",
-      "description": "Studio configuration settings including SEO and Google Search Console verification.",
+      "description": "Studio configuration settings including SEO verification and CEO/Founder profile picture and information.",
       "type": "object",
       "properties": {
         "googleSiteVerification": { "type": "string" },
+        "ceoPhotoUrl": { "type": "string" },
+        "ceoName": { "type": "string", "maxLength": 120 },
+        "ceoTitle": { "type": "string", "maxLength": 150 },
+        "ceoQuote": { "type": "string", "maxLength": 1000 },
+        "ceoPhone": { "type": "string", "maxLength": 50 },
         "updatedAt": { "type": "string" }
       }
     }

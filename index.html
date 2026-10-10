@@ -580,32 +580,98 @@
         <!-- About Content Section -->
         <section id="about" class="about-section">
           <div class="container about-container">
-            <div class="about-text">
-              <h2 class="section-title" data-i18n="aboutTitle">
-                Who We Are & What Drives Us
-              </h2>
-              <h3 class="section-sub" data-i18n="aboutSub">
-                Dedicated to Elevating Businesses & Organizations Online
-              </h3>
-              <p class="text-muted">
-                <strong class="text-white">Sammie Digital Studio</strong> is a
-                premium creative and digital agency founded by
-                <strong class="text-orange">Adeniran Samuel Inioluwa</strong>. We
-                specialize in modern website development, distinctive brand
-                identity, high-impact graphic flyers, and active social media
-                management.
-              </p>
-              <p class="text-muted">
-                We empower businesses, churches, schools, corporate enterprises, and
-                ambitious individuals across Nigeria and globally to establish an
-                authoritative digital presence that inspires trust and converts
-                visitors into loyal clients.
-              </p>
-              <div class="about-meta">
-                <span class="founder-badge"
-                  >Founder & Lead: Adeniran Samuel Inioluwa</span
-                >
-                <span class="founder-phone">WhatsApp & Calls: 08168874826</span>
+            <!-- Studio Story & CEO Spotlight Grid -->
+            <div class="about-hero-grid">
+              <div class="about-text">
+                <h2 class="section-title" data-i18n="aboutTitle">
+                  Who We Are & What Drives Us
+                </h2>
+                <h3 class="section-sub" data-i18n="aboutSub">
+                  Dedicated to Elevating Businesses & Organizations Online
+                </h3>
+                <p class="text-muted">
+                  <strong class="text-white">Sammie Digital Studio</strong> is a
+                  premium creative and digital agency founded by
+                  <strong class="text-orange" id="aboutFounderNameDisplay">Adeniran Samuel Inioluwa</strong>. We
+                  specialize in modern website development, distinctive brand
+                  identity, high-impact graphic flyers, and active social media
+                  management.
+                </p>
+                <p class="text-muted">
+                  We empower businesses, churches, schools, corporate enterprises, and
+                  ambitious individuals across Nigeria and globally to establish an
+                  authoritative digital presence that inspires trust and converts
+                  visitors into loyal clients.
+                </p>
+                <div class="about-meta">
+                  <span class="founder-badge" id="aboutFounderBadge">Founder & Lead: Adeniran Samuel Inioluwa</span>
+                  <span class="founder-phone" id="aboutFounderPhone">WhatsApp & Calls: 08168874826</span>
+                </div>
+              </div>
+
+              <!-- Executive CEO / Founder Showcase Card -->
+              <div class="about-ceo-card" id="aboutCeoCard">
+                <div class="about-ceo-card-glow"></div>
+                <div class="about-ceo-card-inner">
+                  <div class="about-ceo-photo-wrap">
+                    <div class="about-ceo-avatar-frame">
+                      <img
+                        id="aboutCeoPhoto"
+                        src="/assets/images/ceo.jpg"
+                        alt="Adeniran Samuel Inioluwa - CEO & Founder"
+                        class="about-ceo-photo-img"
+                        loading="lazy"
+                      />
+                      <span class="about-ceo-status-dot" title="Active Studio Lead"></span>
+                    </div>
+                    <div class="about-ceo-badge-tag">
+                      <span class="ceo-spark-icon">✨</span>
+                      <span>Studio Principal</span>
+                    </div>
+                  </div>
+
+                  <div class="about-ceo-info">
+                    <div class="about-ceo-heading-row">
+                      <div>
+                        <span class="about-ceo-kicker">CEO & Founder</span>
+                        <h3 class="about-ceo-name" id="aboutCeoName">Adeniran Samuel Inioluwa</h3>
+                        <p class="about-ceo-title" id="aboutCeoTitle">Founder, Creative Director & Lead Engineer</p>
+                      </div>
+                    </div>
+
+                    <blockquote class="about-ceo-quote" id="aboutCeoQuote">
+                      "Every business, church, and organization deserves digital craftsmanship that commands respect, builds trust, and converts visitors into lifelong clients."
+                    </blockquote>
+
+                    <div class="about-ceo-actions">
+                      <a
+                        href="https://wa.me/2348168874826?text=Hello%20Samuel!%20I'd%20like%20to%20discuss%20a%20project%20with%20Sammie%20Digital%20Studio."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn btn-primary btn-sm ceo-chat-btn"
+                        id="aboutCeoWhatsappLink"
+                      >
+                        💬 Chat with CEO
+                      </a>
+                      <a
+                        href="tel:08168874826"
+                        class="btn btn-outline btn-sm ceo-call-btn"
+                        id="aboutCeoPhoneLink"
+                      >
+                        📞 Call Direct
+                      </a>
+                      <button
+                        type="button"
+                        id="adminQuickEditCeoBtn"
+                        class="btn btn-outline btn-sm admin-quick-edit-ceo"
+                        style="display: none;"
+                        title="Change CEO photo or info in Admin Workspace"
+                      >
+                        ✏️ Change Photo (Admin)
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1780,6 +1846,128 @@
 
               <div id="adminWorksList" class="admin-works-grid-list">
                 <p class="admin-empty">Loading items from Firestore...</p>
+              </div>
+            </div>
+
+            <!-- Full Width Row: CEO & Founder Profile Manager -->
+            <div class="admin-ceo-full-card" id="adminCeoManagerCard">
+              <div class="admin-card-header admin-ceo-card-header">
+                <div class="admin-ceo-title-group">
+                  <span class="admin-ceo-badge-icon">👤</span>
+                  <div>
+                    <h3 class="admin-card-title">CEO & Founder Profile Manager</h3>
+                    <p class="admin-card-sub">
+                      Change the CEO photo, name, executive title, and founder statement anytime.
+                      Saves live to Cloud Firestore and updates the public About section in real time.
+                    </p>
+                  </div>
+                </div>
+                <span id="ceoSyncStatusChip" class="admin-seo-badge verified">
+                  <span class="status-dot"></span> Cloud Firestore Synced
+                </span>
+              </div>
+
+              <div class="admin-ceo-body">
+                <!-- CEO Preview Card Column -->
+                <div class="admin-ceo-preview-col">
+                  <div class="admin-ceo-preview-frame">
+                    <img
+                      id="adminCeoPreviewImg"
+                      src="/assets/images/ceo.jpg"
+                      alt="CEO Portrait Preview"
+                    />
+                    <div class="admin-ceo-preview-tag">Live Preview</div>
+                  </div>
+                  <div class="admin-ceo-preview-meta">
+                    <span class="admin-ceo-preview-name" id="adminCeoPreviewName">Adeniran Samuel Inioluwa</span>
+                    <span class="admin-ceo-preview-role" id="adminCeoPreviewRole">Founder, Creative Director & Lead Engineer</span>
+                  </div>
+                </div>
+
+                <!-- CEO Edit Form Column -->
+                <form id="adminCeoForm" class="admin-ceo-form-col">
+                  <!-- Photo Upload / File Section -->
+                  <div class="form-group">
+                    <label>Change CEO Picture (Upload From Device) *</label>
+                    <div class="admin-ceo-upload-row">
+                      <input type="file" id="adminCeoFileInput" accept="image/*" style="display: none;" />
+                      <button type="button" id="adminCeoUploadBtn" class="btn btn-outline btn-sm">
+                        📁 Choose New Photo
+                      </button>
+                      <span id="adminCeoFileNameLabel" class="form-hint">Using studio high-res portrait</span>
+                    </div>
+                  </div>
+
+                  <!-- Optional Direct Image URL -->
+                  <div class="form-group">
+                    <label for="adminCeoUrlInput">Or Paste Direct Image URL (Optional)</label>
+                    <input
+                      type="text"
+                      id="adminCeoUrlInput"
+                      placeholder="e.g. https://... (or choose a photo from device above)"
+                    />
+                    <span class="form-hint">Paste any HTTPS link to an image file or leave blank when uploading a file.</span>
+                  </div>
+
+                  <!-- Two-column Name & Role -->
+                  <div class="admin-ceo-fields-grid">
+                    <div class="form-group">
+                      <label for="adminCeoNameInput">CEO / Founder Full Name *</label>
+                      <input
+                        type="text"
+                        id="adminCeoNameInput"
+                        value="Adeniran Samuel Inioluwa"
+                        required
+                        maxlength="120"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="adminCeoTitleInput">Executive Title / Role *</label>
+                      <input
+                        type="text"
+                        id="adminCeoTitleInput"
+                        value="Founder, Creative Director & Lead Engineer"
+                        required
+                        maxlength="150"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Phone / WhatsApp -->
+                  <div class="form-group">
+                    <label for="adminCeoPhoneInput">Direct Phone / WhatsApp Number</label>
+                    <input
+                      type="text"
+                      id="adminCeoPhoneInput"
+                      value="08168874826"
+                      placeholder="08168874826 or +234..."
+                      maxlength="50"
+                    />
+                  </div>
+
+                  <!-- Quote / Mission -->
+                  <div class="form-group">
+                    <label for="adminCeoQuoteInput">Founder Philosophy / Statement (Displayed on About Us)</label>
+                    <textarea
+                      id="adminCeoQuoteInput"
+                      rows="3"
+                      maxlength="1000"
+                      placeholder="Short founder statement or design philosophy..."
+                    >Every business, church, and organization deserves digital craftsmanship that commands respect, builds trust, and converts visitors into lifelong clients.</textarea>
+                  </div>
+
+                  <!-- Form Actions -->
+                  <div class="admin-ceo-actions">
+                    <button type="submit" id="adminSaveCeoBtn" class="btn btn-primary">
+                      💾 Save & Update CEO Profile
+                    </button>
+                    <button type="button" id="adminResetCeoBtn" class="btn btn-outline btn-sm">
+                      🔄 Reset to Default Studio Portrait
+                    </button>
+                  </div>
+
+                  <div id="adminCeoFormStatus" class="admin-status-msg" style="display: none;"></div>
+                </form>
               </div>
             </div>
 
