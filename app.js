@@ -50,6 +50,56 @@ function handleFirestoreError(error, operationType, path) {
   return errInfo;
 }
 
+// Strict Viewport Lock: Completely disable zooming in or out (mobile pinch, double-tap, desktop wheel/keys)
+(function enforceStrictNoZoom() {
+  if (typeof window === 'undefined') return;
+
+  // 1. Prevent Safari & iOS multi-touch gesture zoom
+  document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false });
+  document.addEventListener('gesturechange', (e) => e.preventDefault(), { passive: false });
+  document.addEventListener('gestureend', (e) => e.preventDefault(), { passive: false });
+
+  // 2. Prevent multi-touch pinch zoom (touchstart & touchmove with 2+ fingers)
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // 3. Prevent double-tap to zoom on mobile while preserving button/input taps
+  let lastTouchEndTime = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEndTime <= 300) {
+      const tag = (e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '');
+      if (!['input', 'textarea', 'select', 'button', 'a'].includes(tag) && !e.target.closest('button, a, input, select, textarea')) {
+        e.preventDefault();
+      }
+    }
+    lastTouchEndTime = now;
+  }, { passive: false });
+
+  // 4. Prevent Ctrl + Mouse wheel / Trackpad pinch zoom on laptops/desktops
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // 5. Prevent Ctrl/Cmd + '+' / '-' / '0' key zoom combinations
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+      e.preventDefault();
+    }
+  });
+})();
+
 // 2. Multilingual Dictionary (7 Country-Level Languages)
 const translations = {
   en: {
@@ -1271,20 +1321,575 @@ if (quoteForm) {
   });
 }
 
-// 6b. Embedded Contact Page Inquiry Form
+// 6b. Embedded Contact Page Inquiry Form with Real-Time Validation & Visual Feedback
 const pageContactForm = document.getElementById('pageContactForm');
+
 if (pageContactForm) {
+  const formAlert = document.getElementById('contactFormAlert');
+  const nameInput = document.getElementById('contactPageName');
+  const phoneInput = document.getElementById('contactPagePhone');
+  const serviceSelect = document.getElementById('contactPageService');
+  const detailsTextarea = document.getElementById('contactPageDetails');
+  const charCounter = document.getElementById('detailsCharCounter');
+  const submitBtn = document.getElementById('contactPageSubmitBtn');
+
+  const countryCodeSelect = document.getElementById('contactPageCountryCode');
+
+  // Track user interaction state for intelligent real-time feedback
+  const fieldStates = {
+    name: { touched: false, valid: false },
+    phone: { touched: false, valid: false },
+    service: { touched: false, valid: false }
+  };
+
+  /**
+   * Validates phone number formats with country code support:
+   * - Supports picking country code from selector (e.g. +234, +1, +44, +233, etc.)
+   * - Auto-detects if the user types an international number directly starting with '+' or country code
+   * - Local Nigerian 11-digit format (08168874826) or 10-digit without leading zero (8168874826)
+   * - Full international E.164 compliance
+   */
+  function validatePhoneNumber(rawVal, selectedCode) {
+    const val = (rawVal || '').trim();
+    const code = selectedCode || (countryCodeSelect ? countryCodeSelect.value : '+234');
+
+    if (!val) {
+      return { valid: false, message: 'WhatsApp or phone number is required.' };
+    }
+
+    // Check for disallowed characters (only digits, +, spaces, hyphens, and parentheses allowed)
+    if (!/^[0-9+\s\-().]+$/.test(val)) {
+      return {
+        valid: false,
+        message: 'Invalid characters. Phone can only contain numbers, "+", spaces, and dashes.'
+      };
+    }
+
+    // Check for misplaced '+' (can only be at start)
+    if (val.indexOf('+') > 0) {
+      return {
+        valid: false,
+        message: 'The "+" country code symbol must only be at the very start of the number.'
+      };
+    }
+
+    // Strip formatting characters to isolate digits
+    const cleanNumber = val.replace(/[\s\-\(\)\.]/g, '');
+    const digitsOnly = val.replace(/\D/g, '');
+
+    if (digitsOnly.length === 0) {
+      return { valid: false, message: 'Please enter valid phone digits.' };
+    }
+
+    // A. User typed with explicit leading '+' (full international format)
+    if (cleanNumber.startsWith('+')) {
+      if (digitsOnly.length < 7) {
+        return {
+          valid: false,
+          message: `International number is too short (${digitsOnly.length} digits, minimum 7 required).`
+        };
+      }
+      if (digitsOnly.length > 15) {
+        return {
+          valid: false,
+          message: `International number is too long (${digitsOnly.length}/15 digits max).`
+        };
+      }
+
+      // Check if it matches known Nigerian prefix
+      if (digitsOnly.startsWith('234')) {
+        return {
+          valid: true,
+          message: 'Valid Nigerian format (+234) ✓',
+          sanitized: '+' + digitsOnly,
+          displayFormatted: '+' + digitsOnly
+        };
+      }
+
+      return {
+        valid: true,
+        message: `Valid international number (${digitsOnly.length} digits) ✓`,
+        sanitized: '+' + digitsOnly,
+        displayFormatted: '+' + digitsOnly
+      };
+    }
+
+    // B. User typed with international dial out '00' (e.g. 00234...)
+    if (cleanNumber.startsWith('00') && digitsOnly.length >= 9) {
+      const actualDigits = digitsOnly.substring(2);
+      return {
+        valid: true,
+        message: 'Valid international number with 00 prefix ✓',
+        sanitized: '+' + actualDigits,
+        displayFormatted: '+' + actualDigits
+      };
+    }
+
+    // C. Special handling based on selected Country Code
+    if (code === '+234') {
+      // If user typed 2348168874826 (without '+')
+      if (cleanNumber.startsWith('234') && (digitsOnly.length === 13 || digitsOnly.length === 14)) {
+        return {
+          valid: true,
+          message: 'Valid Nigerian format (+234) ✓',
+          sanitized: '+' + digitsOnly,
+          displayFormatted: '+' + digitsOnly
+        };
+      }
+
+      // If user typed local 08168874826 (11 digits starting with 0)
+      if (cleanNumber.startsWith('0')) {
+        if (digitsOnly.length < 11) {
+          return {
+            valid: false,
+            message: `Incomplete Nigerian number (${digitsOnly.length}/11 digits). e.g. 0816 887 4826`
+          };
+        }
+        if (digitsOnly.length > 11) {
+          return {
+            valid: false,
+            message: `Too many digits for local Nigerian number (${digitsOnly.length}/11 digits).`
+          };
+        }
+        return {
+          valid: true,
+          message: 'Valid Nigerian phone number ✓',
+          sanitized: '+234' + digitsOnly.substring(1),
+          displayFormatted: digitsOnly
+        };
+      }
+
+      // If user typed 10 digits without leading 0 (e.g. 8168874826 with +234 chosen)
+      if (digitsOnly.length === 10 && /^[789]/.test(digitsOnly)) {
+        return {
+          valid: true,
+          message: 'Valid Nigerian phone number (+234) ✓',
+          sanitized: '+234' + digitsOnly,
+          displayFormatted: '+234 ' + digitsOnly
+        };
+      }
+
+      if (digitsOnly.length < 10) {
+        return {
+          valid: false,
+          message: `Phone number is too short (${digitsOnly.length} digits). Format: 08168874826 or 8168874826`
+        };
+      }
+
+      if (digitsOnly.length > 11) {
+        return {
+          valid: false,
+          message: `Too many digits (${digitsOnly.length}). For foreign numbers, select your country code.`
+        };
+      }
+    } else if (code === '+1') {
+      // North America (10 digits)
+      const cleanUs = digitsOnly.startsWith('1') && digitsOnly.length === 11 ? digitsOnly.substring(1) : digitsOnly;
+      if (cleanUs.length === 10) {
+        return {
+          valid: true,
+          message: 'Valid US/Canada number (+1) ✓',
+          sanitized: '+1' + cleanUs,
+          displayFormatted: `+1 (${cleanUs.slice(0,3)}) ${cleanUs.slice(3,6)}-${cleanUs.slice(6)}`
+        };
+      }
+      if (cleanUs.length < 10) {
+        return {
+          valid: false,
+          message: `US/Canada numbers require 10 digits (${cleanUs.length}/10 entered).`
+        };
+      }
+      return {
+        valid: false,
+        message: `Too many digits for US/Canada (${cleanUs.length}/10).`
+      };
+    } else if (code === '+44') {
+      // UK (typically 10-11 digits)
+      const cleanUk = cleanNumber.startsWith('0') ? digitsOnly.substring(1) : digitsOnly;
+      if (cleanUk.length >= 9 && cleanUk.length <= 11) {
+        return {
+          valid: true,
+          message: 'Valid UK number (+44) ✓',
+          sanitized: '+44' + cleanUk,
+          displayFormatted: '+44 ' + cleanUk
+        };
+      }
+      return {
+        valid: false,
+        message: 'UK phone number format: e.g. 7911 123456 (9-11 digits).'
+      };
+    } else if (code === '+233') {
+      // Ghana (9 or 10 digits)
+      const cleanGh = cleanNumber.startsWith('0') ? digitsOnly.substring(1) : digitsOnly;
+      if (cleanGh.length >= 9 && cleanGh.length <= 10) {
+        return {
+          valid: true,
+          message: 'Valid Ghana number (+233) ✓',
+          sanitized: '+233' + cleanGh,
+          displayFormatted: '+233 ' + cleanGh
+        };
+      }
+      return {
+        valid: false,
+        message: 'Ghana phone format: 9-10 digits (e.g. 024 123 4567).'
+      };
+    } else if (code === 'other') {
+      // Generic international validation
+      if (digitsOnly.length >= 7 && digitsOnly.length <= 15) {
+        const withPlus = val.startsWith('+') ? cleanNumber : '+' + digitsOnly;
+        return {
+          valid: true,
+          message: 'Valid international number ✓',
+          sanitized: withPlus,
+          displayFormatted: withPlus
+        };
+      }
+      return {
+        valid: false,
+        message: 'Please include country code with "+" (e.g. +49..., 7 to 15 digits).'
+      };
+    } else {
+      // Any other selected prefix (+254, +27, +971, etc.)
+      const strippedLocal = cleanNumber.startsWith('0') ? digitsOnly.substring(1) : digitsOnly;
+      if (strippedLocal.length >= 7 && strippedLocal.length <= 12) {
+        return {
+          valid: true,
+          message: `Valid phone format for ${code} ✓`,
+          sanitized: code + strippedLocal,
+          displayFormatted: `${code} ${strippedLocal}`
+        };
+      }
+      return {
+        valid: false,
+        message: `Please enter 7 to 12 digits for country code ${code}.`
+      };
+    }
+
+    return {
+      valid: false,
+      message: 'Please enter a valid phone number with or without country code.'
+    };
+  }
+
+  /**
+   * Validates full name / organization
+   */
+  function validateName(val) {
+    const trimmed = (val || '').trim();
+    if (!trimmed) {
+      return { valid: false, message: 'Full name or organization name is required.' };
+    }
+    if (trimmed.length < 2) {
+      return { valid: false, message: 'Name must be at least 2 characters long.' };
+    }
+    if (!/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]/.test(trimmed)) {
+      return { valid: false, message: 'Name must include alphabetical letters.' };
+    }
+    return { valid: true, message: 'Name verified ✓' };
+  }
+
+  /**
+   * Validates service selection
+   */
+  function validateService(val) {
+    if (!val || val === '') {
+      return { valid: false, message: 'Please select a service needed from the options.' };
+    }
+    return { valid: true, message: 'Service selected ✓' };
+  }
+
+  /**
+   * Updates visual feedback for any given field
+   */
+  function setFieldVisualFeedback(fieldName, inputEl, validationResult, isForced) {
+    const state = fieldStates[fieldName];
+    if (!state) return;
+
+    state.valid = validationResult.valid;
+
+    const feedbackEl = document.getElementById(`feedback-${inputEl.id}`);
+    const badgeEl = document.getElementById(`badge-${inputEl.id}`);
+    const iconEl = document.getElementById(`icon-${inputEl.id}`);
+    const formGroup = document.getElementById(`group-${inputEl.id}`);
+
+    // If not touched yet and not forced (e.g. initial pristine load), keep neutral
+    if (!state.touched && !isForced && !inputEl.value.trim()) {
+      inputEl.classList.remove('is-valid', 'is-invalid');
+      if (feedbackEl) {
+        feedbackEl.textContent = '';
+        feedbackEl.className = 'form-feedback-msg';
+      }
+      if (badgeEl) {
+        badgeEl.textContent = 'Required';
+        badgeEl.className = 'field-status-badge';
+      }
+      if (iconEl) {
+        iconEl.textContent = '';
+        iconEl.className = 'field-icon-indicator';
+      }
+      return;
+    }
+
+    if (validationResult.valid) {
+      inputEl.classList.remove('is-invalid');
+      inputEl.classList.add('is-valid');
+      if (formGroup) formGroup.classList.remove('shake-field');
+
+      if (feedbackEl) {
+        feedbackEl.textContent = validationResult.message;
+        feedbackEl.className = 'form-feedback-msg show feedback-valid';
+      }
+
+      if (badgeEl) {
+        badgeEl.textContent = '✓ Ready';
+        badgeEl.className = 'field-status-badge status-valid';
+      }
+
+      if (iconEl) {
+        iconEl.textContent = '✓';
+        iconEl.className = 'field-icon-indicator icon-valid';
+      }
+    } else {
+      inputEl.classList.remove('is-valid');
+      inputEl.classList.add('is-invalid');
+
+      if (feedbackEl) {
+        feedbackEl.textContent = '⚠️ ' + validationResult.message;
+        feedbackEl.className = 'form-feedback-msg show feedback-error';
+      }
+
+      if (badgeEl) {
+        badgeEl.textContent = 'Fix Error';
+        badgeEl.className = 'field-status-badge status-invalid';
+      }
+
+      if (iconEl) {
+        iconEl.textContent = '!';
+        iconEl.className = 'field-icon-indicator icon-invalid';
+      }
+    }
+  }
+
+  // Real-time listener: Name input
+  if (nameInput) {
+    nameInput.addEventListener('input', () => {
+      const result = validateName(nameInput.value);
+      // If user is actively typing, provide instant feedback if dirty
+      if (fieldStates.name.touched || nameInput.value.length > 0) {
+        setFieldVisualFeedback('name', nameInput, result, false);
+      }
+    });
+
+    nameInput.addEventListener('blur', () => {
+      fieldStates.name.touched = true;
+      const result = validateName(nameInput.value);
+      setFieldVisualFeedback('name', nameInput, result, true);
+    });
+  }
+
+  // Auto-detect country code if user types "+" or specific prefix into phoneInput
+  function autoSyncCountryCode(val) {
+    if (!countryCodeSelect) return;
+    const clean = (val || '').trim();
+    if (clean.startsWith('+234') || clean.startsWith('234')) {
+      countryCodeSelect.value = '+234';
+    } else if (clean.startsWith('+1') || clean.startsWith('001')) {
+      countryCodeSelect.value = '+1';
+    } else if (clean.startsWith('+44') || clean.startsWith('0044')) {
+      countryCodeSelect.value = '+44';
+    } else if (clean.startsWith('+233') || clean.startsWith('00233')) {
+      countryCodeSelect.value = '+233';
+    } else if (clean.startsWith('+254')) {
+      countryCodeSelect.value = '+254';
+    } else if (clean.startsWith('+27')) {
+      countryCodeSelect.value = '+27';
+    } else if (clean.startsWith('+971')) {
+      countryCodeSelect.value = '+971';
+    } else if (clean.startsWith('+49')) {
+      countryCodeSelect.value = '+49';
+    } else if (clean.startsWith('+33')) {
+      countryCodeSelect.value = '+33';
+    } else if (clean.startsWith('+353')) {
+      countryCodeSelect.value = '+353';
+    } else if (clean.startsWith('+61')) {
+      countryCodeSelect.value = '+61';
+    } else if (clean.startsWith('+91')) {
+      countryCodeSelect.value = '+91';
+    } else if (clean.startsWith('+')) {
+      countryCodeSelect.value = 'other';
+    }
+  }
+
+  // Real-time listener: Phone input
+  if (phoneInput) {
+    phoneInput.addEventListener('input', () => {
+      autoSyncCountryCode(phoneInput.value);
+      const selectedCode = countryCodeSelect ? countryCodeSelect.value : '+234';
+      const result = validatePhoneNumber(phoneInput.value, selectedCode);
+      if (fieldStates.phone.touched || phoneInput.value.length > 0) {
+        setFieldVisualFeedback('phone', phoneInput, result, false);
+      }
+    });
+
+    phoneInput.addEventListener('blur', () => {
+      fieldStates.phone.touched = true;
+      const selectedCode = countryCodeSelect ? countryCodeSelect.value : '+234';
+      const result = validatePhoneNumber(phoneInput.value, selectedCode);
+      setFieldVisualFeedback('phone', phoneInput, result, true);
+    });
+  }
+
+  // Country Code selector change listener: re-evaluates phone input instantly
+  if (countryCodeSelect) {
+    countryCodeSelect.addEventListener('change', () => {
+      if (phoneInput && phoneInput.value.trim().length > 0) {
+        const result = validatePhoneNumber(phoneInput.value, countryCodeSelect.value);
+        setFieldVisualFeedback('phone', phoneInput, result, fieldStates.phone.touched);
+      }
+    });
+  }
+
+  // Real-time listener: Service select
+  if (serviceSelect) {
+    serviceSelect.addEventListener('change', () => {
+      fieldStates.service.touched = true;
+      const result = validateService(serviceSelect.value);
+      setFieldVisualFeedback('service', serviceSelect, result, true);
+    });
+
+    serviceSelect.addEventListener('blur', () => {
+      fieldStates.service.touched = true;
+      const result = validateService(serviceSelect.value);
+      setFieldVisualFeedback('service', serviceSelect, result, true);
+    });
+  }
+
+  // Details textarea character counter
+  if (detailsTextarea && charCounter) {
+    detailsTextarea.addEventListener('input', () => {
+      const length = detailsTextarea.value.length;
+      charCounter.textContent = `${length} / 600`;
+      if (length >= 580) {
+        charCounter.style.color = '#EF4444';
+      } else if (length >= 500) {
+        charCounter.style.color = '#FF6B00';
+      } else {
+        charCounter.style.color = '#64748B';
+      }
+    });
+  }
+
+  // Form submission handler with complete pre-flight validation
   pageContactForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const name = document.getElementById('contactPageName')?.value.trim() || 'Valued Client';
-    const phone = document.getElementById('contactPagePhone')?.value.trim() || 'Not specified';
-    const service = document.getElementById('contactPageService')?.value || 'Digital Services';
-    const details = document.getElementById('contactPageDetails')?.value.trim() || 'Ready to start a new project.';
 
-    const message = `Hello Samuel (Sammie Digital Studio)!%0A%0AI would like to start a project:%0A- *Client / Brand:* ${encodeURIComponent(name)}%0A- *Phone / WhatsApp:* ${encodeURIComponent(phone)}%0A- *Service:* ${encodeURIComponent(service)}%0A- *Project Details:* ${encodeURIComponent(details)}%0A%0APlease let me know the rates and timeframe to begin!`;
+    // Mark all required fields as touched
+    fieldStates.name.touched = true;
+    fieldStates.phone.touched = true;
+    fieldStates.service.touched = true;
 
-    window.open(`https://wa.me/2348168874826?text=${message}`, '_blank');
-    pageContactForm.reset();
+    // Run validations
+    const selectedCode = countryCodeSelect ? countryCodeSelect.value : '+234';
+    const nameRes = validateName(nameInput?.value);
+    const phoneRes = validatePhoneNumber(phoneInput?.value, selectedCode);
+    const serviceRes = validateService(serviceSelect?.value);
+
+    setFieldVisualFeedback('name', nameInput, nameRes, true);
+    setFieldVisualFeedback('phone', phoneInput, phoneRes, true);
+    setFieldVisualFeedback('service', serviceSelect, serviceRes, true);
+
+    const isAllValid = nameRes.valid && phoneRes.valid && serviceRes.valid;
+
+    if (!isAllValid) {
+      // Find first invalid field and focus/shake it
+      const invalidFields = [];
+      if (!nameRes.valid) invalidFields.push({ el: nameInput, group: document.getElementById('group-contactPageName') });
+      if (!phoneRes.valid) invalidFields.push({ el: phoneInput, group: document.getElementById('group-contactPagePhone') });
+      if (!serviceRes.valid) invalidFields.push({ el: serviceSelect, group: document.getElementById('group-contactPageService') });
+
+      // Apply shake animation to invalid groups
+      invalidFields.forEach(({ group }) => {
+        if (group) {
+          group.classList.remove('shake-field');
+          void group.offsetWidth; // Trigger reflow
+          group.classList.add('shake-field');
+        }
+      });
+
+      // Show alert banner
+      if (formAlert) {
+        formAlert.style.display = 'flex';
+        formAlert.className = 'contact-form-alert alert-error';
+        formAlert.innerHTML = `<span>⚠️</span><div><strong>Please check the highlighted fields:</strong> Correct the errors shown above before sending your inquiry.</div>`;
+      }
+
+      // Focus the first invalid field
+      if (invalidFields.length > 0 && invalidFields[0].el) {
+        invalidFields[0].el.focus();
+      }
+      return;
+    }
+
+    // All fields are valid!
+    if (formAlert) {
+      formAlert.style.display = 'flex';
+      formAlert.className = 'contact-form-alert alert-success';
+      formAlert.innerHTML = `<span>🚀</span><div><strong>Inquiry Ready!</strong> Connecting with Samuel via WhatsApp...</div>`;
+    }
+
+    if (submitBtn) {
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '✓ Opening WhatsApp...';
+
+      const name = nameInput.value.trim();
+      const formattedPhone = phoneRes.displayFormatted || phoneRes.sanitized || phoneInput.value.trim();
+      const service = serviceSelect.value;
+      const details = detailsTextarea?.value.trim() || 'Ready to start a new project.';
+
+      const message = `Hello Samuel (Sammie Digital Studio)!%0A%0AI would like to start a project:%0A- *Client / Brand:* ${encodeURIComponent(name)}%0A- *Phone / WhatsApp:* ${encodeURIComponent(formattedPhone)}%0A- *Service:* ${encodeURIComponent(service)}%0A- *Project Details:* ${encodeURIComponent(details)}%0A%0APlease let me know the rates and timeframe to begin!`;
+
+      setTimeout(() => {
+        window.open(`https://wa.me/2348168874826?text=${message}`, '_blank');
+
+        // Reset form and UI states
+        pageContactForm.reset();
+        if (countryCodeSelect) countryCodeSelect.value = '+234';
+        fieldStates.name = { touched: false, valid: false };
+        fieldStates.phone = { touched: false, valid: false };
+        fieldStates.service = { touched: false, valid: false };
+
+        [nameInput, phoneInput, serviceSelect].forEach((input) => {
+          if (!input) return;
+          input.classList.remove('is-valid', 'is-invalid');
+          const fb = document.getElementById(`feedback-${input.id}`);
+          if (fb) {
+            fb.textContent = '';
+            fb.className = 'form-feedback-msg';
+          }
+          const badge = document.getElementById(`badge-${input.id}`);
+          if (badge) {
+            badge.textContent = 'Required';
+            badge.className = 'field-status-badge';
+          }
+          const icon = document.getElementById(`icon-${input.id}`);
+          if (icon) {
+            icon.textContent = '';
+            icon.className = 'field-icon-indicator';
+          }
+        });
+
+        if (charCounter) charCounter.textContent = '0 / 600';
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+
+        setTimeout(() => {
+          if (formAlert) formAlert.style.display = 'none';
+        }, 6000);
+      }, 500);
+    }
   });
 }
 
@@ -2397,6 +3002,8 @@ const DEFAULT_CEO_PROFILE = {
   name: 'Adeniran Samuel Inioluwa',
   title: 'Founder, Creative Director & Lead Engineer',
   quote: 'Every business, church, and organization deserves digital craftsmanship that commands respect, builds trust, and converts visitors into lifelong clients.',
+  whatsapp: '+22942502201',
+  callPhone: '08168874826',
   phone: '08168874826'
 };
 
@@ -2413,6 +3020,7 @@ const aboutCeoPhoneLink = document.getElementById('aboutCeoPhoneLink');
 const aboutFounderNameDisplay = document.getElementById('aboutFounderNameDisplay');
 const aboutFounderBadge = document.getElementById('aboutFounderBadge');
 const aboutFounderPhone = document.getElementById('aboutFounderPhone');
+const aboutCeoNoticePill = document.getElementById('aboutCeoNoticePill');
 const adminQuickEditCeoBtn = document.getElementById('adminQuickEditCeoBtn');
 
 // DOM References for CEO Manager in Admin Workspace
@@ -2427,6 +3035,7 @@ const adminCeoFileNameLabel = document.getElementById('adminCeoFileNameLabel');
 const adminCeoUrlInput = document.getElementById('adminCeoUrlInput');
 const adminCeoNameInput = document.getElementById('adminCeoNameInput');
 const adminCeoTitleInput = document.getElementById('adminCeoTitleInput');
+const adminCeoWhatsappInput = document.getElementById('adminCeoWhatsappInput');
 const adminCeoPhoneInput = document.getElementById('adminCeoPhoneInput');
 const adminCeoQuoteInput = document.getElementById('adminCeoQuoteInput');
 const adminSaveCeoBtn = document.getElementById('adminSaveCeoBtn');
@@ -2445,7 +3054,8 @@ function updateCeoUI(profile) {
   const name = profile.name || DEFAULT_CEO_PROFILE.name;
   const title = profile.title || DEFAULT_CEO_PROFILE.title;
   const quote = profile.quote || DEFAULT_CEO_PROFILE.quote;
-  const phone = profile.phone || DEFAULT_CEO_PROFILE.phone;
+  const whatsapp = profile.whatsapp || '+22942502201';
+  const callPhone = profile.callPhone || (profile.phone && profile.phone.startsWith('08') ? profile.phone : '08168874826');
 
   // 1. Update public About page showcase elements
   if (aboutCeoPhoto) {
@@ -2460,16 +3070,32 @@ function updateCeoUI(profile) {
   }
   if (aboutFounderNameDisplay) aboutFounderNameDisplay.textContent = name;
   if (aboutFounderBadge) aboutFounderBadge.textContent = `Founder & Lead: ${name}`;
-  if (aboutFounderPhone) aboutFounderPhone.textContent = `WhatsApp & Calls: ${phone}`;
-
-  // WhatsApp link & direct telephone call
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
-  if (aboutCeoWhatsappLink) {
-    const waNumber = cleanPhone.startsWith('0') ? `234${cleanPhone.slice(1)}` : cleanPhone;
-    aboutCeoWhatsappLink.href = `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(name)}!%20I'd%20like%20to%20discuss%20a%20project%20with%20Sammie%20Digital%20Studio.`;
+  if (aboutFounderPhone) {
+    aboutFounderPhone.textContent = `WhatsApp: ${whatsapp} | Call: ${callPhone}`;
   }
+  if (aboutCeoNoticePill) {
+    aboutCeoNoticePill.textContent = `💬 WhatsApp: ${whatsapp} • 📞 Call: ${callPhone}`;
+  }
+
+  // WhatsApp link (Benin number: +22942502201)
+  const waDigits = whatsapp.replace(/[^0-9]/g, '');
+  const waNumber = (waDigits.startsWith('0') && waDigits.length === 11)
+    ? `234${waDigits.slice(1)}`
+    : waDigits;
+
+  if (aboutCeoWhatsappLink) {
+    aboutCeoWhatsappLink.href = `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(name)}!%20Executive%20brief%20for%20Sammie%20Digital%20Studio.`;
+  }
+
+  // Voice Call link (08168874826)
+  const callDigits = callPhone.replace(/[^0-9]/g, '');
+  const telNumber = callPhone.startsWith('+')
+    ? callPhone
+    : (callDigits.startsWith('0') && callDigits.length === 11 ? `+234${callDigits.slice(1)}` : callPhone);
+
   if (aboutCeoPhoneLink) {
-    aboutCeoPhoneLink.href = `tel:${cleanPhone}`;
+    aboutCeoPhoneLink.href = `tel:${telNumber}`;
+    aboutCeoPhoneLink.textContent = `📞 Call ${callPhone}`;
   }
 
   // 2. Update Admin Workspace Preview elements
@@ -2484,8 +3110,11 @@ function updateCeoUI(profile) {
   if (adminCeoTitleInput && document.activeElement !== adminCeoTitleInput) {
     adminCeoTitleInput.value = title;
   }
+  if (adminCeoWhatsappInput && document.activeElement !== adminCeoWhatsappInput) {
+    adminCeoWhatsappInput.value = whatsapp;
+  }
   if (adminCeoPhoneInput && document.activeElement !== adminCeoPhoneInput) {
-    adminCeoPhoneInput.value = phone;
+    adminCeoPhoneInput.value = callPhone;
   }
   if (adminCeoQuoteInput && document.activeElement !== adminCeoQuoteInput) {
     adminCeoQuoteInput.value = quote.replace(/^["']|["']$/g, '').trim();
@@ -2516,7 +3145,9 @@ try {
         name: data.ceoName || DEFAULT_CEO_PROFILE.name,
         title: data.ceoTitle || DEFAULT_CEO_PROFILE.title,
         quote: data.ceoQuote || DEFAULT_CEO_PROFILE.quote,
-        phone: data.ceoPhone || DEFAULT_CEO_PROFILE.phone
+        whatsapp: data.ceoWhatsapp || DEFAULT_CEO_PROFILE.whatsapp,
+        callPhone: data.ceoCallPhone || (data.ceoPhone && data.ceoPhone.startsWith('08') ? data.ceoPhone : DEFAULT_CEO_PROFILE.callPhone),
+        phone: data.ceoCallPhone || DEFAULT_CEO_PROFILE.callPhone
       };
       localStorage.setItem('sammie_ceo_profile', JSON.stringify(currentCeoProfile));
       updateCeoUI(currentCeoProfile);
@@ -2624,7 +3255,8 @@ if (adminCeoForm) {
     const name = adminCeoNameInput ? adminCeoNameInput.value.trim() : DEFAULT_CEO_PROFILE.name;
     const title = adminCeoTitleInput ? adminCeoTitleInput.value.trim() : DEFAULT_CEO_PROFILE.title;
     const quote = adminCeoQuoteInput ? adminCeoQuoteInput.value.trim() : DEFAULT_CEO_PROFILE.quote;
-    const phone = adminCeoPhoneInput ? adminCeoPhoneInput.value.trim() : DEFAULT_CEO_PROFILE.phone;
+    const whatsapp = adminCeoWhatsappInput ? adminCeoWhatsappInput.value.trim() : DEFAULT_CEO_PROFILE.whatsapp;
+    const callPhone = adminCeoPhoneInput ? adminCeoPhoneInput.value.trim() : DEFAULT_CEO_PROFILE.callPhone;
 
     let photoUrl = pendingCeoPhotoData || currentCeoProfile.photoUrl || DEFAULT_CEO_PROFILE.photoUrl;
     if (adminCeoUrlInput && adminCeoUrlInput.value.trim()) {
@@ -2642,7 +3274,9 @@ if (adminCeoForm) {
         ceoName: name,
         ceoTitle: title,
         ceoQuote: quote,
-        ceoPhone: phone,
+        ceoWhatsapp: whatsapp,
+        ceoCallPhone: callPhone,
+        ceoPhone: callPhone,
         updatedAt: new Date().toISOString()
       };
 
@@ -2653,7 +3287,9 @@ if (adminCeoForm) {
         name,
         title,
         quote,
-        phone
+        whatsapp,
+        callPhone,
+        phone: callPhone
       };
       localStorage.setItem('sammie_ceo_profile', JSON.stringify(currentCeoProfile));
       updateCeoUI(currentCeoProfile);
@@ -2702,7 +3338,9 @@ if (adminResetCeoBtn) {
         ceoName: DEFAULT_CEO_PROFILE.name,
         ceoTitle: DEFAULT_CEO_PROFILE.title,
         ceoQuote: DEFAULT_CEO_PROFILE.quote,
-        ceoPhone: DEFAULT_CEO_PROFILE.phone,
+        ceoWhatsapp: DEFAULT_CEO_PROFILE.whatsapp,
+        ceoCallPhone: DEFAULT_CEO_PROFILE.callPhone,
+        ceoPhone: DEFAULT_CEO_PROFILE.callPhone,
         updatedAt: new Date().toISOString()
       }, { merge: true });
 

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
     <title>Sammie Digital Studio — Design. Develop. Grow.</title>
 
     <!-- SEO & Search Engine Metadata -->
@@ -148,6 +148,12 @@
         margin: 0;
         padding: 0;
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden !important;
+        touch-action: pan-y;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
       }
       .page-view {
         display: none;
@@ -618,20 +624,20 @@
 
                     <div class="about-ceo-actions">
                       <a
-                        href="https://wa.me/2348168874826?text=Hello%20Samuel!%20I'd%20like%20to%20discuss%20a%20project%20with%20Sammie%20Digital%20Studio."
+                        href="https://wa.me/22942502201?text=Hello%20Samuel!%20Executive%20brief%20for%20Sammie%20Digital%20Studio."
                         target="_blank"
                         rel="noopener noreferrer"
                         class="btn btn-primary btn-sm ceo-chat-btn"
                         id="aboutCeoWhatsappLink"
                       >
-                        💬 Chat with CEO
+                        💬 Chat on WhatsApp
                       </a>
                       <a
                         href="tel:08168874826"
                         class="btn btn-outline btn-sm ceo-call-btn"
                         id="aboutCeoPhoneLink"
                       >
-                        📞 Call Direct
+                        📞 Call 08168874826
                       </a>
                       <button
                         type="button"
@@ -643,6 +649,9 @@
                         ✏️ Change Photo (Admin)
                       </button>
                     </div>
+                    <span class="about-ceo-notice-pill" id="aboutCeoNoticePill">
+                      💬 WhatsApp: +22942502201 • 📞 Call: 08168874826
+                    </span>
                   </div>
                 </div>
               </div>
@@ -671,18 +680,13 @@
                 </p>
                 <div class="about-meta">
                   <span class="founder-badge" id="aboutFounderBadge">Founder & Lead: Adeniran Samuel Inioluwa</span>
-                  <span class="founder-phone" id="aboutFounderPhone">WhatsApp & Calls: 08168874826</span>
+                  <span class="founder-phone" id="aboutFounderPhone">WhatsApp: +22942502201 | Call: 08168874826</span>
                 </div>
               </div>
             </div>
 
             <!-- Studio Key Metrics -->
             <div class="about-stats-grid">
-              <div class="stat-card">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Projects Completed</div>
-                <p class="stat-desc">Websites, church flyers, brand packages, and digital campaigns.</p>
-              </div>
               <div class="stat-card">
                 <div class="stat-number">24-48h</div>
                 <div class="stat-label">Flyer Turnaround</div>
@@ -1369,53 +1373,113 @@
                 <h3 class="contact-card-title">Send a Quick Inquiry</h3>
                 <p class="contact-card-sub">Fill out the quick form below to launch your project or get a quote.</p>
 
-                <form id="pageContactForm" class="contact-page-form">
-                  <div class="form-group">
-                    <label for="contactPageName">Your Full Name / Organization *</label>
-                    <input
-                      type="text"
-                      id="contactPageName"
-                      class="form-input"
-                      placeholder="e.g. Pastor David / Grace Church / Adebayo Ltd"
-                      required
-                    />
+                <form id="pageContactForm" class="contact-page-form" novalidate>
+                  <!-- Form Status Alert Banner -->
+                  <div id="contactFormAlert" class="contact-form-alert" role="alert" style="display: none;"></div>
+
+                  <div class="form-group" id="group-contactPageName">
+                    <div class="form-label-row">
+                      <label for="contactPageName">Your Full Name / Organization <span class="required-star" title="Required field">*</span></label>
+                      <span class="field-status-badge" id="badge-contactPageName">Required</span>
+                    </div>
+                    <div class="form-input-wrapper">
+                      <input
+                        type="text"
+                        id="contactPageName"
+                        class="form-input"
+                        placeholder="e.g. Pastor David / Grace Church / Adebayo Ltd"
+                        required
+                        autocomplete="name"
+                        aria-required="true"
+                        aria-describedby="feedback-contactPageName"
+                      />
+                      <span class="field-icon-indicator" id="icon-contactPageName" aria-hidden="true"></span>
+                    </div>
+                    <div class="form-feedback-msg" id="feedback-contactPageName" role="alert" aria-live="polite"></div>
                   </div>
 
-                  <div class="form-group">
-                    <label for="contactPagePhone">WhatsApp Number / Phone *</label>
-                    <input
-                      type="tel"
-                      id="contactPagePhone"
-                      class="form-input"
-                      placeholder="e.g. 08168874826 or +234..."
-                      required
-                    />
+                  <div class="form-group" id="group-contactPagePhone">
+                    <div class="form-label-row">
+                      <label for="contactPagePhone">WhatsApp Number / Phone <span class="required-star" title="Required field">*</span></label>
+                      <span class="field-status-badge" id="badge-contactPagePhone">Required</span>
+                    </div>
+                    <div class="phone-input-combo-wrapper">
+                      <!-- Country Code Selector -->
+                      <div class="country-code-picker">
+                        <select id="contactPageCountryCode" class="country-code-select" aria-label="Select Country Code">
+                          <option value="+234" selected data-flag="🇳🇬" data-iso="NG">🇳🇬 +234 (Nigeria)</option>
+                          <option value="+1" data-flag="🇺🇸" data-iso="US">🇺🇸 +1 (USA/Canada)</option>
+                          <option value="+44" data-flag="🇬🇧" data-iso="GB">🇬🇧 +44 (UK)</option>
+                          <option value="+233" data-flag="🇬🇭" data-iso="GH">🇬🇭 +233 (Ghana)</option>
+                          <option value="+254" data-flag="🇰🇪" data-iso="KE">🇰🇪 +254 (Kenya)</option>
+                          <option value="+27" data-flag="🇿🇦" data-iso="ZA">🇿🇦 +27 (South Africa)</option>
+                          <option value="+971" data-flag="🇦🇪" data-iso="AE">🇦🇪 +971 (UAE)</option>
+                          <option value="+49" data-flag="🇩🇪" data-iso="DE">🇩🇪 +49 (Germany)</option>
+                          <option value="+33" data-flag="🇫🇷" data-iso="FR">🇫🇷 +33 (France)</option>
+                          <option value="+353" data-flag="🇮🇪" data-iso="IE">🇮🇪 +353 (Ireland)</option>
+                          <option value="+61" data-flag="🇦🇺" data-iso="AU">🇦🇺 +61 (Australia)</option>
+                          <option value="+91" data-flag="🇮🇳" data-iso="IN">🇮🇳 +91 (India)</option>
+                          <option value="other" data-flag="🌐" data-iso="INTL">🌐 Other / Type +</option>
+                        </select>
+                      </div>
+                      <!-- Phone Input Field -->
+                      <div class="form-input-wrapper phone-number-field-wrapper">
+                        <input
+                          type="tel"
+                          id="contactPagePhone"
+                          class="form-input phone-number-input"
+                          placeholder="e.g. 0816 887 4826 or 816 887 4826"
+                          required
+                          autocomplete="tel"
+                          aria-required="true"
+                          aria-describedby="feedback-contactPagePhone hint-contactPagePhone"
+                        />
+                        <span class="field-icon-indicator" id="icon-contactPagePhone" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                    <div class="form-feedback-msg" id="feedback-contactPagePhone" role="alert" aria-live="polite"></div>
+                    <p class="form-helper-text" id="hint-contactPagePhone">
+                      Select country code or type directly (e.g. <span class="text-orange-400 font-mono">08168874826</span>, <span class="text-orange-400 font-mono">+234...</span>, or <span class="text-orange-400 font-mono">+1...</span>).
+                    </p>
                   </div>
 
-                  <div class="form-group">
-                    <label for="contactPageService">Service Needed *</label>
-                    <select id="contactPageService" class="form-select" required>
-                      <option value="" disabled selected>Select service</option>
-                      <option value="Church Flyer / Event Flyer">Church Flyer / Event Flyer Design</option>
-                      <option value="Website Development">Website Development (Landing page / Corporate)</option>
-                      <option value="Logo & Brand Identity">Logo & Brand Identity System</option>
-                      <option value="Social Media Graphics">Social Media Graphics & Content</option>
-                      <option value="Complete Branding & Web Bundle">Complete Branding & Web Bundle</option>
-                      <option value="Other Inquiry">Other Custom Request</option>
-                    </select>
+                  <div class="form-group" id="group-contactPageService">
+                    <div class="form-label-row">
+                      <label for="contactPageService">Service Needed <span class="required-star" title="Required field">*</span></label>
+                      <span class="field-status-badge" id="badge-contactPageService">Required</span>
+                    </div>
+                    <div class="form-input-wrapper">
+                      <select id="contactPageService" class="form-select" required aria-required="true" aria-describedby="feedback-contactPageService">
+                        <option value="" disabled selected>Select service</option>
+                        <option value="Church Flyer / Event Flyer">Church Flyer / Event Flyer Design</option>
+                        <option value="Website Development">Website Development (Landing page / Corporate)</option>
+                        <option value="Logo & Brand Identity">Logo & Brand Identity System</option>
+                        <option value="Social Media Graphics">Social Media Graphics & Content</option>
+                        <option value="Complete Branding & Web Bundle">Complete Branding & Web Bundle</option>
+                        <option value="Other Inquiry">Other Custom Request</option>
+                      </select>
+                      <span class="field-icon-indicator" id="icon-contactPageService" aria-hidden="true"></span>
+                    </div>
+                    <div class="form-feedback-msg" id="feedback-contactPageService" role="alert" aria-live="polite"></div>
                   </div>
 
-                  <div class="form-group">
-                    <label for="contactPageDetails">Project Details & Expected Date</label>
-                    <textarea
-                      id="contactPageDetails"
-                      class="form-textarea"
-                      rows="3"
-                      placeholder="Tell us briefly about your event, business goals, or deadline..."
-                    ></textarea>
+                  <div class="form-group" id="group-contactPageDetails">
+                    <div class="form-label-row">
+                      <label for="contactPageDetails">Project Details & Expected Date <span class="optional-tag">(Optional)</span></label>
+                      <span class="char-counter" id="detailsCharCounter">0 / 600</span>
+                    </div>
+                    <div class="form-input-wrapper">
+                      <textarea
+                        id="contactPageDetails"
+                        class="form-textarea"
+                        rows="3"
+                        maxlength="600"
+                        placeholder="Tell us briefly about your event, business goals, or deadline..."
+                      ></textarea>
+                    </div>
                   </div>
 
-                  <button type="submit" class="btn btn-primary btn-block">
+                  <button type="submit" id="contactPageSubmitBtn" class="btn btn-primary btn-block">
                     🚀 Send Inquiry Directly to WhatsApp
                   </button>
                   <p class="form-security-note">
@@ -1935,15 +1999,27 @@
                   </div>
 
                   <!-- Phone / WhatsApp -->
-                  <div class="form-group">
-                    <label for="adminCeoPhoneInput">Direct Phone / WhatsApp Number</label>
-                    <input
-                      type="text"
-                      id="adminCeoPhoneInput"
-                      value="08168874826"
-                      placeholder="08168874826 or +234..."
-                      maxlength="50"
-                    />
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="adminCeoWhatsappInput">CEO WhatsApp Number (Benin / International)</label>
+                      <input
+                        type="text"
+                        id="adminCeoWhatsappInput"
+                        value="+22942502201"
+                        placeholder="+22942502201"
+                        maxlength="50"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="adminCeoPhoneInput">CEO Direct Line for Calling (Voice Calls)</label>
+                      <input
+                        type="text"
+                        id="adminCeoPhoneInput"
+                        value="08168874826"
+                        placeholder="08168874826"
+                        maxlength="50"
+                      />
+                    </div>
                   </div>
 
                   <!-- Quote / Mission -->
