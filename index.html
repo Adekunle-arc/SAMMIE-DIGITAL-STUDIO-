@@ -150,11 +150,13 @@
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       }
       .hero-section {
-        padding: 3.5rem 0 3rem;
+        padding: 4.25rem 0 3.75rem;
+        position: relative;
+        overflow: hidden;
       }
       @media (max-width: 768px) {
         .hero-section {
-          padding: 2rem 0 1.75rem;
+          padding: 2.75rem 0 2.25rem;
         }
       }
       .brand-logo-img {
@@ -328,6 +330,19 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero-section">
+      <!-- Ambient Studio Laptop Backdrop -->
+      <div class="hero-backdrop-wrap" aria-hidden="true">
+        <img
+          src="/assets/images/hero_laptop.jpg"
+          alt="Sammie Digital Studio Creative Tech Laptop"
+          class="hero-backdrop-img"
+          loading="eager"
+          referrerpolicy="no-referrer"
+        />
+        <div class="hero-backdrop-overlay"></div>
+        <div class="hero-backdrop-glow"></div>
+      </div>
+
       <div class="container hero-container">
         <div class="hero-content">
           <div class="badge hero-badge">
