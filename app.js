@@ -55,11 +55,13 @@ const translations = {
   en: {
     langLabel: "English",
     flag: "🇺🇸",
+    navHome: "Home",
     navAbout: "About",
     navServices: "Services",
     navPortfolio: "Our Works",
     navProcess: "Process",
     navFaq: "FAQ",
+    navContact: "Contact",
     navQuote: "Get Quote",
     heroBadge: "Sammie Digital Studio • Nigeria and worldwide",
     heroTitlePrefix: "We Build ",
@@ -111,11 +113,13 @@ const translations = {
   fr: {
     langLabel: "Français",
     flag: "🇫🇷",
+    navHome: "Accueil",
     navAbout: "À Propos",
     navServices: "Services",
     navPortfolio: "Nos Réalisations",
     navProcess: "Processus",
     navFaq: "FAQ",
+    navContact: "Contact",
     navQuote: "Devis",
     heroBadge: "Sammie Digital Studio • Nigeria and worldwide",
     heroTitlePrefix: "Nous Créons des ",
@@ -167,11 +171,13 @@ const translations = {
   es: {
     langLabel: "Español",
     flag: "🇪🇸",
+    navHome: "Inicio",
     navAbout: "Nosotros",
     navServices: "Servicios",
     navPortfolio: "Nuestros Trabajos",
     navProcess: "Proceso",
     navFaq: "FAQ",
+    navContact: "Contacto",
     navQuote: "Cotizar",
     heroBadge: "Sammie Digital Studio • Nigeria and worldwide",
     heroTitlePrefix: "Construimos ",
@@ -223,11 +229,13 @@ const translations = {
   de: {
     langLabel: "Deutsch",
     flag: "🇩🇪",
+    navHome: "Startseite",
     navAbout: "Über uns",
     navServices: "Leistungen",
     navPortfolio: "Unsere Arbeiten",
     navProcess: "Ablauf",
     navFaq: "FAQ",
+    navContact: "Kontakt",
     navQuote: "Angebot",
     heroBadge: "Sammie Digital Studio • Nigeria and worldwide",
     heroTitlePrefix: "Wir Erschaffen ",
@@ -279,11 +287,13 @@ const translations = {
   pt: {
     langLabel: "Português",
     flag: "🇧🇷",
+    navHome: "Início",
     navAbout: "Sobre",
     navServices: "Serviços",
     navPortfolio: "Nossos Trabalhos",
     navProcess: "Processo",
     navFaq: "FAQ",
+    navContact: "Contato",
     navQuote: "Orçamento",
     heroBadge: "Sammie Digital Studio • Nigeria and worldwide",
     heroTitlePrefix: "Criamos ",
@@ -335,11 +345,13 @@ const translations = {
   ar: {
     langLabel: "العربية",
     flag: "🇸🇦",
+    navHome: "الرئيسية",
     navAbout: "عن الاستوديو",
     navServices: "الخدمات",
     navPortfolio: "أعمالنا",
     navProcess: "خطوات العمل",
     navFaq: "الأسئلة",
+    navContact: "اتصل بنا",
     navQuote: "طلب سعر",
     heroBadge: "استوديو سامي الرقمي • Nigeria and worldwide",
     heroTitlePrefix: "نحن نصنع ",
@@ -391,11 +403,13 @@ const translations = {
   pcm: {
     langLabel: "Pidgin",
     flag: "🇳🇬",
+    navHome: "Home",
     navAbout: "About Us",
     navServices: "Services",
     navPortfolio: "Our Works",
     navProcess: "How We Dey Work",
     navFaq: "FAQ",
+    navContact: "Holla Us",
     navQuote: "Ask Price",
     heroBadge: "Sammie Digital Studio • Nigeria and worldwide",
     heroTitlePrefix: "We Dey Build ",
@@ -523,23 +537,36 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+let portfolioSearchQuery = '';
+
 /**
  * Renders portfolio cards strictly into the intended #portfolioGrid container.
  * Guaranteed not to inject, alter, or manipulate any other page sections.
  */
-function renderPortfolio(items, filter = currentPortfolioFilter) {
+function renderPortfolio(items, filter = currentPortfolioFilter, search = portfolioSearchQuery) {
   if (!portfolioGrid) {
     console.error('Target portfolio gallery element (#portfolioGrid) is missing from DOM.');
     return;
   }
 
   currentPortfolioFilter = filter;
+  portfolioSearchQuery = (search || '').trim().toLowerCase();
   portfolioGrid.innerHTML = '';
 
   const activeItems = Array.isArray(items) ? items : allPortfolioItems;
-  const filtered = filter === 'all' 
+  let filtered = filter === 'all' 
     ? activeItems 
     : activeItems.filter((item) => item.category === filter);
+
+  if (portfolioSearchQuery) {
+    filtered = filtered.filter((item) => {
+      const titleMatch = (item.title || '').toLowerCase().includes(portfolioSearchQuery);
+      const descMatch = (item.description || '').toLowerCase().includes(portfolioSearchQuery);
+      const catMatch = (item.category || '').toLowerCase().includes(portfolioSearchQuery);
+      const clientMatch = (item.client || '').toLowerCase().includes(portfolioSearchQuery);
+      return titleMatch || descMatch || catMatch || clientMatch;
+    });
+  }
 
   if (filtered.length === 0) {
     if (activeItems.length === 0) {
@@ -814,9 +841,36 @@ document.querySelectorAll('.filter-btn').forEach((btn) => {
     btn.classList.add('active');
     const filter = btn.getAttribute('data-filter') || 'all';
     currentPortfolioFilter = filter;
-    renderPortfolio(allPortfolioItems, filter);
+    renderPortfolio(allPortfolioItems, filter, portfolioSearchQuery);
   });
 });
+
+// Portfolio Instant Search Input & Clear
+const portfolioSearchInput = document.getElementById('portfolioSearchInput');
+const portfolioSearchClear = document.getElementById('portfolioSearchClear');
+
+if (portfolioSearchInput) {
+  portfolioSearchInput.addEventListener('input', (e) => {
+    const val = e.target.value.trim();
+    portfolioSearchQuery = val;
+    if (portfolioSearchClear) {
+      portfolioSearchClear.style.display = val ? 'inline-block' : 'none';
+    }
+    renderPortfolio(allPortfolioItems, currentPortfolioFilter, val);
+  });
+}
+
+if (portfolioSearchClear) {
+  portfolioSearchClear.addEventListener('click', () => {
+    if (portfolioSearchInput) {
+      portfolioSearchInput.value = '';
+      portfolioSearchInput.focus();
+    }
+    portfolioSearchQuery = '';
+    portfolioSearchClear.style.display = 'none';
+    renderPortfolio(allPortfolioItems, currentPortfolioFilter, '');
+  });
+}
 
 // 4. FAQ Accordion
 document.querySelectorAll('.faq-question').forEach((button) => {
@@ -1191,6 +1245,9 @@ if (headerQuoteBtn) headerQuoteBtn.addEventListener('click', openModal);
 if (openQuoteBtnHero) openQuoteBtnHero.addEventListener('click', openModal);
 if (openQuoteBtnCta) openQuoteBtnCta.addEventListener('click', openModal);
 if (closeQuoteBtn) closeQuoteBtn.addEventListener('click', closeModal);
+document.querySelectorAll('.open-quote-trigger').forEach((btn) => {
+  btn.addEventListener('click', openModal);
+});
 
 if (quoteModal) {
   quoteModal.addEventListener('click', (e) => {
@@ -1211,6 +1268,23 @@ if (quoteForm) {
     window.open(`https://wa.me/2348168874826?text=${message}`, '_blank');
     closeModal();
     quoteForm.reset();
+  });
+}
+
+// 6b. Embedded Contact Page Inquiry Form
+const pageContactForm = document.getElementById('pageContactForm');
+if (pageContactForm) {
+  pageContactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('contactPageName')?.value.trim() || 'Valued Client';
+    const phone = document.getElementById('contactPagePhone')?.value.trim() || 'Not specified';
+    const service = document.getElementById('contactPageService')?.value || 'Digital Services';
+    const details = document.getElementById('contactPageDetails')?.value.trim() || 'Ready to start a new project.';
+
+    const message = `Hello Samuel (Sammie Digital Studio)!%0A%0AI would like to start a project:%0A- *Client / Brand:* ${encodeURIComponent(name)}%0A- *Phone / WhatsApp:* ${encodeURIComponent(phone)}%0A- *Service:* ${encodeURIComponent(service)}%0A- *Project Details:* ${encodeURIComponent(details)}%0A%0APlease let me know the rates and timeframe to begin!`;
+
+    window.open(`https://wa.me/2348168874826?text=${message}`, '_blank');
+    pageContactForm.reset();
   });
 }
 
@@ -1277,30 +1351,88 @@ if (mobileQuoteBtn) {
   });
 }
 
-// 8. Active Nav Link on Scroll Spy
-const sections = document.querySelectorAll('section[id]');
-function updateActiveNavLink() {
-  const scrollY = window.pageYOffset;
-  sections.forEach((current) => {
-    const sectionHeight = current.offsetHeight;
-    const sectionTop = current.offsetTop - 120;
-    const sectionId = current.getAttribute('id');
-    const desktopLink = document.querySelector(`.nav-link[href*="${sectionId}"]`);
-    const mobileLink = document.querySelector(`.mobile-nav-link[href*="${sectionId}"]`);
+// 8. Multi-Page Client-Side Router & Page Views Controller
+const validPages = ['home', 'about', 'services', 'portfolio', 'process', 'faq', 'contact'];
+let currentPage = 'home';
 
-    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-      if (desktopLink) {
-        document.querySelectorAll('.nav-link').forEach((l) => l.classList.remove('active'));
-        desktopLink.classList.add('active');
-      }
-      if (mobileLink) {
-        document.querySelectorAll('.mobile-nav-link').forEach((l) => l.classList.remove('active'));
-        mobileLink.classList.add('active');
-      }
+function navigateToPage(targetPage, shouldPushHistory = true) {
+  if (!targetPage) targetPage = 'home';
+  targetPage = targetPage.toLowerCase().trim();
+
+  // Route aliases
+  if (targetPage === 'works' || targetPage === 'our-works') {
+    targetPage = 'portfolio';
+  }
+
+  if (!validPages.includes(targetPage)) {
+    targetPage = 'home';
+  }
+
+  currentPage = targetPage;
+
+  // Toggle active class on page-views
+  const pageViews = document.querySelectorAll('.page-view');
+  pageViews.forEach((view) => {
+    const pageAttr = view.getAttribute('data-page');
+    if (pageAttr === targetPage) {
+      view.classList.add('active');
+    } else {
+      view.classList.remove('active');
     }
   });
+
+  // Update active state on nav links
+  document.querySelectorAll('.nav-link, .mobile-nav-link').forEach((link) => {
+    const href = (link.getAttribute('href') || '').replace(/^#\/?/, '').toLowerCase();
+    const linkPage = link.getAttribute('data-page') || href;
+    const isTarget = linkPage === targetPage || (targetPage === 'portfolio' && (linkPage === 'works' || href === 'portfolio'));
+    if (isTarget) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // Smoothly scroll to top of page
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  // Update browser URL hash
+  const targetHash = '#' + (targetPage === 'home' ? 'home' : targetPage);
+  if (shouldPushHistory) {
+    if (window.location.hash !== targetHash) {
+      history.pushState(null, '', targetHash);
+    }
+  }
 }
-window.addEventListener('scroll', updateActiveNavLink);
+
+function handleHashRouting() {
+  const hash = window.location.hash.toLowerCase().trim();
+  if (hash === '#admin') {
+    showAdminModal();
+    return;
+  }
+  const cleanPage = hash.replace(/^#\/?/, '') || 'home';
+  navigateToPage(cleanPage, false);
+}
+
+// Global click event delegation for internal hash navigation
+document.addEventListener('click', (e) => {
+  const targetLink = e.target.closest('a[href^="#"]');
+  if (!targetLink) return;
+
+  const href = targetLink.getAttribute('href');
+  if (!href || href === '#' || href === '#!') return;
+  if (href === '#admin') return; // Handled by admin portal click listener
+
+  const page = href.replace(/^#\/?/, '').toLowerCase();
+  if (validPages.includes(page) || page === 'works' || page === 'our-works') {
+    e.preventDefault();
+    navigateToPage(page, true);
+    if (typeof closeMobileNav === 'function') {
+      closeMobileNav();
+    }
+  }
+});
 
 // 9. Back to Top Button
 const backToTopBtn = document.getElementById('backToTopBtn');
@@ -1720,20 +1852,15 @@ function hideAdminModal() {
     }
 
     if (window.location.hash === '#admin') {
-      history.pushState(null, '', window.location.pathname + window.location.search);
+      const returnHash = '#' + (currentPage || 'home');
+      history.pushState(null, '', returnHash);
     }
   }
 }
 
-// Check URL Hash for #admin
-function checkHashRoute() {
-  if (window.location.hash === '#admin') {
-    showAdminModal();
-  }
-}
-
-window.addEventListener('hashchange', checkHashRoute);
-window.addEventListener('load', checkHashRoute);
+// Global URL Hash Route Listener (Coordinates Dedicated Pages & #admin Modal)
+window.addEventListener('hashchange', handleHashRouting);
+window.addEventListener('load', handleHashRouting);
 
 if (footerAdminLink) {
   footerAdminLink.addEventListener('click', (e) => {

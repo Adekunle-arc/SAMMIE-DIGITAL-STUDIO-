@@ -149,8 +149,14 @@
         padding: 0;
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       }
+      .page-view {
+        display: none;
+      }
+      .page-view.active {
+        display: block;
+      }
       .hero-section {
-        padding: 4.25rem 0 3.75rem;
+        padding: 4.5rem 0 3.75rem;
         position: relative;
         overflow: hidden;
       }
@@ -240,12 +246,13 @@
 
         <!-- Desktop Navigation Links -->
         <nav class="nav-links" id="desktopNav" aria-label="Main Navigation">
-          <a href="#home" class="nav-link active" data-i18n="navHome">Home</a>
-          <a href="#about" class="nav-link" data-i18n="navAbout">About</a>
-          <a href="#services" class="nav-link" data-i18n="navServices">Services</a>
-          <a href="#portfolio" class="nav-link" data-i18n="navPortfolio">Our Works</a>
-          <a href="#process" class="nav-link" data-i18n="navProcess">Process</a>
-          <a href="#faq" class="nav-link" data-i18n="navFaq">FAQ</a>
+          <a href="#home" class="nav-link active" data-page="home" data-i18n="navHome">Home</a>
+          <a href="#about" class="nav-link" data-page="about" data-i18n="navAbout">About</a>
+          <a href="#services" class="nav-link" data-page="services" data-i18n="navServices">Services</a>
+          <a href="#portfolio" class="nav-link" data-page="portfolio" data-i18n="navPortfolio">Our Works</a>
+          <a href="#process" class="nav-link" data-page="process" data-i18n="navProcess">Process</a>
+          <a href="#faq" class="nav-link" data-page="faq" data-i18n="navFaq">FAQ</a>
+          <a href="#contact" class="nav-link" data-page="contact" data-i18n="navContact">Contact</a>
         </nav>
 
         <!-- Header CTA Actions -->
@@ -300,12 +307,13 @@
         </div>
 
         <nav class="mobile-nav-links" id="mobileNavLinks">
-          <a href="#home" class="mobile-nav-link" data-i18n="navHome">Home</a>
-          <a href="#about" class="mobile-nav-link" data-i18n="navAbout">About</a>
-          <a href="#services" class="mobile-nav-link" data-i18n="navServices">Services</a>
-          <a href="#portfolio" class="mobile-nav-link" data-i18n="navPortfolio">Our Works</a>
-          <a href="#process" class="mobile-nav-link" data-i18n="navProcess">Process</a>
-          <a href="#faq" class="mobile-nav-link" data-i18n="navFaq">FAQ</a>
+          <a href="#home" class="mobile-nav-link active" data-page="home" data-i18n="navHome">Home</a>
+          <a href="#about" class="mobile-nav-link" data-page="about" data-i18n="navAbout">About</a>
+          <a href="#services" class="mobile-nav-link" data-page="services" data-i18n="navServices">Services</a>
+          <a href="#portfolio" class="mobile-nav-link" data-page="portfolio" data-i18n="navPortfolio">Our Works</a>
+          <a href="#process" class="mobile-nav-link" data-page="process" data-i18n="navProcess">Process</a>
+          <a href="#faq" class="mobile-nav-link" data-page="faq" data-i18n="navFaq">FAQ</a>
+          <a href="#contact" class="mobile-nav-link" data-page="contact" data-i18n="navContact">Contact</a>
         </nav>
 
         <div class="mobile-nav-actions">
@@ -328,413 +336,1050 @@
       </div>
     </div>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero-section">
-      <!-- Ambient Studio Laptop Backdrop -->
-      <div class="hero-backdrop-wrap" aria-hidden="true">
-        <img
-          src="/assets/images/hero_laptop.jpg"
-          alt="Sammie Digital Studio Creative Tech Laptop"
-          class="hero-backdrop-img"
-          loading="eager"
-          referrerpolicy="no-referrer"
-        />
-        <div class="hero-backdrop-overlay"></div>
-        <div class="hero-backdrop-glow"></div>
-      </div>
+    <!-- Main Content Container with Dedicated Multi-Page Views -->
+    <main id="mainContent">
+      <!-- ==========================================
+           PAGE 1: HOME
+           ========================================== -->
+      <div id="page-home" class="page-view active" data-page="home">
+        <!-- Clean Dark Minimalist Hero Section -->
+        <section id="home" class="hero-section hero-clean-dark">
+          <!-- Subtle Dark Studio Ambient Radial Glow (Clean, no photo background) -->
+          <div class="hero-ambient-glow" aria-hidden="true"></div>
 
-      <div class="container hero-container">
-        <div class="hero-content">
-          <div class="badge hero-badge">
-            <span class="badge-dot"></span>
-            <span data-i18n="heroBadge"
-              >Sammie Digital Studio • Nigeria and worldwide</span
-            >
-          </div>
+          <div class="container hero-container">
+            <div class="hero-content">
+              <div class="badge hero-badge">
+                <span class="badge-dot"></span>
+                <span data-i18n="heroBadge">Sammie Digital Studio • Nigeria and worldwide</span>
+              </div>
 
-          <h1 class="hero-title">
-            <span data-i18n="heroTitlePrefix">We Build </span>
-            <span class="text-orange hero-highlight-underline" data-i18n="heroTitleHighlight"
-              >Digital Experiences</span
-            >
-            <span data-i18n="heroTitleSuffix"> That Help Businesses Grow</span>
-          </h1>
+              <h1 class="hero-title">
+                <span data-i18n="heroTitlePrefix">We Build </span>
+                <span class="text-orange hero-highlight-underline" data-i18n="heroTitleHighlight">Digital Experiences</span>
+                <span data-i18n="heroTitleSuffix"> That Help Businesses Grow</span>
+              </h1>
 
-          <p class="hero-desc" data-i18n="heroSubtitle">
-            Modern websites, branding, and digital solutions designed to give
-            businesses, organizations, and individuals a strong and credible
-            online presence.
-          </p>
+              <p class="hero-desc" data-i18n="heroSubtitle">
+                Modern websites, branding, and digital solutions designed to give
+                businesses, organizations, and individuals a strong and credible
+                online presence.
+              </p>
 
-          <div class="hero-buttons">
-            <a
-              href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20get%20started."
-              target="_blank"
-              class="btn btn-primary"
-              data-i18n="getStarted"
-            >
-              Get Started
-            </a>
-            <button
-              id="openQuoteBtnHero"
-              class="btn btn-outline"
-              data-i18n="requestQuote"
-            >
-              Request Quote
-            </button>
-          </div>
+              <div class="hero-buttons">
+                <a
+                  href="#portfolio"
+                  class="btn btn-primary"
+                  data-page="portfolio"
+                >
+                  <span>🎨</span> Explore Our Works
+                </a>
+                <a
+                  href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20get%20started."
+                  target="_blank"
+                  class="btn btn-whatsapp"
+                >
+                  <span>💬</span> WhatsApp Direct
+                </a>
+                <button
+                  id="openQuoteBtnHero"
+                  class="btn btn-outline"
+                  data-i18n="requestQuote"
+                >
+                  Request Quote
+                </button>
+              </div>
 
-          <div class="hero-highlights">
-            <div class="hero-highlight-item">
-              <span class="highlight-icon">⚡</span>
-              <span data-i18n="heroHighlight1">Fast & Reliable Delivery</span>
+              <div class="hero-highlights">
+                <div class="hero-highlight-item">
+                  <span class="highlight-icon">⚡</span>
+                  <span data-i18n="heroHighlight1">Fast & Reliable Delivery</span>
+                </div>
+                <div class="hero-highlight-item">
+                  <span class="highlight-icon">✨</span>
+                  <span data-i18n="heroHighlight2">Bespoke Design & Development</span>
+                </div>
+                <div class="hero-highlight-item">
+                  <span class="highlight-icon">🌍</span>
+                  <span data-i18n="heroHighlight3">Digital Solutions for Businesses & Organizations</span>
+                </div>
+              </div>
             </div>
-            <div class="hero-highlight-item">
-              <span class="highlight-icon">✨</span>
-              <span data-i18n="heroHighlight2">Bespoke Design & Development</span>
+          </div>
+        </section>
+
+        <!-- 3 Pillars Section -->
+        <section class="pillars-section">
+          <div class="container pillars-grid">
+            <div class="pillar-card">
+              <div class="pillar-icon">⚡</div>
+              <h4 data-i18n="pillar1Title">Precision Web Engineering</h4>
+              <p data-i18n="pillar1Desc">
+                Fully responsive, modern websites engineered to build credibility
+                and perform seamlessly on phones, tablets, and desktop computers.
+              </p>
             </div>
-            <div class="hero-highlight-item">
-              <span class="highlight-icon">🌍</span>
-              <span data-i18n="heroHighlight3">Digital Solutions for Businesses & Organizations</span>
+            <div class="pillar-card">
+              <div class="pillar-icon">🎨</div>
+              <h4 data-i18n="pillar2Title">Distinctive Visual Design</h4>
+              <p data-i18n="pillar2Desc">
+                Striking promotional flyers, memorable logo marks, and cohesive
+                branding guidelines crafted to capture audience attention.
+              </p>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3 Pillars Section -->
-    <section class="pillars-section">
-      <div class="container pillars-grid">
-        <div class="pillar-card">
-          <div class="pillar-icon">⚡</div>
-          <h4 data-i18n="pillar1Title">Precision Web Engineering</h4>
-          <p data-i18n="pillar1Desc">
-            Fully responsive, modern websites engineered to build credibility
-            and perform seamlessly on phones, tablets, and desktop computers.
-          </p>
-        </div>
-        <div class="pillar-card">
-          <div class="pillar-icon">🎨</div>
-          <h4 data-i18n="pillar2Title">Distinctive Visual Design</h4>
-          <p data-i18n="pillar2Desc">
-            Striking promotional flyers, memorable logo marks, and cohesive
-            branding guidelines crafted to capture audience attention.
-          </p>
-        </div>
-        <div class="pillar-card">
-          <div class="pillar-icon">🤝</div>
-          <h4 data-i18n="pillar3Title">Direct Client Collaboration</h4>
-          <p data-i18n="pillar3Desc">
-            Personalized attention from our studio team with quick communication
-            via WhatsApp, reliable revisions, and prompt delivery.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about-section">
-      <div class="container about-container">
-        <div class="about-text">
-          <h2 class="section-title" data-i18n="aboutTitle">
-            About Sammie Digital Studio
-          </h2>
-          <h3 class="section-sub" data-i18n="aboutSub">
-            Dedicated to Elevating Businesses & Organizations Online
-          </h3>
-          <p class="text-muted">
-            <strong class="text-white">Sammie Digital Studio</strong> is a
-            premium creative and digital agency founded by
-            <strong class="text-orange">Adeniran Samuel Inioluwa</strong>. We
-            specialize in modern website development, distinctive brand
-            identity, high-impact graphic flyers, and active social media
-            management.
-          </p>
-          <p class="text-muted">
-            We empower businesses, churches, schools, corporate enterprises, and
-            ambitious individuals across Nigeria and globally to establish an
-            authoritative digital presence that inspires trust and converts
-            visitors into loyal clients.
-          </p>
-          <div class="about-meta">
-            <span class="founder-badge"
-              >Founder & Lead: Adeniran Samuel Inioluwa</span
-            >
-            <span class="founder-phone">WhatsApp & Calls: 08168874826</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Core Services Section -->
-    <section id="services" class="services-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="servicesTitle">
-            Our Core Services
-          </h2>
-          <p class="section-sub" data-i18n="servicesSub">
-            Tailored creative and technical solutions designed to help your
-            brand stand out.
-          </p>
-        </div>
-
-        <div class="services-grid">
-          <div class="service-card">
-            <div class="service-icon">🌐</div>
-            <h3 data-i18n="webDevTitle">Website Development</h3>
-            <p data-i18n="webDevDesc">
-              High-converting, responsive websites engineered with clean
-              architecture to build immediate credibility on any screen.
-            </p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">📄</div>
-            <h3 data-i18n="graphicDesignTitle">Graphic Design & Flyers</h3>
-            <p data-i18n="graphicDesignDesc">
-              Eye-catching church flyers, event announcements, and corporate
-              marketing materials delivered in print-ready and digital formats.
-            </p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">✨</div>
-            <h3 data-i18n="logoDesignTitle">Logo Design</h3>
-            <p data-i18n="logoDesignDesc">
-              Distinctive and memorable logo marks tailored to encapsulate your
-              company's mission and unique value proposition.
-            </p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">🎯</div>
-            <h3 data-i18n="brandingTitle">Branding & Identity</h3>
-            <p data-i18n="brandingDesc">
-              Comprehensive brand identity design, encompassing typography
-              pairings, custom color systems, and usage guidelines.
-            </p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">📱</div>
-            <h3 data-i18n="socialMediaTitle">Social Media Management</h3>
-            <p data-i18n="socialMediaDesc">
-              Strategic content planning, graphic asset creation, post
-              scheduling, and brand consistency across Instagram and TikTok.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Real-Time Cloud Firestore Portfolio -->
-    <section id="portfolio" class="portfolio-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="portfolioTitle">Our Works</h2>
-          <p class="section-sub" data-i18n="portfolioSub">
-            Explore our curated selection of high-impact websites, brand designs, and creative flyers.
-          </p>
-        </div>
-
-        <!-- Filter Controls -->
-        <div class="portfolio-filters" id="portfolioFilters">
-          <button
-            class="filter-btn active"
-            data-filter="all"
-            data-i18n="allProjects"
-          >
-            All Works
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="websites"
-            data-i18n="websitesFilter"
-          >
-            Websites
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="flyers"
-            data-i18n="flyersFilter"
-          >
-            Flyers
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="branding"
-            data-i18n="brandingFilter"
-          >
-            Logos & Brands
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="social"
-            data-i18n="socialFilter"
-          >
-            Social Media
-          </button>
-        </div>
-
-        <!-- Dynamic Portfolio Grid -->
-        <div class="portfolio-grid" id="portfolioGrid">
-          <div class="loading-spinner" role="status" aria-live="polite">
-            <div class="spinner-ring"></div>
-            <p class="spinner-text">Loading studio works...</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4-Step Process Section -->
-    <section id="process" class="process-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="processTitle">How We Work</h2>
-          <p class="section-sub" data-i18n="processSub">
-            A seamless, collaborative process from initial concept to final
-            delivery.
-          </p>
-        </div>
-
-        <div class="process-grid">
-          <div class="process-card">
-            <div class="process-step">01</div>
-            <h4>Discovery & Brief</h4>
-            <p>
-              We discuss your goals, audience, brand style, and specific
-              requirements directly via WhatsApp or call.
-            </p>
-          </div>
-          <div class="process-card">
-            <div class="process-step">02</div>
-            <h4>Concept & Design</h4>
-            <p>
-              We draft creative visual directions or website prototypes aligned
-              with your business vision.
-            </p>
-          </div>
-          <div class="process-card">
-            <div class="process-step">03</div>
-            <h4>Review & Refine</h4>
-            <p>
-              You provide feedback. We make clean, prompt revisions until the
-              project meets your exact expectations.
-            </p>
-          </div>
-          <div class="process-card">
-            <div class="process-step">04</div>
-            <h4>Launch & Delivery</h4>
-            <p>
-              We deliver all high-resolution files (print and digital) or launch
-              your website live to the world.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section id="faq" class="faq-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Frequently Asked Questions</h2>
-          <p class="section-sub">
-            Quick answers to common questions about our services and process.
-          </p>
-        </div>
-
-        <div class="faq-accordion">
-          <div class="faq-item">
-            <button class="faq-question">
-              <span>How fast can you design an event or church flyer?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Most flyers are delivered within 24 to 48 hours. Urgent
-                turnaround is also available upon request.
+            <div class="pillar-card">
+              <div class="pillar-icon">🤝</div>
+              <h4 data-i18n="pillar3Title">Direct Client Collaboration</h4>
+              <p data-i18n="pillar3Desc">
+                Personalized attention from our studio team with quick communication
+                via WhatsApp, reliable revisions, and prompt delivery.
               </p>
             </div>
           </div>
+        </section>
 
-          <div class="faq-item">
-            <button class="faq-question">
-              <span>How long does a full website take to build?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                A standard business landing page or corporate website typically
-                takes 3 to 7 business days, including design, mobile
-                responsiveness, and testing.
+        <!-- Home Featured Works Teaser -->
+        <section class="home-teaser-section">
+          <div class="container">
+            <div class="section-header">
+              <span class="badge-pill-sub">Recent Studio Showcase</span>
+              <h2 class="section-title">Crafted With Excellence</h2>
+              <p class="section-sub">
+                Explore a taste of our websites, church media, flyers, and branding work.
               </p>
             </div>
-          </div>
 
-          <div class="faq-item">
-            <button class="faq-question">
-              <span
-                >Do you provide print-ready files for physical banners and
-                posters?</span
+            <div class="home-teaser-grid">
+              <div class="teaser-card">
+                <div class="teaser-card-badge">Church Media & Events</div>
+                <h3>Conference & Worship Flyers</h3>
+                <p>300 DPI high-definition promotional flyers engineered for vibrant social media engagement and physical prints.</p>
+                <a href="#portfolio" class="teaser-link" data-page="portfolio">View Church Works →</a>
+              </div>
+              <div class="teaser-card">
+                <div class="teaser-card-badge">Web Engineering</div>
+                <h3>High-Converting Business Websites</h3>
+                <p>Fast, mobile-friendly websites with clean UI/UX, SEO foundations, and conversion-focused customer touchpoints.</p>
+                <a href="#portfolio" class="teaser-link" data-page="portfolio">View Web Projects →</a>
+              </div>
+              <div class="teaser-card">
+                <div class="teaser-card-badge">Identity & Logos</div>
+                <h3>Memorable Brand Identities</h3>
+                <p>Custom logos, bespoke color palettes, and typography guidelines that set your business apart from competitors.</p>
+                <a href="#portfolio" class="teaser-link" data-page="portfolio">View Brand Assets →</a>
+              </div>
+            </div>
+
+            <div class="text-center mt-6">
+              <a href="#portfolio" class="btn btn-primary btn-lg" data-page="portfolio">
+                <span>🎨</span> Browse Full Works & Portfolio (Works Page) →
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Home Services Overview -->
+        <section class="home-services-overview">
+          <div class="container">
+            <div class="section-header">
+              <span class="badge-pill-sub">Our Capabilities</span>
+              <h2 class="section-title">Everything You Need to Scale Online</h2>
+              <p class="section-sub">
+                Complete digital agency services tailored for Nigerian and global businesses.
+              </p>
+            </div>
+
+            <div class="services-grid">
+              <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3 data-i18n="webDevTitle">Website Development</h3>
+                <p data-i18n="webDevDesc">
+                  High-converting, responsive websites engineered with clean
+                  architecture to build immediate credibility on any screen.
+                </p>
+              </div>
+              <div class="service-card">
+                <div class="service-icon">📄</div>
+                <h3 data-i18n="graphicDesignTitle">Graphic Design & Flyers</h3>
+                <p data-i18n="graphicDesignDesc">
+                  Eye-catching church flyers, event announcements, and corporate
+                  marketing materials delivered in print-ready and digital formats.
+                </p>
+              </div>
+              <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <h3 data-i18n="brandingTitle">Branding & Identity</h3>
+                <p data-i18n="brandingDesc">
+                  Comprehensive brand identity design, encompassing typography
+                  pairings, custom color systems, and usage guidelines.
+                </p>
+              </div>
+            </div>
+
+            <div class="text-center mt-6">
+              <a href="#services" class="btn btn-outline" data-page="services">
+                Explore All Services & Packages →
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Home CTA Banner -->
+        <section class="cta-section">
+          <div class="container cta-container">
+            <h2 class="cta-title" data-i18n="ctaReadyTitle">
+              Ready to Build Your Website or Flyer Design?
+            </h2>
+            <p class="cta-sub" data-i18n="ctaReadySub">
+              Contact Sammie Digital Studio today for professional website
+              development, branding, graphic design, and social media management services.
+            </p>
+            <div class="cta-buttons">
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20chat%20about%20a%20project."
+                target="_blank"
+                class="btn btn-whatsapp"
               >
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Yes! We provide 300 DPI high-resolution files in CMYK format
-                (PDF/JPEG) ready for any commercial printing press, alongside
-                digital RGB versions for WhatsApp and social media.
-              </p>
+                💬 Chat us on WhatsApp
+              </a>
+              <button
+                class="btn btn-primary open-quote-trigger"
+                data-i18n="requestQuoteBtn"
+              >
+                Request Quote
+              </button>
             </div>
+            <p class="cta-note" data-i18n="directLineNote">
+              Direct Line & WhatsApp: 08168874826 • Nigeria and worldwide
+            </p>
           </div>
+        </section>
+      </div>
 
-          <div class="faq-item">
-            <button class="faq-question">
-              <span>How do payments work?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                We accept local Nigerian bank transfers as well as international
-                payments. We typically work with a 50% initial commitment and
-                the remaining balance upon final approval.
-              </p>
+      <!-- ==========================================
+           PAGE 2: ABOUT US
+           ========================================== -->
+      <div id="page-about" class="page-view" data-page="about">
+        <!-- Dedicated Page Banner -->
+        <div class="page-header-banner">
+          <div class="container">
+            <div class="page-breadcrumbs">
+              <a href="#home" data-page="home">Home</a>
+              <span class="page-breadcrumbs-sep">/</span>
+              <span>About Us</span>
             </div>
+            <div class="page-badge-pill">Creative Agency & Studio</div>
+            <h1 class="page-main-title">About Sammie Digital Studio</h1>
+            <p class="page-main-sub">
+              Founded by Adeniran Samuel Inioluwa. Dedicated to elevating businesses, churches,
+              and organizations across Nigeria and worldwide with modern tech and distinctive design.
+            </p>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- CTA Banner -->
-    <section class="cta-section">
-      <div class="container cta-container">
-        <h2 class="cta-title" data-i18n="ctaReadyTitle">
-          Ready to Build Your Website or Flyer Design?
-        </h2>
-        <p class="cta-sub" data-i18n="ctaReadySub">
-          Contact Sammie Digital Studio today for professional website
-          development, branding, graphic design, and social media management
-          services.
-        </p>
-        <div class="cta-buttons">
-          <a
-            href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20chat%20about%20a%20project."
-            target="_blank"
-            class="btn btn-whatsapp"
-          >
-            💬 Chat us on WhatsApp
-          </a>
-          <button
-            id="openQuoteBtnCta"
-            class="btn btn-primary"
-            data-i18n="requestQuoteBtn"
-          >
-            Request Quote
-          </button>
-        </div>
-        <p class="cta-note" data-i18n="directLineNote">
-          Direct Line & WhatsApp: 08168874826 • Nigeria and worldwide
-        </p>
+        <!-- About Content Section -->
+        <section id="about" class="about-section">
+          <div class="container about-container">
+            <div class="about-text">
+              <h2 class="section-title" data-i18n="aboutTitle">
+                Who We Are & What Drives Us
+              </h2>
+              <h3 class="section-sub" data-i18n="aboutSub">
+                Dedicated to Elevating Businesses & Organizations Online
+              </h3>
+              <p class="text-muted">
+                <strong class="text-white">Sammie Digital Studio</strong> is a
+                premium creative and digital agency founded by
+                <strong class="text-orange">Adeniran Samuel Inioluwa</strong>. We
+                specialize in modern website development, distinctive brand
+                identity, high-impact graphic flyers, and active social media
+                management.
+              </p>
+              <p class="text-muted">
+                We empower businesses, churches, schools, corporate enterprises, and
+                ambitious individuals across Nigeria and globally to establish an
+                authoritative digital presence that inspires trust and converts
+                visitors into loyal clients.
+              </p>
+              <div class="about-meta">
+                <span class="founder-badge"
+                  >Founder & Lead: Adeniran Samuel Inioluwa</span
+                >
+                <span class="founder-phone">WhatsApp & Calls: 08168874826</span>
+              </div>
+            </div>
+
+            <!-- Studio Key Metrics -->
+            <div class="about-stats-grid">
+              <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Projects Completed</div>
+                <p class="stat-desc">Websites, church flyers, brand packages, and digital campaigns.</p>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">24-48h</div>
+                <div class="stat-label">Flyer Turnaround</div>
+                <p class="stat-desc">Fast, reliable turnaround with urgent delivery available on demand.</p>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Client Satisfaction</div>
+                <p class="stat-desc">Collaborative revisions until you are completely proud of the work.</p>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">Global</div>
+                <div class="stat-label">Worldwide Reach</div>
+                <p class="stat-desc">Serving clients throughout Nigeria, Africa, Europe, the UK, and the US.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Studio Values Section -->
+        <section class="pillars-section">
+          <div class="container pillars-grid">
+            <div class="pillar-card">
+              <div class="pillar-icon">💎</div>
+              <h4>Uncompromising Quality</h4>
+              <p>Every flyer is delivered in 300 DPI print-ready quality; every website is tested across iPhone, Android, tablets, and laptops.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">⚡</div>
+              <h4>Speed Without Mistakes</h4>
+              <p>We respect your event schedules and launch deadlines. We communicate quickly and hit our commitments.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">🤝</div>
+              <h4>Direct Founder Contact</h4>
+              <p>You speak directly with lead designer and engineer Samuel, guaranteeing clear communication and no middleman delays.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- About CTA Banner -->
+        <section class="cta-section">
+          <div class="container cta-container">
+            <h2 class="cta-title">Ready to Partner With Us?</h2>
+            <p class="cta-sub">
+              Let's build your next business website, event flyer, or brand identity with precision.
+            </p>
+            <div class="cta-buttons">
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Samuel!%20I'd%20like%20to%20discuss%20a%20project%20with%20Sammie%20Digital%20Studio."
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                💬 Chat With Samuel on WhatsApp
+              </a>
+              <button class="btn btn-primary open-quote-trigger">
+                Request Free Quote
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+
+      <!-- ==========================================
+           PAGE 3: SERVICES
+           ========================================== -->
+      <div id="page-services" class="page-view" data-page="services">
+        <!-- Dedicated Page Banner -->
+        <div class="page-header-banner">
+          <div class="container">
+            <div class="page-breadcrumbs">
+              <a href="#home" data-page="home">Home</a>
+              <span class="page-breadcrumbs-sep">/</span>
+              <span>Services</span>
+            </div>
+            <div class="page-badge-pill">What We Offer</div>
+            <h1 class="page-main-title">Our Digital & Creative Services</h1>
+            <p class="page-main-sub">
+              High-converting web engineering and striking visual design tailored for businesses, churches, and brands looking to dominate online.
+            </p>
+          </div>
+        </div>
+
+        <!-- Core Services Section -->
+        <section id="services" class="services-section">
+          <div class="container">
+            <div class="services-grid services-detailed-grid">
+              <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3 data-i18n="webDevTitle">Website Development</h3>
+                <p data-i18n="webDevDesc">
+                  High-converting, responsive websites engineered with clean
+                  architecture to build immediate credibility on any screen.
+                </p>
+                <ul class="service-checklist">
+                  <li>✓ Mobile, tablet & desktop responsiveness</li>
+                  <li>✓ Fast loading speeds & SEO optimization</li>
+                  <li>✓ WhatsApp & contact inquiry integration</li>
+                  <li>✓ Domain & hosting guidance</li>
+                </ul>
+              </div>
+
+              <div class="service-card">
+                <div class="service-icon">📄</div>
+                <h3 data-i18n="graphicDesignTitle">Graphic Design & Flyers</h3>
+                <p data-i18n="graphicDesignDesc">
+                  Eye-catching church flyers, event announcements, and corporate
+                  marketing materials delivered in print-ready and digital formats.
+                </p>
+                <ul class="service-checklist">
+                  <li>✓ 300 DPI CMYK for physical print presses</li>
+                  <li>✓ High-res RGB for Instagram & WhatsApp status</li>
+                  <li>✓ Church conferences, vigils, & concerts</li>
+                  <li>✓ 24-48 hours rapid turnaround</li>
+                </ul>
+              </div>
+
+              <div class="service-card">
+                <div class="service-icon">✨</div>
+                <h3 data-i18n="logoDesignTitle">Logo Design</h3>
+                <p data-i18n="logoDesignDesc">
+                  Distinctive and memorable logo marks tailored to encapsulate your
+                  company's mission and unique value proposition.
+                </p>
+                <ul class="service-checklist">
+                  <li>✓ Vector source files (SVG, PDF, PNG)</li>
+                  <li>✓ Transparent background files</li>
+                  <li>✓ Monogram, wordmark & pictorial concepts</li>
+                  <li>✓ Full commercial ownership rights</li>
+                </ul>
+              </div>
+
+              <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <h3 data-i18n="brandingTitle">Branding & Identity</h3>
+                <p data-i18n="brandingDesc">
+                  Comprehensive brand identity design, encompassing typography
+                  pairings, custom color systems, and usage guidelines.
+                </p>
+                <ul class="service-checklist">
+                  <li>✓ Brand color palettes & typography guide</li>
+                  <li>✓ Business cards & stationery layouts</li>
+                  <li>✓ Social media brand kits</li>
+                  <li>✓ Brand book & identity guidelines</li>
+                </ul>
+              </div>
+
+              <div class="service-card">
+                <div class="service-icon">📱</div>
+                <h3 data-i18n="socialMediaTitle">Social Media Management</h3>
+                <p data-i18n="socialMediaDesc">
+                  Strategic content planning, graphic asset creation, post
+                  scheduling, and brand consistency across Instagram and TikTok.
+                </p>
+                <ul class="service-checklist">
+                  <li>✓ Post graphics, carousels & stories</li>
+                  <li>✓ Content calendar & scheduling</li>
+                  <li>✓ Aesthetic feed curation</li>
+                  <li>✓ Bio optimization & growth setup</li>
+                </ul>
+              </div>
+
+              <div class="service-card">
+                <div class="service-icon">💡</div>
+                <h3>Tech & Digital Consulting</h3>
+                <p>
+                  Technical advisory for businesses needing advice on digital tools, web infrastructure, custom workflows, or online presence setup.
+                </p>
+                <ul class="service-checklist">
+                  <li>✓ Digital presence audits</li>
+                  <li>✓ Hosting & domain troubleshooting</li>
+                  <li>✓ Web optimization recommendations</li>
+                  <li>✓ 1-on-1 WhatsApp consultation</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- What's Included In Every Service Box -->
+            <div class="service-perks-box mt-8">
+              <h3 class="perks-title">What You Get With Every Project:</h3>
+              <div class="perks-grid">
+                <div class="perk-item">
+                  <span class="perk-icon">⚡</span>
+                  <div><strong>Rapid Turnaround</strong><p>Clear timelines agreed before work begins.</p></div>
+                </div>
+                <div class="perk-item">
+                  <span class="perk-icon">🔄</span>
+                  <div><strong>Prompt Revisions</strong><p>Collaborative fine-tuning to perfection.</p></div>
+                </div>
+                <div class="perk-item">
+                  <span class="perk-icon">📁</span>
+                  <div><strong>High-Res File Formats</strong><p>Digital RGB + Print CMYK ready for press.</p></div>
+                </div>
+                <div class="perk-item">
+                  <span class="perk-icon">💬</span>
+                  <div><strong>Direct WhatsApp Line</strong><p>Quick responses and zero communication hurdles.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Services CTA -->
+        <section class="cta-section">
+          <div class="container cta-container">
+            <h2 class="cta-title">Need a Custom Package?</h2>
+            <p class="cta-sub">
+              Tell us your requirements and we will send you a transparent, competitive quote within minutes.
+            </p>
+            <div class="cta-buttons">
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20a%20quote%20for%20your%20services."
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                💬 Discuss Package on WhatsApp
+              </a>
+              <button class="btn btn-primary open-quote-trigger">
+                Request Free Quote
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==========================================
+           PAGE 4: OUR WORKS / PORTFOLIO
+           ========================================== -->
+      <div id="page-portfolio" class="page-view" data-page="portfolio">
+        <!-- Dedicated Page Banner -->
+        <div class="page-header-banner">
+          <div class="container">
+            <div class="page-breadcrumbs">
+              <a href="#home" data-page="home">Home</a>
+              <span class="page-breadcrumbs-sep">/</span>
+              <span>Our Works</span>
+            </div>
+            <div class="page-badge-pill">Curated Portfolio</div>
+            <h1 class="page-main-title" data-i18n="portfolioTitle">Our Works & Featured Portfolio</h1>
+            <p class="page-main-sub" data-i18n="portfolioSub">
+              Explore our curated selection of high-impact websites, brand designs, and creative flyers. Real-time updates directly from our studio.
+            </p>
+          </div>
+        </div>
+
+        <!-- Real-Time Cloud Firestore Portfolio -->
+        <section id="portfolio" class="portfolio-section">
+          <div class="container">
+            <!-- Search & Filter Controls Bar -->
+            <div class="portfolio-toolbar">
+              <div class="portfolio-search-wrap">
+                <span class="search-icon">🔍</span>
+                <input
+                  type="text"
+                  id="portfolioSearchInput"
+                  class="portfolio-search-input"
+                  placeholder="Search works (e.g., church, COPAM, flyer, website)..."
+                  aria-label="Search studio portfolio"
+                />
+                <button
+                  type="button"
+                  id="portfolioSearchClear"
+                  class="portfolio-search-clear"
+                  style="display: none;"
+                  aria-label="Clear search"
+                >&times;</button>
+              </div>
+
+              <!-- Filter Controls -->
+              <div class="portfolio-filters" id="portfolioFilters">
+                <button
+                  class="filter-btn active"
+                  data-filter="all"
+                  data-i18n="allProjects"
+                >
+                  All Works
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="websites"
+                  data-i18n="websitesFilter"
+                >
+                  Websites
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="flyers"
+                  data-i18n="flyersFilter"
+                >
+                  Flyers
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="branding"
+                  data-i18n="brandingFilter"
+                >
+                  Logos & Brands
+                </button>
+                <button
+                  class="filter-btn"
+                  data-filter="social"
+                  data-i18n="socialFilter"
+                >
+                  Social Media
+                </button>
+              </div>
+            </div>
+
+            <div class="portfolio-meta-bar">
+              <span class="portfolio-copyright-note">
+                🛡️ © Sammie Digital Studio • Tap any artwork to view details or expand in full-screen.
+              </span>
+            </div>
+
+            <!-- Dynamic Portfolio Grid (Fed by Cloud Firestore in app.js) -->
+            <div class="portfolio-grid" id="portfolioGrid">
+              <div class="loading-spinner" role="status" aria-live="polite">
+                <div class="spinner-ring"></div>
+                <p class="spinner-text">Loading studio works...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Portfolio CTA -->
+        <section class="cta-section">
+          <div class="container cta-container">
+            <h2 class="cta-title">Love What You See?</h2>
+            <p class="cta-sub">
+              Let's create something equally striking for your church, business, or brand.
+            </p>
+            <div class="cta-buttons">
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I%20saw%20your%20works%20and%20would%20love%20to%20work%20together."
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                💬 Chat on WhatsApp
+              </a>
+              <button class="btn btn-primary open-quote-trigger">
+                Request a Quote
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==========================================
+           PAGE 5: PROCESS
+           ========================================== -->
+      <div id="page-process" class="page-view" data-page="process">
+        <!-- Dedicated Page Banner -->
+        <div class="page-header-banner">
+          <div class="container">
+            <div class="page-breadcrumbs">
+              <a href="#home" data-page="home">Home</a>
+              <span class="page-breadcrumbs-sep">/</span>
+              <span>Process</span>
+            </div>
+            <div class="page-badge-pill">Workflow</div>
+            <h1 class="page-main-title" data-i18n="processTitle">How We Work</h1>
+            <p class="page-main-sub" data-i18n="processSub">
+              A seamless, collaborative framework from initial concept to final delivery.
+            </p>
+          </div>
+        </div>
+
+        <!-- 4-Step Process Section -->
+        <section id="process" class="process-section">
+          <div class="container">
+            <div class="process-grid">
+              <div class="process-card">
+                <div class="process-step">01</div>
+                <h4>Discovery & Brief</h4>
+                <p>
+                  We discuss your goals, audience, brand style, and specific
+                  requirements directly via WhatsApp or call. We establish the project
+                  timeline and exact deliverables.
+                </p>
+              </div>
+              <div class="process-card">
+                <div class="process-step">02</div>
+                <h4>Concept & Design</h4>
+                <p>
+                  We draft creative visual directions or website prototypes aligned
+                  with your business vision, applying high typography and brand harmony.
+                </p>
+              </div>
+              <div class="process-card">
+                <div class="process-step">03</div>
+                <h4>Review & Refine</h4>
+                <p>
+                  You provide feedback. We make clean, prompt revisions until the
+                  project meets your exact expectations and standards.
+                </p>
+              </div>
+              <div class="process-card">
+                <div class="process-step">04</div>
+                <h4>Launch & Delivery</h4>
+                <p>
+                  We deliver all high-resolution files (300 DPI print and digital) or launch
+                  your website live to the world with full operational support.
+                </p>
+              </div>
+            </div>
+
+            <!-- Client Guarantees Box -->
+            <div class="service-perks-box mt-8">
+              <h3 class="perks-title">Our Studio Guarantees To You:</h3>
+              <div class="perks-grid">
+                <div class="perk-item">
+                  <span class="perk-icon">🛡️</span>
+                  <div><strong>No Hidden Fees</strong><p>Clear, agreed pricing upfront before work kicks off.</p></div>
+                </div>
+                <div class="perk-item">
+                  <span class="perk-icon">📱</span>
+                  <div><strong>Live Updates</strong><p>Regular status updates right on WhatsApp.</p></div>
+                </div>
+                <div class="perk-item">
+                  <span class="perk-icon">⏱️</span>
+                  <div><strong>On-Time Delivery</strong><p>We respect your event dates and campaign deadlines.</p></div>
+                </div>
+                <div class="perk-item">
+                  <span class="perk-icon">🌟</span>
+                  <div><strong>Long-Term Support</strong><p>Always here for questions, re-orders, or future upgrades.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Process CTA -->
+        <section class="cta-section">
+          <div class="container cta-container">
+            <h2 class="cta-title">Ready to Kick Off Step 01?</h2>
+            <p class="cta-sub">
+              Drop us a message on WhatsApp with your project ideas and let's bring it to life.
+            </p>
+            <div class="cta-buttons">
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'm%20ready%20to%20start%20a%20project."
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                💬 Start With Discovery On WhatsApp
+              </a>
+              <button class="btn btn-primary open-quote-trigger">
+                Request Quote
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==========================================
+           PAGE 6: FAQ
+           ========================================== -->
+      <div id="page-faq" class="page-view" data-page="faq">
+        <!-- Dedicated Page Banner -->
+        <div class="page-header-banner">
+          <div class="container">
+            <div class="page-breadcrumbs">
+              <a href="#home" data-page="home">Home</a>
+              <span class="page-breadcrumbs-sep">/</span>
+              <span>FAQ</span>
+            </div>
+            <div class="page-badge-pill">Knowledge Base</div>
+            <h1 class="page-main-title">Frequently Asked Questions</h1>
+            <p class="page-main-sub">
+              Clear answers to common questions about our services, turnaround times, payments, and revisions.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+          <div class="container">
+            <div class="faq-accordion">
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span>How fast can you design an event or church flyer?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                  <p>
+                    Most flyers are delivered within 24 to 48 hours. Urgent same-day
+                    turnaround is also available upon request for sudden events and conferences.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span>How long does a full website take to build?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                  <p>
+                    A standard business landing page or corporate website typically
+                    takes 3 to 7 business days, including design, mobile
+                    responsiveness, and testing. Custom web apps and multi-page platforms
+                    are scheduled according to project scale.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span>Do you provide print-ready files for physical banners and posters?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                  <p>
+                    Yes! We provide 300 DPI high-resolution files in CMYK format
+                    (PDF/JPEG) ready for any commercial printing press, alongside
+                    digital RGB versions for WhatsApp and social media.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span>How do payments work?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                  <p>
+                    We accept local Nigerian bank transfers as well as international
+                    payments. We typically work with a 50% initial commitment and
+                    the remaining balance upon final approval before delivery of final high-res files.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span>What happens if I need changes or revisions?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                  <p>
+                    We include revisions with every project! We work closely with you
+                    to adjust typography, colors, layout, and copy until you are 100% happy
+                    with the final design or website.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span>Can I work with you from outside Nigeria?</span>
+                  <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                  <p>
+                    Yes! We work with clients across the UK, USA, Canada, Europe, Ghana,
+                    and South Africa. Communication is seamless via WhatsApp and Google Meet,
+                    and international payments are accepted.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Still Have Questions Card -->
+            <div class="faq-help-card mt-8">
+              <div class="faq-help-icon">💬</div>
+              <div>
+                <h3>Still have a question?</h3>
+                <p>We are always available to help and answer any questions directly on WhatsApp.</p>
+              </div>
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Samuel!%20I%20have%20a%20question%20about%20Sammie%20Digital%20Studio."
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                Ask on WhatsApp
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ CTA -->
+        <section class="cta-section">
+          <div class="container cta-container">
+            <h2 class="cta-title">Ready to Get Started?</h2>
+            <p class="cta-sub">
+              Contact Sammie Digital Studio today for professional digital solutions.
+            </p>
+            <div class="cta-buttons">
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20get%20started."
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                💬 Chat on WhatsApp
+              </a>
+              <button class="btn btn-primary open-quote-trigger">
+                Request Free Quote
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==========================================
+           PAGE 7: CONTACT US
+           ========================================== -->
+      <div id="page-contact" class="page-view" data-page="contact">
+        <!-- Dedicated Page Banner -->
+        <div class="page-header-banner">
+          <div class="container">
+            <div class="page-breadcrumbs">
+              <a href="#home" data-page="home">Home</a>
+              <span class="page-breadcrumbs-sep">/</span>
+              <span>Contact Us</span>
+            </div>
+            <div class="page-badge-pill">Available Worldwide</div>
+            <h1 class="page-main-title">Let's Talk About Your Project</h1>
+            <p class="page-main-sub">
+              Reach out directly to Samuel via WhatsApp, phone, or fill out the project inquiry form below. We respond rapidly.
+            </p>
+          </div>
+        </div>
+
+        <!-- Contact Main Section -->
+        <section id="contact" class="contact-section">
+          <div class="container">
+            <div class="contact-grid">
+              <!-- Left: Direct Channels -->
+              <div class="contact-channels-card">
+                <h3 class="contact-card-title">Direct Studio Channels</h3>
+                <p class="contact-card-sub">Choose your preferred method to reach out. WhatsApp is our fastest channel.</p>
+
+                <div class="contact-channels-list">
+                  <a
+                    href="https://wa.me/2348168874826?text=Hi%20Sammie%20Digital%20Studio!%20I'd%20like%20to%20discuss%20a%20project."
+                    target="_blank"
+                    class="contact-channel-item whatsapp-item"
+                  >
+                    <div class="contact-channel-icon">💬</div>
+                    <div class="contact-channel-info">
+                      <span class="channel-label">WhatsApp Direct</span>
+                      <strong class="channel-value">08168874826</strong>
+                      <span class="channel-status">🟢 Online • Instant Response</span>
+                    </div>
+                  </a>
+
+                  <a href="tel:+2348168874826" class="contact-channel-item">
+                    <div class="contact-channel-icon">📞</div>
+                    <div class="contact-channel-info">
+                      <span class="channel-label">Direct Phone Line</span>
+                      <strong class="channel-value">08168874826</strong>
+                      <span class="channel-status">Mon - Sat: 8:00 AM - 9:00 PM WAT</span>
+                    </div>
+                  </a>
+
+                  <a href="mailto:sammiedigitalstudio1@gmail.com" class="contact-channel-item">
+                    <div class="contact-channel-icon">✉️</div>
+                    <div class="contact-channel-info">
+                      <span class="channel-label">Official Email</span>
+                      <strong class="channel-value">sammiedigitalstudio1@gmail.com</strong>
+                      <span class="channel-status">For formal proposals & briefs</span>
+                    </div>
+                  </a>
+
+                  <div class="contact-channel-item address-item">
+                    <div class="contact-channel-icon">🌍</div>
+                    <div class="contact-channel-info">
+                      <span class="channel-label">Studio Coverage</span>
+                      <strong class="channel-value">Nigeria & Global Remote</strong>
+                      <span class="channel-status">Delivering projects to clients worldwide</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="contact-founder-note mt-6">
+                  <p><strong>Studio Lead:</strong> Adeniran Samuel Inioluwa</p>
+                  <p class="text-muted">Personalized attention to every detail of your design or website.</p>
+                </div>
+              </div>
+
+              <!-- Right: Quick Project Inquiry Form -->
+              <div class="contact-form-card">
+                <h3 class="contact-card-title">Send a Quick Inquiry</h3>
+                <p class="contact-card-sub">Fill out the quick form below to launch your project or get a quote.</p>
+
+                <form id="pageContactForm" class="contact-page-form">
+                  <div class="form-group">
+                    <label for="contactPageName">Your Full Name / Organization *</label>
+                    <input
+                      type="text"
+                      id="contactPageName"
+                      class="form-input"
+                      placeholder="e.g. Pastor David / Grace Church / Adebayo Ltd"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contactPagePhone">WhatsApp Number / Phone *</label>
+                    <input
+                      type="tel"
+                      id="contactPagePhone"
+                      class="form-input"
+                      placeholder="e.g. 08168874826 or +234..."
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contactPageService">Service Needed *</label>
+                    <select id="contactPageService" class="form-select" required>
+                      <option value="" disabled selected>Select service</option>
+                      <option value="Church Flyer / Event Flyer">Church Flyer / Event Flyer Design</option>
+                      <option value="Website Development">Website Development (Landing page / Corporate)</option>
+                      <option value="Logo & Brand Identity">Logo & Brand Identity System</option>
+                      <option value="Social Media Graphics">Social Media Graphics & Content</option>
+                      <option value="Complete Branding & Web Bundle">Complete Branding & Web Bundle</option>
+                      <option value="Other Inquiry">Other Custom Request</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contactPageDetails">Project Details & Expected Date</label>
+                    <textarea
+                      id="contactPageDetails"
+                      class="form-textarea"
+                      rows="3"
+                      placeholder="Tell us briefly about your event, business goals, or deadline..."
+                    ></textarea>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary btn-block">
+                    🚀 Send Inquiry Directly to WhatsApp
+                  </button>
+                  <p class="form-security-note">
+                    🔒 We respect your privacy. Samuel will respond directly via WhatsApp.
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Contact CTA -->
+        <section class="cta-section">
+          <div class="container cta-container">
+            <h2 class="cta-title">Let's Create Something Great Together</h2>
+            <p class="cta-sub">
+              Sammie Digital Studio • Design. Develop. Grow.
+            </p>
+            <div class="cta-buttons">
+              <a
+                href="https://wa.me/2348168874826?text=Hi%20Samuel!%20I'm%20ready%20to%20get%20started."
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                💬 Chat on WhatsApp: 08168874826
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
 
     <!-- Site Footer -->
     <footer class="site-footer">
@@ -763,12 +1408,13 @@
           <div class="footer-col">
             <h4 class="footer-heading">Quick Links</h4>
             <ul class="footer-nav-list">
-              <li><a href="#home" class="footer-link">Home</a></li>
-              <li><a href="#about" class="footer-link">About Us</a></li>
-              <li><a href="#services" class="footer-link">Our Services</a></li>
-              <li><a href="#portfolio" class="footer-link">Our Works</a></li>
-              <li><a href="#process" class="footer-link">How We Work</a></li>
-              <li><a href="#faq" class="footer-link">FAQ</a></li>
+              <li><a href="#home" class="footer-link" data-page="home">Home</a></li>
+              <li><a href="#about" class="footer-link" data-page="about">About Us</a></li>
+              <li><a href="#services" class="footer-link" data-page="services">Our Services</a></li>
+              <li><a href="#portfolio" class="footer-link" data-page="portfolio">Our Works</a></li>
+              <li><a href="#process" class="footer-link" data-page="process">How We Work</a></li>
+              <li><a href="#faq" class="footer-link" data-page="faq">FAQ</a></li>
+              <li><a href="#contact" class="footer-link" data-page="contact">Contact Us</a></li>
             </ul>
           </div>
 
