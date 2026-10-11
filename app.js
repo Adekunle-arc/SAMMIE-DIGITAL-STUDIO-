@@ -663,6 +663,7 @@ function renderPortfolio(items, filter = currentPortfolioFilter, search = portfo
       <div class="portfolio-img-wrap">
         <div class="portfolio-img-backdrop" style="background-image: url('${imgSrc}');"></div>
         <img src="${imgSrc}" alt="${safeTitle}" class="portfolio-img" loading="lazy" />
+        <div class="portfolio-category-badge portfolio-corner-badge">${catLabel}</div>
         ${allImages.length > 1 ? `
           <div class="portfolio-photo-count-pill">
             <span>📷</span>
@@ -670,6 +671,7 @@ function renderPortfolio(items, filter = currentPortfolioFilter, search = portfo
           </div>
         ` : ''}
         <div class="portfolio-overlay">
+          <span class="portfolio-category-badge portfolio-overlay-badge">${catLabel}</span>
           <span class="portfolio-zoom-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
@@ -1849,7 +1851,7 @@ if (pageContactForm) {
     if (formAlert) {
       formAlert.style.display = 'flex';
       formAlert.className = 'contact-form-alert alert-success';
-      formAlert.innerHTML = `<span>🚀</span><div><strong>Inquiry Ready!</strong> Connecting with Samuel via WhatsApp...</div>`;
+      formAlert.innerHTML = `<span>🚀</span><div><strong>Inquiry Ready!</strong> Connecting to WhatsApp...</div>`;
     }
 
     if (submitBtn) {
@@ -1862,7 +1864,7 @@ if (pageContactForm) {
       const service = serviceSelect.value;
       const details = detailsTextarea?.value.trim() || 'Ready to start a new project.';
 
-      const message = `Hello Samuel (Sammie Digital Studio)!%0A%0AI would like to start a project:%0A- *Client / Brand:* ${encodeURIComponent(name)}%0A- *Phone / WhatsApp:* ${encodeURIComponent(formattedPhone)}%0A- *Service:* ${encodeURIComponent(service)}%0A- *Project Details:* ${encodeURIComponent(details)}%0A%0APlease let me know the rates and timeframe to begin!`;
+      const message = `Hello Sammie Digital Studio!%0A%0AI would like to start a project:%0A- *Client / Brand:* ${encodeURIComponent(name)}%0A- *Phone / WhatsApp:* ${encodeURIComponent(formattedPhone)}%0A- *Service:* ${encodeURIComponent(service)}%0A- *Project Details:* ${encodeURIComponent(details)}%0A%0APlease let me know the rates and timeframe to begin!`;
 
       setTimeout(() => {
         window.open(`https://wa.me/2348168874826?text=${message}`, '_blank');
