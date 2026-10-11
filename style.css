@@ -1056,12 +1056,12 @@ body.nav-open {
 
 /* Contact Page Styles */
 .contact-section {
-  padding: 3rem 0 2rem;
+  padding: 3.25rem 0 3.5rem;
 }
 
 @media (max-width: 768px) {
   .contact-section {
-    padding: 1.85rem 0 1.25rem;
+    padding: 2rem 0 2.5rem;
   }
 }
 
@@ -2653,13 +2653,13 @@ body.nav-open {
 /* Footer */
 .site-footer {
   border-top: 1px solid var(--border-color);
-  padding: 3.25rem 0 1.75rem;
+  padding: 3.5rem 0 2rem;
   background-color: var(--bg-surface);
 }
 
 @media (max-width: 768px) {
   .site-footer {
-    padding: 2.25rem 0 4.5rem; /* Safe bottom clearance so floating WhatsApp & Back-To-Top buttons never overlap content */
+    padding: 2.5rem 0 1.5rem;
   }
 }
 
@@ -2880,14 +2880,16 @@ body.nav-open {
 @media (max-width: 640px) {
   .footer-bottom {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+    gap: 0.65rem;
     padding-top: 1.25rem;
-    padding-bottom: 3.5rem; /* Safe clearance for floating action buttons */
+    padding-bottom: 1.25rem;
   }
 
   .footer-bottom-links {
     font-size: 0.82rem;
+    justify-content: center;
   }
 }
 
