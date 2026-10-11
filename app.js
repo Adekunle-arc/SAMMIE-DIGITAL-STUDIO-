@@ -1518,6 +1518,21 @@ if (pageContactForm) {
         valid: false,
         message: 'UK phone number format: e.g. 7911 123456 (9-11 digits).'
       };
+    } else if (code === '+229') {
+      // Benin Republic (8-10 digits, e.g. 42502201 or 0142502201)
+      const cleanBenin = cleanNumber.startsWith('0') ? digitsOnly.substring(1) : digitsOnly;
+      if (cleanBenin.length >= 8 && cleanBenin.length <= 10) {
+        return {
+          valid: true,
+          message: 'Valid Benin Republic number (+229) ✓',
+          sanitized: '+229' + cleanBenin,
+          displayFormatted: '+229 ' + cleanBenin
+        };
+      }
+      return {
+        valid: false,
+        message: 'Benin phone format: 8-10 digits (e.g. 42 50 22 01).'
+      };
     } else if (code === '+233') {
       // Ghana (9 or 10 digits)
       const cleanGh = cleanNumber.startsWith('0') ? digitsOnly.substring(1) : digitsOnly;
