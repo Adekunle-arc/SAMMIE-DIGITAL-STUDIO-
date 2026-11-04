@@ -137,15 +137,15 @@ const translations = {
     servicesTitle: "Our Core Services",
     servicesSub: "Tailored creative and technical solutions designed to help your brand stand out.",
     webDevTitle: "Website Development",
-    webDevDesc: "High-converting, responsive websites engineered with clean architecture to build immediate credibility on any screen.",
-    graphicDesignTitle: "Graphic Design & Flyers",
-    graphicDesignDesc: "Eye-catching church flyers, event announcements, and corporate marketing materials delivered in print-ready and digital formats.",
-    logoDesignTitle: "Logo Design",
-    logoDesignDesc: "Distinctive and memorable logo marks tailored to encapsulate your company's mission and unique value proposition.",
-    brandingTitle: "Branding & Identity",
-    brandingDesc: "Comprehensive brand identity design, encompassing typography pairings, custom color systems, and usage guidelines.",
+    webDevDesc: "Custom, responsive websites engineered with clean architecture, mobile-first performance, and two weeks of free post-launch maintenance.",
+    graphicDesignTitle: "Graphic Design",
+    graphicDesignDesc: "Striking promotional flyers, church and event designs, banners, and marketing graphics crafted for digital reach and print production.",
+    logoDesignTitle: "Logo Design and Brand Identity",
+    logoDesignDesc: "Distinctive logo marks, custom wordmarks, brand color palettes, typography systems, and identity assets to position your brand with lasting credibility.",
+    brandingTitle: "Logo Design and Brand Identity",
+    brandingDesc: "Distinctive logo marks, custom wordmarks, brand color palettes, typography systems, and identity assets to position your brand with lasting credibility.",
     socialMediaTitle: "Social Media Management",
-    socialMediaDesc: "Strategic content planning, graphic asset creation, post scheduling, and brand consistency across Instagram and TikTok.",
+    socialMediaDesc: "Strategic content planning, announcement graphics, scheduled posting, and visual brand consistency across digital channels.",
     processTitle: "How We Work",
     processSub: "A seamless, collaborative process from initial concept to final delivery.",
     portfolioTitle: "Our Works",
@@ -155,8 +155,8 @@ const translations = {
     flyersFilter: "Flyers",
     brandingFilter: "Logos & Brands",
     socialFilter: "Social Media",
-    ctaReadyTitle: "Ready to Build Your Website or Flyer Design?",
-    ctaReadySub: "Contact Sammie Digital Studio today for professional website development, branding, graphic design, and social media management services.",
+    ctaReadyTitle: "Ready to Build Your Website or Creative Project?",
+    ctaReadySub: "Contact Sammie Digital Studio today for professional website development, graphic design, logo design & brand identity, and social media management services.",
     requestQuoteBtn: "Request Quote",
     directLineNote: "Direct Line & WhatsApp: 08168874826 • Nigeria and worldwide"
   },
@@ -3088,23 +3088,24 @@ function updateCeoUI(profile) {
   if (aboutFounderNameDisplay) aboutFounderNameDisplay.textContent = name;
   if (aboutFounderBadge) aboutFounderBadge.textContent = `Founder & Lead: ${name}`;
   if (aboutFounderPhone) {
-    aboutFounderPhone.textContent = `WhatsApp: ${whatsapp} | Call: ${callPhone}`;
+    aboutFounderPhone.textContent = `Founder Direct: ${whatsapp} | Studio Office: ${callPhone}`;
   }
   if (aboutCeoNoticePill) {
-    aboutCeoNoticePill.textContent = `💬 WhatsApp: ${whatsapp} • 📞 Call: ${callPhone}`;
+    aboutCeoNoticePill.textContent = `👤 Founder Direct Line: ${whatsapp} • 🏢 Studio Official Line: ${callPhone}`;
   }
 
-  // WhatsApp link (Benin number: +22942502201)
+  // Founder Direct WhatsApp link (Benin number: +22942502201)
   const waDigits = whatsapp.replace(/[^0-9]/g, '');
   const waNumber = (waDigits.startsWith('0') && waDigits.length === 11)
     ? `234${waDigits.slice(1)}`
     : waDigits;
 
   if (aboutCeoWhatsappLink) {
-    aboutCeoWhatsappLink.href = `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(name)}!%20Executive%20brief%20for%20Sammie%20Digital%20Studio.`;
+    aboutCeoWhatsappLink.href = `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(name)}!%20Executive%20inquiry%20regarding%20Sammie%20Digital%20Studio.`;
+    aboutCeoWhatsappLink.textContent = `💬 Chat with Founder Direct`;
   }
 
-  // Voice Call link (08168874826)
+  // Official Studio Voice Call link (08168874826)
   const callDigits = callPhone.replace(/[^0-9]/g, '');
   const telNumber = callPhone.startsWith('+')
     ? callPhone
@@ -3112,7 +3113,7 @@ function updateCeoUI(profile) {
 
   if (aboutCeoPhoneLink) {
     aboutCeoPhoneLink.href = `tel:${telNumber}`;
-    aboutCeoPhoneLink.textContent = `📞 Call ${callPhone}`;
+    aboutCeoPhoneLink.textContent = `📞 Studio Office: ${callPhone}`;
   }
 
   // 2. Update Admin Workspace Preview elements
