@@ -1,16 +1,16 @@
 /* Sammie Digital Studio - Premium Design & Development Stylesheet */
 
 :root {
-  --bg-main: #090B10;
-  --bg-surface: #101522;
-  --bg-surface-elevated: #161D2E;
-  --bg-surface-glass: rgba(16, 21, 34, 0.82);
-  --border-color: rgba(255, 255, 255, 0.09);
+  --bg-main: #0B1530;
+  --bg-surface: #101E42;
+  --bg-surface-elevated: #162B5A;
+  --bg-surface-glass: rgba(11, 21, 48, 0.88);
+  --border-color: rgba(255, 255, 255, 0.1);
   --border-hover: rgba(255, 107, 0, 0.45);
   --primary-orange: #FF6B00;
   --primary-orange-light: #FF8533;
   --primary-hover: #E05E00;
-  --text-white: #F8FAFC;
+  --text-white: #FFFFFF;
   --text-muted: #94A3B8;
   --whatsapp-green: #25D366;
   --radius-sm: 8px;
@@ -152,7 +152,7 @@ body.nav-open {
   position: sticky;
   top: 0;
   z-index: 90;
-  background-color: rgba(9, 11, 16, 0.92);
+  background-color: rgba(11, 21, 48, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
@@ -588,10 +588,11 @@ body.nav-open {
   padding: 4.25rem 0 3.25rem;
   position: relative;
   overflow: hidden;
-  background-color: #090B10;
+  background-color: var(--bg-main);
   background-image: 
-    radial-gradient(circle at 50% 12%, rgba(255, 107, 0, 0.12) 0%, rgba(255, 107, 0, 0.02) 48%, transparent 70%),
-    radial-gradient(circle at 85% 20%, rgba(255, 107, 0, 0.05) 0%, transparent 40%);
+    radial-gradient(ellipse at 50% 12%, rgba(255, 107, 0, 0.16) 0%, rgba(20, 35, 78, 0.55) 45%, transparent 75%),
+    radial-gradient(circle at 85% 20%, rgba(255, 107, 0, 0.08) 0%, transparent 45%),
+    linear-gradient(180deg, #0B1530 0%, #0E1B3E 100%);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -642,8 +643,8 @@ body.nav-open {
 .page-header-banner {
   padding: 3.5rem 0 2.5rem;
   background: 
-    radial-gradient(circle at 50% 0%, rgba(255, 107, 0, 0.12) 0%, rgba(255, 107, 0, 0.02) 55%, transparent 75%),
-    #090B10;
+    radial-gradient(circle at 50% 0%, rgba(255, 107, 0, 0.14) 0%, rgba(20, 35, 78, 0.45) 55%, transparent 75%),
+    linear-gradient(180deg, #0D1938 0%, #0B1530 100%);
   border-bottom: 1px solid var(--border-color);
   text-align: center;
   position: relative;
@@ -1293,7 +1294,7 @@ body.nav-open {
   height: 100%;
   min-height: 44px;
   padding: 0.75rem 0.5rem;
-  background: #0B0E17;
+  background: #0D1938;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   color: #fff;
@@ -1321,7 +1322,7 @@ body.nav-open {
 .contact-page-form .form-textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: #0B0E17;
+  background: #0D1938;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   color: #fff;
@@ -2178,29 +2179,6 @@ body.nav-open {
   flex-shrink: 0;
 }
 
-/* Founder Direct Contact Highlight */
-.contact-channel-item.founder-direct-item {
-  border-color: rgba(255, 107, 0, 0.35);
-  background: rgba(255, 107, 0, 0.04);
-}
-
-.contact-channel-item.founder-direct-item:hover {
-  border-color: var(--primary-orange);
-  background: rgba(255, 107, 0, 0.08);
-}
-
-.founder-direct-tag {
-  display: inline-block;
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--primary-orange);
-  background: rgba(255, 107, 0, 0.14);
-  padding: 0.12rem 0.5rem;
-  border-radius: var(--radius-full);
-  margin-left: 0.4rem;
-  letter-spacing: 0.04em;
-}
 
 /* Process Section */
 .process-grid {
@@ -2336,7 +2314,7 @@ body.nav-open {
 .portfolio-img-wrap {
   width: 100%;
   height: 330px;
-  background: radial-gradient(circle at center, #151b27 0%, #090c13 100%);
+  background: radial-gradient(circle at center, #182B5A 0%, #0D1735 100%);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -3223,7 +3201,7 @@ body.nav-open {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #090C12;
+  background: #0B1530;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
@@ -3236,7 +3214,7 @@ body.nav-open {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.85rem 1.25rem;
-  background: #0C101A;
+  background: #101E42;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
 }
@@ -3332,7 +3310,7 @@ body.nav-open {
   flex: 1;
   min-height: 280px;
   max-height: 68vh;
-  background: #040609;
+  background: #080E22;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3405,7 +3383,7 @@ body.nav-open {
   align-items: center;
   gap: 0.6rem;
   padding: 0.6rem 1.25rem;
-  background: #07090E;
+  background: #0C1635;
   border-top: 1px solid var(--border-color);
   overflow-x: auto;
   flex-shrink: 0;
@@ -3417,7 +3395,7 @@ body.nav-open {
   border-radius: 6px;
   border: 2px solid rgba(255, 255, 255, 0.15);
   padding: 0;
-  background: #000;
+  background: #09122C;
   cursor: pointer;
   overflow: hidden;
   flex-shrink: 0;
@@ -3441,7 +3419,7 @@ body.nav-open {
 
 .lightbox-caption-wrap {
   padding: 0.85rem 1.25rem;
-  background: #0C101A;
+  background: #101E42;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -3590,7 +3568,7 @@ body.nav-open {
   height: 100vh;
   height: 100dvh;
   z-index: 100000;
-  background-color: #080A0F;
+  background-color: #0B1530;
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -3612,7 +3590,7 @@ body.nav-open {
   height: 68px;
   min-height: 68px;
   padding: 0 1.5rem;
-  background-color: #0D111A;
+  background-color: #101E42;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -3695,7 +3673,7 @@ body.nav-open {
   flex: 1;
   overflow-y: auto;
   position: relative;
-  background-color: #080A0F;
+  background-color: #0B1530;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
@@ -3763,7 +3741,7 @@ body.nav-open {
   flex-wrap: wrap;
   gap: 1rem;
   padding: 0.85rem 1.25rem;
-  background-color: #0E131E;
+  background-color: #12214A;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
@@ -3824,7 +3802,7 @@ body.nav-open {
 }
 
 .admin-dash-card {
-  background-color: #0E131E;
+  background-color: #12214A;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
@@ -4011,7 +3989,7 @@ body.nav-open {
 
 .multi-preview-card {
   position: relative;
-  background: #06080D;
+  background: #0B1530;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -5056,8 +5034,8 @@ body.nav-open {
   width: 100vw;
   height: 100vh;
   z-index: 9999999;
-  background-color: #080A0F !important;
-  background-image: radial-gradient(circle at 50% 45%, #18120c 0%, #0c0d12 55%, #080a0f 85%) !important;
+  background-color: #0B1530 !important;
+  background-image: radial-gradient(circle at 50% 45%, #16285A 0%, #0F1B3E 55%, #0B1530 85%) !important;
   display: flex;
   align-items: center;
   justify-content: center;

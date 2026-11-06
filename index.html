@@ -137,14 +137,21 @@
     <!-- Critical Baseline Styles (Prevents FOUC on Mobile Networks) -->
     <style>
       :root {
-        --bg-main: #090B10;
-        --bg-surface: #101522;
+        --bg-main: #0B1530;
+        --bg-surface: #101E42;
+        --bg-surface-elevated: #162B5A;
+        --bg-surface-glass: rgba(11, 21, 48, 0.88);
+        --border-color: rgba(255, 255, 255, 0.1);
+        --border-hover: rgba(255, 107, 0, 0.45);
         --primary-orange: #FF6B00;
-        --text-white: #F8FAFC;
+        --primary-orange-light: #FF8533;
+        --primary-hover: #E05E00;
+        --text-white: #FFFFFF;
+        --text-muted: #94A3B8;
       }
       html, body {
-        background-color: #090B10 !important;
-        color: #F8FAFC !important;
+        background-color: #0B1530 !important;
+        color: #FFFFFF !important;
         margin: 0;
         padding: 0;
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -193,8 +200,8 @@
         width: 100%;
         height: 100%;
         z-index: 9999999;
-        background-color: #080A0F !important;
-        background-image: radial-gradient(circle at 50% 45%, #18120c 0%, #0c0d12 55%, #080a0f 85%) !important;
+        background-color: #0B1530 !important;
+        background-image: radial-gradient(circle at 50% 45%, #16285A 0%, #0F1B3E 55%, #0B1530 85%) !important;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -336,7 +343,7 @@
         </div>
 
         <div class="mobile-nav-footer">
-          <p class="mobile-nav-direct">Direct Line: <strong>08168874826</strong></p>
+          <p class="mobile-nav-direct">Studio Line: <strong>08168874826</strong></p>
           <p class="mobile-nav-meta">Nigeria & Worldwide • Design. Develop. Grow.</p>
         </div>
       </div>
@@ -560,7 +567,7 @@
               </button>
             </div>
             <p class="cta-note" data-i18n="directLineNote">
-              Direct Line & WhatsApp: 08168874826 • Nigeria and worldwide
+              Studio WhatsApp & Call: 08168874826 • Nigeria and worldwide
             </p>
           </div>
         </section>
@@ -626,36 +633,15 @@
                       "Every business, church, and organization deserves digital craftsmanship that commands respect, builds trust, and converts visitors into lifelong clients."
                     </blockquote>
 
-                    <div class="about-ceo-actions">
-                      <a
-                        href="https://wa.me/22942502201?text=Hello%20Adeniran%20Samuel!%20Executive%20inquiry%20regarding%20Sammie%20Digital%20Studio."
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="btn btn-primary btn-sm ceo-chat-btn"
-                        id="aboutCeoWhatsappLink"
-                      >
-                        💬 Chat with Founder Direct
-                      </a>
-                      <a
-                        href="tel:+2348168874826"
-                        class="btn btn-outline btn-sm ceo-call-btn"
-                        id="aboutCeoPhoneLink"
-                      >
-                        📞 Studio Office: 08168874826
-                      </a>
-                      <button
-                        type="button"
-                        id="adminQuickEditCeoBtn"
-                        class="btn btn-outline btn-sm admin-quick-edit-ceo"
-                        style="display: none;"
-                        title="Change CEO photo or info in Admin Workspace"
-                      >
-                        ✏️ Change Photo (Admin)
-                      </button>
-                    </div>
-                    <span class="about-ceo-notice-pill" id="aboutCeoNoticePill">
-                      👤 Founder Direct Line: +22942502201 • 🏢 Studio Official Line: 08168874826
-                    </span>
+                    <button
+                      type="button"
+                      id="adminQuickEditCeoBtn"
+                      class="btn btn-outline btn-sm admin-quick-edit-ceo"
+                      style="display: none; margin-top: 0.75rem;"
+                      title="Change CEO photo or info in Admin Workspace"
+                    >
+                      ✏️ Change Photo (Admin)
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1420,20 +1406,6 @@
                     </div>
                   </a>
 
-                  <!-- Founder's Direct Contact (Clearly Distinguished from Official Studio Contact) -->
-                  <a
-                    href="https://wa.me/22942502201?text=Hello%20Adeniran%20Samuel!%20Executive%20inquiry%20regarding%20Sammie%20Digital%20Studio."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="contact-channel-item founder-direct-item"
-                  >
-                    <div class="contact-channel-icon">👤</div>
-                    <div class="contact-channel-info">
-                      <span class="channel-label">Founder & Lead Engineer Direct Line</span>
-                      <strong class="channel-value">+22942502201 <span class="founder-direct-tag">Founder Direct</span></strong>
-                      <span class="channel-status">Adeniran Samuel Inioluwa • Executive Consultations</span>
-                    </div>
-                  </a>
 
                   <div class="contact-channel-item address-item">
                     <div class="contact-channel-icon">🌍</div>
@@ -1620,12 +1592,6 @@
               <a href="mailto:sammiedigitalstudio1@gmail.com" class="footer-contact-link">
                 <span class="contact-icon">✉️</span>
                 <span><strong>Official Email:</strong> sammiedigitalstudio1@gmail.com</span>
-              </a>
-              <!-- Founder's Direct Contact (Clearly Distinguished) -->
-              <a href="https://wa.me/22942502201?text=Hello%20Adeniran%20Samuel!%20Executive%20inquiry%20regarding%20Sammie%20Digital%20Studio." target="_blank" rel="noopener noreferrer" class="footer-contact-link" style="color: #CBD5E1;">
-                <span class="contact-icon">👤</span>
-                <span><strong>Founder Direct:</strong> +22942502201</span>
-              </a>
             </div>
 
             <!-- Social Media Handles (Official Studio Channels: Instagram, Facebook, TikTok) -->
@@ -2043,29 +2009,6 @@
                     </div>
                   </div>
 
-                  <!-- Phone / WhatsApp -->
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="adminCeoWhatsappInput">CEO WhatsApp Number (Benin / International)</label>
-                      <input
-                        type="text"
-                        id="adminCeoWhatsappInput"
-                        value="+22942502201"
-                        placeholder="+22942502201"
-                        maxlength="50"
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label for="adminCeoPhoneInput">CEO Direct Line for Calling (Voice Calls)</label>
-                      <input
-                        type="text"
-                        id="adminCeoPhoneInput"
-                        value="08168874826"
-                        placeholder="08168874826"
-                        maxlength="50"
-                      />
-                    </div>
-                  </div>
 
                   <!-- Quote / Mission -->
                   <div class="form-group">

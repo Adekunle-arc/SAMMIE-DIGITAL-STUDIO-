@@ -158,7 +158,7 @@ const translations = {
     ctaReadyTitle: "Ready to Build Your Website or Creative Project?",
     ctaReadySub: "Contact Sammie Digital Studio today for professional website development, graphic design, logo design & brand identity, and social media management services.",
     requestQuoteBtn: "Request Quote",
-    directLineNote: "Direct Line & WhatsApp: 08168874826 • Nigeria and worldwide"
+    directLineNote: "Studio WhatsApp & Call: 08168874826 • Nigeria and worldwide"
   },
   fr: {
     langLabel: "Français",
@@ -216,7 +216,7 @@ const translations = {
     ctaReadyTitle: "Prêt à Créer Votre Site Web ou Vos Affiches ?",
     ctaReadySub: "Contactez Sammie Digital Studio dès aujourd'hui pour des services professionnels de création web et de design graphique.",
     requestQuoteBtn: "Demander un Devis",
-    directLineNote: "Ligne directe et WhatsApp : 08168874826 • Nigeria and worldwide"
+    directLineNote: "Studio WhatsApp et Appel : 08168874826 • Nigeria and worldwide"
   },
   es: {
     langLabel: "Español",
@@ -274,7 +274,7 @@ const translations = {
     ctaReadyTitle: "¿Listo para Crear tu Sitio Web o Flyer?",
     ctaReadySub: "Contacta hoy con Sammie Digital Studio para desarrollo web profesional y diseño gráfico de primer nivel.",
     requestQuoteBtn: "Solicitar Cotización",
-    directLineNote: "Línea directa y WhatsApp: 08168874826 • Nigeria and worldwide"
+    directLineNote: "Studio WhatsApp y Llamadas: 08168874826 • Nigeria and worldwide"
   },
   de: {
     langLabel: "Deutsch",
@@ -332,7 +332,7 @@ const translations = {
     ctaReadyTitle: "Bereit für Ihre neue Website oder Grafik?",
     ctaReadySub: "Kontaktieren Sie Sammie Digital Studio noch heute für erstklassige Web- und Design-Dienstleistungen.",
     requestQuoteBtn: "Angebot Anfragen",
-    directLineNote: "Direktkontakt & WhatsApp: 08168874826 • Nigeria and worldwide"
+    directLineNote: "Studio WhatsApp & Anruf: 08168874826 • Nigeria and worldwide"
   },
   pt: {
     langLabel: "Português",
@@ -390,7 +390,7 @@ const translations = {
     ctaReadyTitle: "Pronto para Criar seu Site ou Flyer?",
     ctaReadySub: "Fale com o Sammie Digital Studio hoje mesmo para serviços profissionais de web design e criação visual.",
     requestQuoteBtn: "Solicitar Orçamento",
-    directLineNote: "Linha direta e WhatsApp: 08168874826 • Nigeria and worldwide"
+    directLineNote: "Studio WhatsApp e Chamada: 08168874826 • Nigeria and worldwide"
   },
   ar: {
     langLabel: "العربية",
@@ -448,7 +448,7 @@ const translations = {
     ctaReadyTitle: "جاهز لتنفيذ موقعك أو تصميمك القادم؟",
     ctaReadySub: "تواصل مع استوديو سامي الرقمي اليوم للحصول على أفضل الخدمات الرقمية.",
     requestQuoteBtn: "طلب عرض سعر",
-    directLineNote: "الاتصال المباشر وواتساب: 08168874826 • Nigeria and worldwide"
+    directLineNote: "استوديو واتساب واتصال: 08168874826 • Nigeria and worldwide"
   },
   pcm: {
     langLabel: "Pidgin",
@@ -506,7 +506,7 @@ const translations = {
     ctaReadyTitle: "Ready Make We Build Your Website or Design Your Flyer?",
     ctaReadySub: "Holla Sammie Digital Studio today for proper website development, branding, graphic design, and social media handling.",
     requestQuoteBtn: "Ask for Price",
-    directLineNote: "Direct Line & WhatsApp: 08168874826 • Nigeria and worldwide"
+    directLineNote: "Studio WhatsApp & Call: 08168874826 • Nigeria and worldwide"
   }
 };
 
@@ -1521,7 +1521,7 @@ if (pageContactForm) {
         message: 'UK phone number format: e.g. 7911 123456 (9-11 digits).'
       };
     } else if (code === '+229') {
-      // Benin Republic (8-10 digits, e.g. 42502201 or 0142502201)
+      // Benin Republic (8-10 digits, e.g. 97123456 or 0197123456)
       const cleanBenin = cleanNumber.startsWith('0') ? digitsOnly.substring(1) : digitsOnly;
       if (cleanBenin.length >= 8 && cleanBenin.length <= 10) {
         return {
@@ -3018,10 +3018,7 @@ const DEFAULT_CEO_PROFILE = {
   photoUrl: '/assets/images/ceo.jpg',
   name: 'Adeniran Samuel Inioluwa',
   title: 'Founder, Creative Director & Lead Engineer',
-  quote: 'Every business, church, and organization deserves digital craftsmanship that commands respect, builds trust, and converts visitors into lifelong clients.',
-  whatsapp: '+22942502201',
-  callPhone: '08168874826',
-  phone: '08168874826'
+  quote: 'Every business, church, and organization deserves digital craftsmanship that commands respect, builds trust, and converts visitors into lifelong clients.'
 };
 
 let currentCeoProfile = { ...DEFAULT_CEO_PROFILE };
@@ -3032,12 +3029,8 @@ const aboutCeoPhoto = document.getElementById('aboutCeoPhoto');
 const aboutCeoName = document.getElementById('aboutCeoName');
 const aboutCeoTitle = document.getElementById('aboutCeoTitle');
 const aboutCeoQuote = document.getElementById('aboutCeoQuote');
-const aboutCeoWhatsappLink = document.getElementById('aboutCeoWhatsappLink');
-const aboutCeoPhoneLink = document.getElementById('aboutCeoPhoneLink');
 const aboutFounderNameDisplay = document.getElementById('aboutFounderNameDisplay');
 const aboutFounderBadge = document.getElementById('aboutFounderBadge');
-const aboutFounderPhone = document.getElementById('aboutFounderPhone');
-const aboutCeoNoticePill = document.getElementById('aboutCeoNoticePill');
 const adminQuickEditCeoBtn = document.getElementById('adminQuickEditCeoBtn');
 
 // DOM References for CEO Manager in Admin Workspace
@@ -3052,8 +3045,6 @@ const adminCeoFileNameLabel = document.getElementById('adminCeoFileNameLabel');
 const adminCeoUrlInput = document.getElementById('adminCeoUrlInput');
 const adminCeoNameInput = document.getElementById('adminCeoNameInput');
 const adminCeoTitleInput = document.getElementById('adminCeoTitleInput');
-const adminCeoWhatsappInput = document.getElementById('adminCeoWhatsappInput');
-const adminCeoPhoneInput = document.getElementById('adminCeoPhoneInput');
 const adminCeoQuoteInput = document.getElementById('adminCeoQuoteInput');
 const adminSaveCeoBtn = document.getElementById('adminSaveCeoBtn');
 const adminResetCeoBtn = document.getElementById('adminResetCeoBtn');
@@ -3071,8 +3062,6 @@ function updateCeoUI(profile) {
   const name = profile.name || DEFAULT_CEO_PROFILE.name;
   const title = profile.title || DEFAULT_CEO_PROFILE.title;
   const quote = profile.quote || DEFAULT_CEO_PROFILE.quote;
-  const whatsapp = profile.whatsapp || '+22942502201';
-  const callPhone = profile.callPhone || (profile.phone && profile.phone.startsWith('08') ? profile.phone : '08168874826');
 
   // 1. Update public About page showcase elements
   if (aboutCeoPhoto) {
@@ -3087,34 +3076,8 @@ function updateCeoUI(profile) {
   }
   if (aboutFounderNameDisplay) aboutFounderNameDisplay.textContent = name;
   if (aboutFounderBadge) aboutFounderBadge.textContent = `Founder & Lead: ${name}`;
-  if (aboutFounderPhone) {
-    aboutFounderPhone.textContent = `Founder Direct: ${whatsapp} | Studio Office: ${callPhone}`;
-  }
-  if (aboutCeoNoticePill) {
-    aboutCeoNoticePill.textContent = `👤 Founder Direct Line: ${whatsapp} • 🏢 Studio Official Line: ${callPhone}`;
-  }
+  // CEO Card in About page displays Photo, Studio Principal badge, Name, Title, and Quote
 
-  // Founder Direct WhatsApp link (Benin number: +22942502201)
-  const waDigits = whatsapp.replace(/[^0-9]/g, '');
-  const waNumber = (waDigits.startsWith('0') && waDigits.length === 11)
-    ? `234${waDigits.slice(1)}`
-    : waDigits;
-
-  if (aboutCeoWhatsappLink) {
-    aboutCeoWhatsappLink.href = `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(name)}!%20Executive%20inquiry%20regarding%20Sammie%20Digital%20Studio.`;
-    aboutCeoWhatsappLink.textContent = `💬 Chat with Founder Direct`;
-  }
-
-  // Official Studio Voice Call link (08168874826)
-  const callDigits = callPhone.replace(/[^0-9]/g, '');
-  const telNumber = callPhone.startsWith('+')
-    ? callPhone
-    : (callDigits.startsWith('0') && callDigits.length === 11 ? `+234${callDigits.slice(1)}` : callPhone);
-
-  if (aboutCeoPhoneLink) {
-    aboutCeoPhoneLink.href = `tel:${telNumber}`;
-    aboutCeoPhoneLink.textContent = `📞 Studio Office: ${callPhone}`;
-  }
 
   // 2. Update Admin Workspace Preview elements
   if (adminCeoPreviewImg) adminCeoPreviewImg.src = photo;
@@ -3162,10 +3125,7 @@ try {
         photoUrl: data.ceoPhotoUrl || DEFAULT_CEO_PROFILE.photoUrl,
         name: data.ceoName || DEFAULT_CEO_PROFILE.name,
         title: data.ceoTitle || DEFAULT_CEO_PROFILE.title,
-        quote: data.ceoQuote || DEFAULT_CEO_PROFILE.quote,
-        whatsapp: data.ceoWhatsapp || DEFAULT_CEO_PROFILE.whatsapp,
-        callPhone: data.ceoCallPhone || (data.ceoPhone && data.ceoPhone.startsWith('08') ? data.ceoPhone : DEFAULT_CEO_PROFILE.callPhone),
-        phone: data.ceoCallPhone || DEFAULT_CEO_PROFILE.callPhone
+        quote: data.ceoQuote || DEFAULT_CEO_PROFILE.quote
       };
       localStorage.setItem('sammie_ceo_profile', JSON.stringify(currentCeoProfile));
       updateCeoUI(currentCeoProfile);
@@ -3273,8 +3233,6 @@ if (adminCeoForm) {
     const name = adminCeoNameInput ? adminCeoNameInput.value.trim() : DEFAULT_CEO_PROFILE.name;
     const title = adminCeoTitleInput ? adminCeoTitleInput.value.trim() : DEFAULT_CEO_PROFILE.title;
     const quote = adminCeoQuoteInput ? adminCeoQuoteInput.value.trim() : DEFAULT_CEO_PROFILE.quote;
-    const whatsapp = adminCeoWhatsappInput ? adminCeoWhatsappInput.value.trim() : DEFAULT_CEO_PROFILE.whatsapp;
-    const callPhone = adminCeoPhoneInput ? adminCeoPhoneInput.value.trim() : DEFAULT_CEO_PROFILE.callPhone;
 
     let photoUrl = pendingCeoPhotoData || currentCeoProfile.photoUrl || DEFAULT_CEO_PROFILE.photoUrl;
     if (adminCeoUrlInput && adminCeoUrlInput.value.trim()) {
@@ -3292,9 +3250,6 @@ if (adminCeoForm) {
         ceoName: name,
         ceoTitle: title,
         ceoQuote: quote,
-        ceoWhatsapp: whatsapp,
-        ceoCallPhone: callPhone,
-        ceoPhone: callPhone,
         updatedAt: new Date().toISOString()
       };
 
@@ -3304,10 +3259,7 @@ if (adminCeoForm) {
         photoUrl,
         name,
         title,
-        quote,
-        whatsapp,
-        callPhone,
-        phone: callPhone
+        quote
       };
       localStorage.setItem('sammie_ceo_profile', JSON.stringify(currentCeoProfile));
       updateCeoUI(currentCeoProfile);
@@ -3356,9 +3308,6 @@ if (adminResetCeoBtn) {
         ceoName: DEFAULT_CEO_PROFILE.name,
         ceoTitle: DEFAULT_CEO_PROFILE.title,
         ceoQuote: DEFAULT_CEO_PROFILE.quote,
-        ceoWhatsapp: DEFAULT_CEO_PROFILE.whatsapp,
-        ceoCallPhone: DEFAULT_CEO_PROFILE.callPhone,
-        ceoPhone: DEFAULT_CEO_PROFILE.callPhone,
         updatedAt: new Date().toISOString()
       }, { merge: true });
 

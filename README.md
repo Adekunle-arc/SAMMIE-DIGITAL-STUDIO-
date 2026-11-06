@@ -71,6 +71,6 @@ Whenever you add or update an item in Firebase, the website updates live without
 
 ## 📞 Studio Contact Info
 * **Founder:** Adeniran Samuel Inioluwa
-* **Direct Line & WhatsApp:** 08168874826
+* **Studio Line & WhatsApp:** 08168874826
 * **Email:** sammiedigitalstudio1@gmail.com
 * **Tagline:** Design. Develop. Grow.
